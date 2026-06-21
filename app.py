@@ -1,9 +1,9 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition - Fully Functional 5-Module Suite
+Enterprise AI Agent Edition - Premium Design System (Green Theme)
 
-Integrated with live Gemini AI Agent processing models. Wraps 
-external dependencies cleanly to safeguard production uptime.
+Integrated with live Gemini AI Agent processing models. Contains upgraded
+frontend typography, an inline CSS logo brand identity, and complete feature suites.
 """
 
 import streamlit as st
@@ -34,7 +34,7 @@ def get_ai_agent():
         return None
 
 # =============================================================================
-# FILE MANAGEMENT & CONFIGURATION
+# FILE MANAGEMENT & CONFIGURATION (BACKEND DATA STORE)
 # =============================================================================
 USER_FILE = "users.json"
 
@@ -92,70 +92,116 @@ def get_user_profile(username):
     return {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
 
 # =============================================================================
-# PREMIUM GREEN DESIGN SYSTEM (CSS INJECTION)
+# FRONTEND SYSTEM DESIGN (FONTS, LOGO, ACCENTS)
 # =============================================================================
 def inject_premium_styles():
     st.markdown("""
         <style>
+        /* Import Professional Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        /* Global Canvas Rules */
         .stApp {
-            background: linear-gradient(180deg, #0A4D2E 0%, #157347 50%, #F4F9F6 100%) !important;
-            color: #1F2937;
+            background: linear-gradient(180deg, #063c22 0%, #0d6137 40%, #f4f8f5 100%) !important;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+            color: #1f2937;
         }
         
+        /* Premium Branding / Logo Mark Geometry */
+        .brand-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 5px;
+        }
+        .logo-mark {
+            background: linear-gradient(135deg, #2ae083 0%, #198754 100%);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(42, 224, 131, 0.25);
+            font-weight: 800;
+            color: white !important;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+        
+        /* Main Hero Presentation Wrapper */
         .premium-hero {
             text-align: center;
-            padding: 40px 20px 20px 20px;
+            padding: 30px 20px 20px 20px;
             color: white;
         }
         .premium-hero h1 {
             color: white !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
             font-size: 42px !important;
             font-weight: 800 !important;
-            letter-spacing: -0.5px;
-            margin-bottom: 5px !important;
+            letter-spacing: -1px;
+            margin: 0 !important;
         }
-        .premium-hero p {
-            color: #E8F5E9 !important;
-            margin: 0 auto !important;
-            opacity: 0.95;
+        .premium-hero p.tagline {
+            color: #a3e6be !important;
+            font-size: 20px !important;
+            font-weight: 400;
+            margin-top: 4px !important;
+            margin-bottom: 16px !important;
+            letter-spacing: -0.2px;
         }
         
+        /* Cards System */
         .premium-card {
-            background: rgba(255, 255, 255, 0.97);
+            background: rgba(255, 255, 255, 0.98);
             padding: 24px;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
             margin-bottom: 24px;
+            transition: transform 0.2s ease;
         }
-        
         .premium-card h3 {
-            color: #0A4D2E !important;
+            color: #063c22 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
             font-size: 20px !important;
             font-weight: 700 !important;
-            margin-bottom: 12px !important;
+            margin-top: 0 !important;
+            margin-bottom: 10px !important;
+        }
+        .premium-card p {
+            font-size: 14px !important;
+            line-height: 1.5 !important;
+            color: #4b5563 !important;
         }
         
+        /* Global Button Layout Matrices */
         div.stButton > button {
-            background: linear-gradient(90deg, #0A4D2E 0%, #198754 100%) !important;
+            background: linear-gradient(90deg, #063c22 0%, #198754 100%) !important;
             color: white !important;
-            border-radius: 50px !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            border-radius: 12px !important;
             border: none !important;
-            padding: 12px 28px !important;
+            padding: 12px 24px !important;
             font-weight: 600 !important;
             font-size: 14px !important;
-            box-shadow: 0 4px 14px rgba(10, 77, 46, 0.35) !important;
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(6, 60, 34, 0.3) !important;
+            transition: all 0.2s ease-in-out;
             width: 100%;
         }
         div.stButton > button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(10, 77, 46, 0.5) !important;
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 20px rgba(6, 60, 34, 0.45) !important;
+            background: linear-gradient(90deg, #0d6137 0%, #1db972 100%) !important;
         }
         
+        /* Forms & Interactive Fields */
         .stTextInput input, .stTextArea textarea, .stSelectbox div {
             border-radius: 12px !important;
-            border: 1px solid #D1D5DB !important;
+            border: 1px solid #d1d5db !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -187,14 +233,15 @@ def main():
     if "cv_data_projects" not in st.session_state:
         st.session_state.cv_data_projects = ""
 
-    # ---- HERO BRAND HEADER BLOCK ----
+    # ---- BRAND IDENTITY & HERO HEADER ----
     st.markdown("""
         <div class="premium-hero">
-            <h1>MT Graduate Career Launchpad</h1>
-            <p style="font-size: 20px !important; font-weight: 400; margin-bottom: 15px !important;">
-                your professional profile, <span style="font-weight: 300; opacity: 0.85;">ready everywhere.</span>
-            </p>
-            <p style="max-width: 600px; margin: 0 auto; font-size: 14px; opacity: 0.8;">
+            <div class="brand-container">
+                <div class="logo-mark">MT</div>
+                <h1>Graduate Career Launchpad</h1>
+            </div>
+            <p class="tagline">your professional profile, <span style="font-weight: 300; opacity: 0.9;">ready everywhere.</span></p>
+            <p style="max-width: 600px; margin: 0 auto; font-size: 14px; opacity: 0.75;">
                 Create a clean digital CV and personal workspace powered by live AI Agent analysis engines.
             </p>
         </div>
@@ -209,7 +256,7 @@ def main():
         col_auth_left, col_auth_right = st.columns(2)
         
         with col_auth_left:
-            st.markdown('<div class="premium-card">HandshakeEntry<h3>🔒 Core Portal Entry</h3><p>Verify your security code keys to view configuration files.</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="premium-card"><h3>🔒 Core Portal Entry</h3><p>Verify your security code keys to view configuration files.</p></div>', unsafe_allow_html=True)
             lin_user = st.text_input("Username", key="l_user_field")
             lin_pass = st.text_input("Security Access Pass", type="password", key="l_pass_field")
             if st.button("Authenticate & Launch Ecosystem", key="act_login_btn"):
@@ -347,7 +394,7 @@ def main():
                                 f"Provide a comprehensive critique containing a quantified Match Index %, missing structural industry terms, and clear recommendations using Markdown formatting."
                             )
                             response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                         except Exception as e:
                             st.error(f"Agent analysis connection dropped: {str(e)}")
                     else:
@@ -383,7 +430,7 @@ def main():
                                 f"Analyze if they utilized the STAR method properly. Highlight clear strengths, identify delivery gaps, and provide a perfectly restructured 'Ideal Revision' version of their answer."
                             )
                             response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                         except Exception as e:
                             st.error(f"Error executing interview assessment: {str(e)}")
                     else:
@@ -416,7 +463,7 @@ def main():
                             f"Format as an itemized breakdown. For each title provide: 1. Core Responsibilities, 2. Critical Skill gaps the user needs to study next, and 3. Suggested pipeline strategy."
                         )
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                        st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                     except Exception as e:
                         st.error(f"Error searching match engine blueprints: {str(e)}")
                 else:
@@ -453,7 +500,7 @@ def main():
                             f"Ensure it avoids boring cliches, clearly highlights why their experience matters, and leaves a sharp, professional call-to-action."
                         )
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                        st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                     except Exception as e:
                         st.error(f"Error processing text generation: {str(e)}")
                 else:
@@ -482,7 +529,7 @@ def main():
                                 f"Reformat them with clear headings, clean feature bullet points, technical architecture breakdowns, and impact summaries."
                             )
                             response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                         except Exception as e:
                             st.error(f"Portfolio agent connection lost: {str(e)}")
                     else:
