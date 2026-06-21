@@ -109,17 +109,15 @@ def inject_premium_styles():
         }
         .premium-hero h1 {
             color: white !important;
-            font-size: 36px !important;
+            font-size: 42px !important;
             font-weight: 800 !important;
             letter-spacing: -0.5px;
-            margin-bottom: 10px !important;
+            margin-bottom: 5px !important;
         }
         .premium-hero p {
             color: #E0E7FF !important;
-            font-size: 16px !important;
-            max-width: 600px;
             margin: 0 auto !important;
-            opacity: 0.9;
+            opacity: 0.95;
         }
         
         .premium-card {
@@ -190,8 +188,13 @@ def main():
     # ---- HERO BRAND HEADER BLOCK ----
     st.markdown("""
         <div class="premium-hero">
-            <h1>your professional profile, <br><span style="opacity: 0.85; font-weight: 400; font-size:28px;">ready everywhere.</span></h1>
-            <p>Create a clean digital CV and personal workspace powered by live AI Agent analysis engines.</p>
+            <h1>MT Graduate Career Launchpad</h1>
+            <p style="font-size: 20px !important; font-weight: 400; margin-bottom: 15px !important;">
+                your professional profile, <span style="font-weight: 300; opacity: 0.85;">ready everywhere.</span>
+            </p>
+            <p style="max-width: 600px; margin: 0 auto; font-size: 14px; opacity: 0.8;">
+                Create a clean digital CV and personal workspace powered by live AI Agent analysis engines.
+            </p>
         </div>
     """, unsafe_allow_html=True)
 
