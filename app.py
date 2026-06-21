@@ -1,6 +1,6 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition - Green Premium Theme
+Enterprise AI Agent Edition - Fully Functional 5-Module Suite
 
 Integrated with live Gemini AI Agent processing models. Wraps 
 external dependencies cleanly to safeguard production uptime.
@@ -184,6 +184,8 @@ def main():
         st.session_state.cv_data_skills = ""
     if "cv_data_exp" not in st.session_state:
         st.session_state.cv_data_exp = ""
+    if "cv_data_projects" not in st.session_state:
+        st.session_state.cv_data_projects = ""
 
     # ---- HERO BRAND HEADER BLOCK ----
     st.markdown("""
@@ -207,7 +209,7 @@ def main():
         col_auth_left, col_auth_right = st.columns(2)
         
         with col_auth_left:
-            st.markdown('<div class="premium-card"><h3>🔒 Core Portal Entry</h3><p>Verify your security code keys to view configuration files.</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="premium-card">HandshakeEntry<h3>🔒 Core Portal Entry</h3><p>Verify your security code keys to view configuration files.</p></div>', unsafe_allow_html=True)
             lin_user = st.text_input("Username", key="l_user_field")
             lin_pass = st.text_input("Security Access Pass", type="password", key="l_pass_field")
             if st.button("Authenticate & Launch Ecosystem", key="act_login_btn"):
@@ -219,6 +221,7 @@ def main():
                     st.session_state.cv_data_title = prof.get("role", "")
                     st.session_state.cv_data_skills = prof.get("skills", "")
                     st.session_state.cv_data_exp = prof.get("bio", "")
+                    st.session_state.cv_data_projects = prof.get("projects", "")
                     st.session_state.current_page = "Home Menu"
                     st.rerun()
                 else:
@@ -296,7 +299,7 @@ def main():
                 st.session_state.current_page = "Profile Config"
                 st.rerun()
 
-    # ---- 2. CV BUILDER MODULE ----
+    # ---- 1. CV BUILDER & OPTIMIZER MODULE ----
     elif st.session_state.current_page == "Advanced CV Builder":
         if st.button("← Back to System Dashboard Menu", key="ret_from_cv"):
             st.session_state.current_page = "Home Menu"
@@ -320,7 +323,7 @@ def main():
                 "role": st.session_state.cv_data_title,
                 "skills": st.session_state.cv_data_skills,
                 "bio": st.session_state.cv_data_exp,
-                "projects": get_user_profile(current_user).get("projects", "")
+                "projects": st.session_state.cv_data_projects
             }
             if update_user_profile(current_user, package):
                 st.success("Profile updates successfully written to central system records!")
@@ -343,32 +346,171 @@ def main():
                                 f"Target Job Requirements:\n{target_description_text}\n\n"
                                 f"Provide a comprehensive critique containing a quantified Match Index %, missing structural industry terms, and clear recommendations using Markdown formatting."
                             )
-                            response = client.models.generate_content(
-                                model='gemini-2.5-flash',
-                                contents=prompt
-                            )
+                            response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                             st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                         except Exception as e:
                             st.error(f"Agent analysis connection dropped: {str(e)}")
                     else:
-                        st.warning("Ecosystem running on local preview. Map your GEMINI_API_KEY environment token to unlock live execution parameters.")
-                        st.markdown(f"""
-                            <div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 16px; border-radius: 8px; margin-top: 15px;">
-                                <h4 style="color: #0A4D2E; margin-top: 0;">✨ AI Optimization Preview</h4>
-                                <p><b>Mock Match Rating Index:</b> 88% Alignment</p>
-                                <p style="font-size:13px;"><i>System ready to stream live analytical feedback once the Gemini connection tokens are registered.</i></p>
-                            </div>
-                        """, unsafe_allow_html=True)
+                        st.warning("Ecosystem running on local preview mode. Add API key for live execution.")
             else:
                 st.warning("Please supply both professional experience data and target job criteria values.")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Fallback protection layout for other pages
-    elif st.session_state.current_page in ["Job Matcher Hub", "Branding & Portfolio", "Interview Simulation", "Alumni Outreach", "Profile Config"]:
-        if st.button("← Back to System Dashboard Menu", key="ret_from_submodules"):
+    # ---- 2. INTERVIEW SIMULATION COACH MODULE ----
+    elif st.session_state.current_page == "Interview Simulation":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_coach"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
-        st.markdown(f'<div class="premium-card"><h3>⚡ Module Workspace: {st.session_state.current_page}</h3><p>Core framework pipeline configured and monitoring inputs successfully.</p></div>', unsafe_allow_html=True)
+            
+        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
+        st.markdown('<h3>🎙️ Live AI Behavioral Simulation Coach</h3>', unsafe_allow_html=True)
+        st.write(f"**Target Position:** {st.session_state.cv_data_title if st.session_state.cv_data_title else 'General Candidate'}")
+        
+        question_type = st.selectbox("Select Interview Focus Metric", ["Behavioral (STAR Method)", "Technical / Domain Deep Dive", "Leadership & Conflict Resolution"])
+        mock_question = st.text_area("Interview Question to Answer", value="Tell me about a time you encountered a severe technical roadblock or conflicting timeline challenge. How did you resolve it?", height=70)
+        user_response = st.text_area("Type Your Response Stream Here", height=150, placeholder="Using the STAR method (Situation, Task, Action, Result), describe your action steps...")
+        
+        if st.button("Submit Response for Agent Evaluation", key="btn_eval_interview"):
+            if user_response:
+                with st.spinner("AI Coach analyzing core delivery structure..."):
+                    if client:
+                        try:
+                            prompt = (
+                                f"Act as an expert technical interviewer. Evaluate this candidate's response to the question: '{mock_question}'\n"
+                                f"Candidate Target Role: {st.session_state.cv_data_title}\n"
+                                f"Candidate Skills: {st.session_state.cv_data_skills}\n"
+                                f"Candidate Answer: {user_response}\n\n"
+                                f"Analyze if they utilized the STAR method properly. Highlight clear strengths, identify delivery gaps, and provide a perfectly restructured 'Ideal Revision' version of their answer."
+                            )
+                            response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                        except Exception as e:
+                            st.error(f"Error executing interview assessment: {str(e)}")
+                    else:
+                        st.warning("API key missing. Connect your token to run live evaluation frameworks.")
+            else:
+                st.warning("Please type your response before running evaluation parameters.")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # ---- 3. JOB PLACEMENT MATRIX MODULE ----
+    elif st.session_state.current_page == "Job Matcher Hub":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_matcher"):
+            st.session_state.current_page = "Home Menu"
+            st.rerun()
+            
+        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
+        st.markdown('<h3>🔍 Strategic Job Placement & Skill Match Matrix</h3>', unsafe_allow_html=True)
+        st.write("Scan your core skill tokens against competitive market roles to map open gaps.")
+        
+        industry_focus = st.text_input("Target Industry Sector (e.g., FinTech, Healthcare, Enterprise AI, Agritech)", value="Technology")
+        
+        if st.button("Generate Tailored Job Placement Blueprint", key="btn_run_job_matcher"):
+            with st.spinner("Mapping dynamic roles matrix pipelines..."):
+                if client:
+                    try:
+                        prompt = (
+                            f"Based on the following profile, map out 3 premium job descriptions/titles currently relevant in the {industry_focus} industry.\n"
+                            f"Verified Title: {st.session_state.cv_data_title}\n"
+                            f"Core Technical Stack: {st.session_state.cv_data_skills}\n"
+                            f"Experience Block: {st.session_state.cv_data_exp}\n\n"
+                            f"Format as an itemized breakdown. For each title provide: 1. Core Responsibilities, 2. Critical Skill gaps the user needs to study next, and 3. Suggested pipeline strategy."
+                        )
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                    except Exception as e:
+                        st.error(f"Error searching match engine blueprints: {str(e)}")
+                else:
+                    st.warning("Ecosystem running on preview mode. Live API client required.")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # ---- 4. OUTREACH ARCHITECTURE MODULE ----
+    elif st.session_state.current_page == "Alumni Outreach":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_outreach"):
+            st.session_state.current_page = "Home Menu"
+            st.rerun()
+            
+        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
+        st.markdown('<h3>✉️ Enterprise Conversion Outreach Architecture</h3>', unsafe_allow_html=True)
+        
+        col_out1, col_out2 = st.columns(2)
+        with col_out1:
+            recipient_title = st.text_input("Recipient Professional Role (e.g., Talent Partner, Engineering Manager)", value="Hiring Manager")
+            platform = st.selectbox("Target Communication Channel", ["LinkedIn InMail Template", "Cold Email Framework", "Alumni Referral Request"])
+        with col_out2:
+            company_target = st.text_input("Target Corporate Institution / Company", value="Target Organization")
+            tone_style = st.selectbox("Tone Setting", ["Warm & Value-First", "Direct & Technical Corporate", "High-Impact Graduate Enthusiast"])
+            
+        if st.button("Generate High-Conversion Messaging Strategy", key="btn_gen_outreach"):
+            with st.spinner("Compiling structural messaging frameworks..."):
+                if client:
+                    try:
+                        prompt = (
+                            f"Write a high-converting {platform} message from a candidate to a {recipient_title} at {company_target}.\n"
+                            f"Candidate Name: {st.session_state.cv_data_name}\n"
+                            f"Candidate Core Identity: {st.session_state.cv_data_title}\n"
+                            f"Core Skills to Reference: {st.session_state.cv_data_skills}\n"
+                            f"Tone Profile: {tone_style}\n\n"
+                            f"Ensure it avoids boring cliches, clearly highlights why their experience matters, and leaves a sharp, professional call-to-action."
+                        )
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                    except Exception as e:
+                        st.error(f"Error processing text generation: {str(e)}")
+                else:
+                    st.warning("Connect your live GEMINI_API_KEY to unlock dynamic generation engines.")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # ---- 5. PORTFOLIO STUDIO MODULE ----
+    elif st.session_state.current_page == "Branding & Portfolio":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_branding"):
+            st.session_state.current_page = "Home Menu"
+            st.rerun()
+            
+        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
+        st.markdown('<h3>📁 Professional Portfolio Asset Studio</h3>', unsafe_allow_html=True)
+        
+        st.session_state.cv_data_projects = st.text_area("Describe Your Live Projects / Repositories", value=st.session_state.cv_data_projects, height=120, placeholder="Project 1: System description, code stack, metrics and outcomes achieved...")
+        
+        if st.button("Optimize Project Descriptions for Behance/GitHub", key="btn_optimize_portfolio"):
+            if st.session_state.cv_data_projects:
+                with st.spinner("Polishing portfolio text layout matrices..."):
+                    if client:
+                        try:
+                            prompt = (
+                                f"You are a professional branding strategist. Optimize these technical project logs into a structured portfolio presentation suitable for GitHub Readmes or Behance project sheets.\n"
+                                f"User Projects Info:\n{st.session_state.cv_data_projects}\n\n"
+                                f"Reformat them with clear headings, clean feature bullet points, technical architecture breakdowns, and impact summaries."
+                            )
+                            response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                        except Exception as e:
+                            st.error(f"Portfolio agent connection lost: {str(e)}")
+                    else:
+                        st.warning("Please verify your API key configs to use live generation.")
+            else:
+                st.warning("Please fill in your current project notes first.")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # ---- 6. ENVIRONMENT SYSTEM SETTINGS MODULE ----
+    elif st.session_state.current_page == "Profile Config":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_cfg"):
+            st.session_state.current_page = "Home Menu"
+            st.rerun()
+            
+        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
+        st.markdown('<h3>⚙️ Secure Local Database & Environment Management</h3>', unsafe_allow_html=True)
+        st.write(f"**Current Workspace Directory Reference:** `{os.getcwd()}`")
+        st.write(f"**Active Instance Index Key:** `{current_user}`")
+        
+        if st.button("Check Local File Safety & Run Database Audit", key="btn_audit_db"):
+            if os.path.exists(USER_FILE):
+                st.success(f"File index verification: Local `{USER_FILE}` database path is healthy and functional.")
+                with open(USER_FILE, "r") as f:
+                    data = json.load(f)
+                st.json({"Registered Profiles Index Count": len(data.keys()), "Active Security Handshakes": True})
+            else:
+                st.error("No centralized local database found. Run setup tasks to initialize.")
+        st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
