@@ -157,7 +157,7 @@ def inject_custom_styles():
             color: white !important;
         }
         </style>
-    """, unsafe_unsafe_with_body=True)
+    """, unsafe_allow_html=True)
 
 # =============================================================================
 # CORE ENGINE UTILITIES
@@ -177,7 +177,7 @@ def generate_cv_critique(cv_text, job_description):
 def generate_networking_message(name, target_company, role_context):
     return f"""
     ### ✉️ Custom LinkedIn Connection Note (Under 300 Characters)
-    "Hi {name}, I'm deeply following your department's technological advancements at {target_co}. As an AI and Product Management professional trained via the 3MTT cohort, I'd love to connect and trace your team's upcoming innovation phases. Thanks!"
+    "Hi {name}, I'm deeply following your department's technological advancements at {target_company}. As an AI and Product Management professional trained via the 3MTT cohort, I'd love to connect and trace your team's upcoming innovation phases. Thanks!"
     
     ---
     ### 📧 High-Impact Professional Email Outreach
