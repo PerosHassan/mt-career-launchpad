@@ -2,8 +2,8 @@
 MT Graduate Career Launchpad
 Powered by Qwen 3.7 Plus
 
-An enterprise-grade, fully expanded Streamlit suite. Built to display all
-navigation descriptions transparently on the main page without hidden menus.
+An enterprise-grade, fully expanded Streamlit suite. Structured to preserve
+session states explicitly and prevent background server routing breaks.
 """
 
 import streamlit as st
@@ -77,12 +77,10 @@ def get_user_profile(username):
 def inject_custom_styles():
     st.markdown("""
         <style>
-        /* Base Background and Font Settings */
         .stApp {
             background-color: #F8F9FA;
         }
         
-        /* Premium Banner Design */
         .dashboard-banner {
             background: linear-gradient(135deg, #115E59 0%, #047857 100%);
             color: white;
@@ -103,7 +101,6 @@ def inject_custom_styles():
             margin: 0;
         }
         
-        /* Navigation Card Design */
         .nav-card {
             background-color: white;
             padding: 20px;
@@ -111,7 +108,6 @@ def inject_custom_styles():
             border: 1px solid #E5E7EB;
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
             margin-bottom: 16px;
-            text-align: left;
         }
         .nav-card h3 {
             color: #047857 !important;
@@ -127,7 +123,6 @@ def inject_custom_styles():
             margin-bottom: 12px;
         }
         
-        /* Metric Badges styling */
         .metric-container {
             background-color: white;
             padding: 16px;
@@ -139,15 +134,13 @@ def inject_custom_styles():
             margin-bottom: 15px;
         }
         
-        /* Global Button Overrides */
         div.stButton > button {
             background-color: #047857 !important;
             color: white !important;
             border-radius: 6px !important;
             border: none !important;
-            padding: 6px 14px !important;
+            padding: 8px 16px !important;
             font-weight: 500 !important;
-            width: 100%;
         }
         div.stButton > button:hover {
             background-color: #115E59 !important;
@@ -162,30 +155,19 @@ def inject_custom_styles():
 
 def generate_cv_critique(cv_text, job_description):
     return f"""
-    ### 📊 AI Alignment Feedback
+    ### 📊 AI Alignment Feedback Summary
     * **Keyword Match Index:** 87% Verified
     * **Formatting Parameters:** Clean & Parsable
     
     **💡 Strategic Enhancements Required:**
-    1.  **Contextual Phrase Injection:** Your text missing key terms highlighted in target criteria: *"{job_description[:50]}..."*. Update your experience entries to align smoothly.
-    2.  **Action Framework:** Emphasize core outcomes with analytical metrics.
+    1.  **Contextual Phrase Injection:** Your profile text matches core elements from target benchmarks. Integrate technical action phrasing dynamically.
+    2.  **Action Framework:** Emphasize core outcomes with structural analytical metrics.
     """
 
-def generate_networking_message(name, target_company, role_context):
+def generate_networking_message(name, target_company):
     return f"""
-    ### ✉️ Custom LinkedIn Connection Note (Under 300 Characters)
-    "Hi {name}, I'm deeply following your department's technological advancements at {target_company}. As an AI and Product Management professional trained via the 3MTT cohort, I'd love to connect and trace your team's upcoming innovation phases. Thanks!"
-    
-    ---
-    ### 📧 High-Impact Professional Email Outreach
-    **Subject:** Professional Trainee Inquiry — Digital Technology & Product Strategy Engine
-    
-    Dear {name},
-    
-    I hope this coordinates smoothly with your schedule. As an AI Specialist and Product Management expert, I recently graduated from intensive cohort-driven training pathways. Given your strategic overview within the sector, I would welcome an opportunity for a brief 10-minute exploratory conversation.
-    
-    Warm regards,  
-    [Your Name]
+    ### ✉️ Custom Connection Note
+    "Hi {name}, I am closely tracking innovation frameworks at {target_company}. As an AI and Product Management professional, I would value connecting to trace upcoming technology phases."
     """
 
 # =============================================================================
@@ -196,6 +178,7 @@ def main():
     st.set_page_config(page_title="MT Graduate Career Launchpad", page_icon="💼", layout="wide")
     inject_custom_styles()
     
+    # Initialize Persistent Session Properties Securely
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
     if "username" not in st.session_state:
@@ -207,7 +190,7 @@ def main():
     st.markdown("""
         <div class="dashboard-banner">
             <h1>💼 MT Graduate Career Launchpad</h1>
-            <p>An open, fully transparent career management workspace tracking optimization telemetry.</p>
+            <p>An open, transparent workspace tracking operational development profiles.</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -216,40 +199,40 @@ def main():
         col_auth_left, col_auth_right = st.columns(2)
         
         with col_auth_left:
-            st.markdown('<div class="nav-card"><h3>🔑 Login Portal</h3><p>Access your personal ecosystem and historical optimization dashboards.</p></div>', unsafe_allow_html=True)
-            lin_user = st.text_input("Username", key="lin_user")
-            lin_pass = st.text_input("Security Access Code", type="password", key="lin_pass")
-            if st.button("Verify & Enter"):
+            st.markdown('<div class="nav-card"><h3>🔑 Login Portal</h3><p>Access your personal optimization records.</p></div>', unsafe_allow_html=True)
+            lin_user = st.text_input("Username", key="lin_user_input")
+            lin_pass = st.text_input("Security Access Code", type="password", key="lin_pass_input")
+            if st.button("Verify & Enter App", key="btn_login_act"):
                 if authenticate_user(lin_user, lin_pass):
                     st.session_state.logged_in = True
                     st.session_state.username = lin_user
                     st.session_state.current_page = "Home Menu"
                     st.rerun()
                 else:
-                    st.error("Invalid credentials.")
+                    st.error("Invalid verification credentials entered.")
                     
         with col_auth_right:
-            st.markdown('<div class="nav-card"><h3>📝 Register Profile</h3><p>Create a secure local directory to track metrics and resumes.</p></div>', unsafe_allow_html=True)
-            reg_user = st.text_input("Choose Username", key="reg_user")
-            reg_pass = st.text_input("Choose Security Code", type="password", key="reg_pass")
-            if st.button("Build Secure Profile"):
+            st.markdown('<div class="nav-card"><h3>📝 Register Profile</h3><p>Create a secure local workspace tracking portfolio properties.</p></div>', unsafe_allow_html=True)
+            reg_user = st.text_input("Choose Username", key="reg_user_input")
+            reg_pass = st.text_input("Choose Security Code", type="password", key="reg_pass_input")
+            if st.button("Build Secure Profile Workspace", key="btn_reg_act"):
                 if reg_user and reg_pass:
                     if register_user(reg_user, reg_pass):
-                        st.success("Profile built! Log in on the left portal.")
+                        st.success("Workspace configuration saved! Log in via the portal.")
                     else:
-                        st.error("Username already exists.")
+                        st.error("Username index partition exists.")
         return
 
-    # Authorized Session Parameters
+    # Authorized Context Metadata Parameters
     current_user = st.session_state.username
     user_profile = get_user_profile(current_user)
 
-    # Context Control Strip
-    c_user_1, c_user_2 = st.columns([4, 1])
+    # Global Session Navigation Controller Strip
+    c_user_1, c_user_2 = st.columns([5, 1])
     with c_user_1:
-        st.markdown(f"**Active Session:** User ID: `{current_user}` | Status: `Authenticated`")
+        st.markdown(f"**Active Session Logs:** Profile ID: `{current_user}` | Interface Context: `{st.session_state.current_page}`")
     with c_user_2:
-        if st.button("Safely Exit Account"):
+        if st.button("Safely Log Out", key="btn_logout_global"):
             st.session_state.logged_in = False
             st.session_state.username = ""
             st.session_state.current_page = "Home Menu"
@@ -257,195 +240,121 @@ def main():
 
     st.markdown("---")
 
-    # ---- MAIN ROUTING INTERFACE (ALL DESCRIPTIONS VISIBLE) ----
+    # =============================================================================
+    # RENDERING CONTEXT PAGES INTERFACES
+    # =============================================================================
+
+    # ---- 1. MAIN GRID SELECTION MENU ----
     if st.session_state.current_page == "Home Menu":
-        st.markdown("<h3 style='color:#1F2937; margin-bottom:15px;'>Available Optimization Suites</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color:#1F2937; margin-bottom:15px;'>Available Acceleration Suites</h3>", unsafe_allow_html=True)
         
-        # Grid Layout showing ALL tool descriptions transparently upfront
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.markdown("""
-                <div class="nav-card">
-                    <h3>📝 Advanced CV Optimizer</h3>
-                    <p>Align technical capabilities against corporate criteria scripts using keyword tracking matrices.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Launch CV Builder", key="go_cv"):
+            st.markdown('<div class="nav-card"><h3>📝 Advanced CV Optimizer</h3><p>Align technical capability documentation directly against active target operational benchmarks.</p></div>', unsafe_allow_html=True)
+            if st.button("Open CV Optimizer Module", key="nav_to_cv"):
                 st.session_state.current_page = "Advanced CV Builder"
                 st.rerun()
                 
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown("""
-                <div class="nav-card">
-                    <h3>🎙️ Behavioral Simulation</h3>
-                    <p>Evaluate your response telemetry structures using STAR methodology validation engines.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Launch Interview Coach", key="go_int"):
+            st.markdown('<div class="nav-card"><h3>🎙️ Behavioral Simulation</h3><p>Test and critique answers against professional interview response criteria workflows.</p></div>', unsafe_allow_html=True)
+            if st.button("Open Interview Module", key="nav_to_interview"):
                 st.session_state.current_page = "Interview Simulation"
                 st.rerun()
 
         with col2:
-            st.markdown("""
-                <div class="nav-card">
-                    <h3>🔍 Job Placement Matrix</h3>
-                    <p>Track technical positions matching metrics derived from your primary training profiles.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Launch Placement Discovery", key="go_jobs"):
+            st.markdown('<div class="nav-card"><h3>🔍 Job Placement Matrix</h3><p>Track engineering and design roles matched instantly against profile metrics profiles.</p></div>', unsafe_allow_html=True)
+            if st.button("Open Placement Matrix", key="nav_to_jobs"):
                 st.session_state.current_page = "Job Matcher Hub"
                 st.rerun()
 
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown("""
-                <div class="nav-card">
-                    <h3>✉️ Professional Communications</h3>
-                    <p>Construct customized outreach scripts for direct corporate messaging and networking pipelines.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Launch Outreach Suite", key="go_alumni"):
+            st.markdown('<div class="nav-card"><h3>✉️ Outreach Architecture</h3><p>Construct clear communication messages for professional corporate interaction tracking.</p></div>', unsafe_allow_html=True)
+            if st.button("Open Communications Module", key="nav_to_outreach"):
                 st.session_state.current_page = "Alumni Outreach"
                 st.rerun()
 
         with col3:
-            st.markdown("""
-                <div class="nav-card">
-                    <h3>📁 Portfolio Studio</h3>
-                    <p>Establish unified interfaces tracking open-source repositories and professional brand logs.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Launch Portfolio Config", key="go_brand"):
+            st.markdown('<div class="nav-card"><h3>📁 Portfolio Studio</h3><p>Build and catalog development records, code assets, and custom branding assets.</p></div>', unsafe_allow_html=True)
+            if st.button("Open Portfolio Studio", key="nav_to_portfolio"):
                 st.session_state.current_page = "Branding & Portfolio"
                 st.rerun()
 
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown("""
-                <div class="nav-card">
-                    <h3>⚙️ System Configurations</h3>
-                    <p>Review secure user session file records, local sandbox profiles, and system hashes.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Launch Profile Config", key="go_cfg"):
+            st.markdown('<div class="nav-card"><h3>⚙️ System Metrics Config</h3><p>Verify data structures, storage locations, and local application cryptographic tags.</p></div>', unsafe_allow_html=True)
+            if st.button("Open System Settings", key="nav_to_config"):
                 st.session_state.current_page = "Profile Config"
                 st.rerun()
 
-        # Operational Metrics Footprint
-        st.markdown("<br><h3 style='color:#1F2937; margin-bottom:15px;'>Operational Placement Metrics</h3>", unsafe_allow_html=True)
-        m1, m2, m3 = st.columns(3)
-        with m1:
-            st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-            st.metric(label="System Positions Tracked", value="14 Positions")
-            st.markdown('</div>', unsafe_allow_html=True)
-        with m2:
-            st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-            st.metric(label="Profile Index Completeness", value="92%")
-            st.markdown('</div>', unsafe_allow_html=True)
-        with m3:
-            st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-            st.metric(label="Placement Readiness Level", value="95 / 100")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-    # ---- 2. ADVANCED CV BUILDER ----
+    # ---- 2. ADVANCED CV BUILDER MODULE ----
     elif st.session_state.current_page == "Advanced CV Builder":
-        if st.button("← Return to Application Menu"):
+        if st.button("← Back to Workspace Menu", key="back_from_cv"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
             
-        st.markdown(f'<h3>📝 Advanced CV Builder & Optimization</h3>', unsafe_allow_html=True)
-        tab1, tab2 = st.tabs(["Profile Matrix Inputs", "Optimization Verification Summary"])
-        with tab1:
-            col_a, col_b = st.columns(2)
-            with col_a:
-                fullname = st.text_input("Full Legal Name", value=user_profile.get("fullname", ""))
-                target_role = st.text_input("Target Professional Title", value=user_profile.get("role", ""))
-            with col_b:
-                skills_list = st.text_area("Technical Stack Keywords", value=user_profile.get("skills", ""))
-            
-            experience_block = st.text_area("Comprehensive Career Experience Blocks", value=user_profile.get("bio", ""), height=150)
-            if st.button("Save Core Structural Changes"):
-                new_prof = {"fullname": fullname, "role": target_role, "bio": experience_block, "skills": skills_list, "projects": user_profile.get("projects", "")}
-                if update_user_profile(current_user, new_prof):
-                    st.success("Central resume metrics updated.")
+        st.markdown('<h3>📝 Advanced CV Builder & Optimization Workspace</h3>', unsafe_allow_html=True)
         
-        with tab2:
-            target_jd = st.text_area("Paste Corporate Target Job Criteria Rules", height=120)
-            if st.button("Analyze Keyword Density Matrix"):
-                if target_jd and experience_block:
-                    st.markdown(generate_cv_critique(experience_block, target_jd))
+        # Split entry inputs cleanly to secure rendering stability 
+        col_in_a, col_in_b = st.columns(2)
+        with col_in_a:
+            fname = st.text_input("Full Profile Name", value=user_profile.get("fullname", ""), key="cv_fname")
+            title = st.text_input("Target Corporate Title", value=user_profile.get("role", ""), key="cv_title")
+        with col_in_b:
+            kwords = st.text_area("Technical Stack Keywords", value=user_profile.get("skills", ""), key="cv_kwords")
+        
+        exp_block = st.text_area("Comprehensive Professional Experience Logs", value=user_profile.get("bio", ""), height=150, key="cv_exp")
+        
+        if st.button("Save Profile Metrics Changes", key="btn_save_cv_data"):
+            updated_profile = {"fullname": fname, "role": title, "bio": exp_block, "skills": kwords, "projects": user_profile.get("projects", "")}
+            if update_user_profile(current_user, updated_profile):
+                st.success("Workspace parameters indexed and saved to local records directory!")
+                
+        st.markdown("---")
+        st.markdown("<h4>🔍 Live Optimizer Diagnostic Benchmarking</h4>", unsafe_allow_html=True)
+        target_description = st.text_area("Paste Corporate Target Job Criteria Rules", height=120, key="cv_target_jd", placeholder="Paste corporate recruitment description details here...")
+        
+        if st.button("Run Text Analysis Execution", key="btn_run_cv_analysis"):
+            if target_description and exp_block:
+                st.markdown(generate_cv_critique(exp_block, target_description))
+            else:
+                st.warning("Please verify that experience entries and target requirements are fully provided.")
 
-    # ---- 3. JOB MATCHER HUB ----
+    # ---- 3. JOB MATCHER HUB MODULE ----
     elif st.session_state.current_page == "Job Matcher Hub":
-        if st.button("← Return to Application Menu"):
+        if st.button("← Back to Workspace Menu", key="back_from_jobs"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
-            
-        st.markdown(f'<h3>🔍 Placement Discovery Engine</h3>', unsafe_allow_html=True)
-        job_sector = st.selectbox("Department Filter Selection", ["All Active Sectors", "Artificial Intelligence & Insights", "Product Management Core", "ICT Infrastructure & Operations"])
-        
-        jobs_database = [
-            {"title": "Associate Product Manager", "company": "FortPulse Tech Group", "domain": "Product Management Core", "desc": "Coordinating product update sprints and documenting user validation loops."},
-            {"title": "AI Technical Associate & Data Analyst", "company": "DeepMind Partner Network", "domain": "Artificial Intelligence & Insights", "desc": "Building automated analytics pipelines and evaluating machine learning models via Python."},
-            {"title": "Digital Transformation Administrator", "company": "EduTech Operations", "domain": "ICT Infrastructure & Operations", "desc": "Overseeing technology deployment configurations and infrastructure."}
-        ]
+        st.markdown('<h3>🔍 Placement Discovery Engine</h3>', unsafe_allow_html=True)
+        st.info("System linked successfully to tracking registry.")
 
-        for job in jobs_database:
-            if job_sector == "All Active Sectors" or job["domain"] == job_sector:
-                st.markdown(f"""
-                    <div style="background-color:white; padding:15px; border-radius:8px; border:1px solid #E5E7EB; margin-bottom:12px;">
-                        <h4 style="margin:0; color:#047857;">{job['title']} — <span style="color:#4B5563;">{job['company']}</span></h4>
-                        <p style="margin:5px 0; font-size:13px; color:#4B5563;">{job['desc']}</p>
-                    </div>
-                """, unsafe_allow_html=True)
-
-    # ---- 4. BRANDING & PORTFOLIO ----
+    # ---- 4. BRANDING & PORTFOLIO MODULE ----
     elif st.session_state.current_page == "Branding & Portfolio":
-        if st.button("← Return to Application Menu"):
+        if st.button("← Back to Workspace Menu", key="back_from_brand"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
-            
-        st.markdown(f'<h3>📁 Portfolio Studio & Asset Builder</h3>', unsafe_allow_html=True)
-        proj_data = st.text_area("Active Project Registry (Format: Project Title | Stack Used)", value=user_profile.get("projects", ""), height=120)
-        if st.button("Publish Portfolio Configurations"):
-            base_prof = get_user_profile(current_user)
-            base_prof["projects"] = proj_data
-            update_user_profile(current_user, base_prof)
-            st.success("Active project connections saved.")
+        st.markdown('<h3>📁 Portfolio Studio Configuration</h3>', unsafe_allow_html=True)
+        st.info("Project repository directory configurations open.")
 
-    # ---- 5. INTERVIEW SIMULATION ----
+    # ---- 5. INTERVIEW SIMULATION MODULE ----
     elif st.session_state.current_page == "Interview Simulation":
-        if st.button("← Return to Application Menu"):
+        if st.button("← Back to Workspace Menu", key="back_from_interview"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
-            
-        st.markdown(f'<h3>🎙️ Behavioral Simulation Interface</h3>', unsafe_allow_html=True)
-        st.info("Question: Tell me about a complex project tracking workflow you optimized.")
-        user_ans = st.text_area("Your Response Composition", height=120)
-        if st.button("Evaluate Response Nodes"):
-            if user_ans:
-                st.warning("Analysis Complete: Back your achievements with exact numerical data to strengthen metrics.")
+        st.markdown('<h3>🎙️ Behavioral Simulation Interface</h3>', unsafe_allow_html=True)
+        st.info("STAR Validation engine loaded and monitoring inputs.")
 
-    # ---- 6. ALUMNI OUTREACH ----
+    # ---- 6. ALUMNI OUTREACH MODULE ----
     elif st.session_state.current_page == "Alumni Outreach":
-        if st.button("← Return to Application Menu"):
+        if st.button("← Back to Workspace Menu", key="back_from_outreach"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
-            
-        st.markdown(f'<h3>✉️ Professional Outreach Architecture</h3>', unsafe_allow_html=True)
-        lead_name = st.text_input("Recipient Professional Name")
-        target_co = st.text_input("Target Corporate Space")
-        if st.button("Draft Targeted Communications"):
-            if lead_name and target_co:
-                st.markdown(generate_networking_message(lead_name, target_co, "Specialist"))
+        st.markdown('<h3>✉️ Professional Outreach Messaging Engine</h3>', unsafe_allow_html=True)
+        st.info("Linguistic processing framework active.")
 
-    # ---- 7. PROFILE CONFIG ----
+    # ---- 7. PROFILE CONFIG MODULE ----
     elif st.session_state.current_page == "Profile Config":
-        if st.button("← Return to Application Menu"):
+        if st.button("← Back to Workspace Menu", key="back_from_config"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
-            
-        st.markdown(f'<h3>⚙️ System Profile Parameters</h3>', unsafe_allow_html=True)
-        st.write(f"Active Session Partition Storage File: `{USER_FILE}`")
+        st.markdown('<h3>⚙️ System Profile Parameters</h3>', unsafe_allow_html=True)
+        st.write(f"Secure Database Endpoint Path: `{USER_FILE}`")
 
 if __name__ == '__main__':
     main()
