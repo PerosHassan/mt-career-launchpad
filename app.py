@@ -1,23 +1,30 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition
+Enterprise AI Agent Edition - Crash Protected
 
-An advanced, stable Streamlit workspace integrated with live Gemini AI Agent 
-processing models for automated career profile optimization.
+Integrated with live Gemini AI Agent processing models. Wraps 
+external dependencies cleanly to safeguard production uptime.
 """
 
 import streamlit as st
 import json
 import hashlib
 import os
-from google import genai
-from google.genai import types
+
+# Safe wrapper for the Google GenAI SDK to prevent app-breaking ImportErrors
+try:
+    from google import genai
+    AI_LIBRARY_AVAILABLE = True
+except ImportError:
+    AI_LIBRARY_AVAILABLE = False
 
 # =============================================================================
 # INITIALIZE LIVE AI AGENT ENGINE
 # =============================================================================
 def get_ai_agent():
     """Initializes the official Google GenAI client using secure environment tokens."""
+    if not AI_LIBRARY_AVAILABLE:
+        return None
     api_key = os.environ.get("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
     if not api_key:
         return None
@@ -131,19 +138,6 @@ def inject_premium_styles():
             margin-bottom: 12px !important;
         }
         
-        .feature-row {
-            display: flex;
-            align-items: flex-start;
-            margin: 16px 0;
-            color: #4B5563;
-        }
-        .feature-icon {
-            color: #0226E3;
-            font-size: 18px;
-            margin-right: 12px;
-            margin-top: 2px;
-        }
-        
         div.stButton > button {
             background: linear-gradient(90deg, #0226E3 0%, #571CE3 100%) !important;
             color: white !important;
@@ -201,6 +195,10 @@ def main():
         </div>
     """, unsafe_allow_html=True)
 
+    # Check for System Dependency Warning
+    if not AI_LIBRARY_AVAILABLE:
+        st.error("🚨 System Dependency Error: 'google-genai' is missing from requirements.txt. Please add it to your repository so Streamlit Cloud can install it.")
+
     # ---- UNAUTHORIZED SYSTEM PORTAL ----
     if not st.session_state.logged_in:
         col_auth_left, col_auth_right = st.columns(2)
@@ -245,7 +243,7 @@ def main():
         if client:
             st.markdown(f"<span style='color: white;'>🟢 <b>AI Agent Cloud Connected:</b> `ID: {current_user}` | Mode: `Live Production Engines Active`</span>", unsafe_allow_html=True)
         else:
-            st.markdown(f"<span style='color: #FEE2E2;'>⚠️ <b>AI Offline Mode:</b> Running on fallback mocks. Please configure your <code>GEMINI_API_KEY</code> token.</span>", unsafe_allow_html=True)
+            st.markdown(f"<span style='color: #FEE2E2;'>⚠️ <b>AI Preview Mode:</b> Please configure your <code>GEMINI_API_KEY</code> token inside Streamlit Secrets to take this agent live.</span>", unsafe_allow_html=True)
     with c_status_right:
         if st.button("Disconnect Agent", key="btn_global_disconnect"):
             st.session_state.logged_in = False
@@ -260,7 +258,6 @@ def main():
     # =============================================================================
     if st.session_state.current_page == "Home Menu":
         st.markdown("<h3 style='color: white; font-weight:600; margin-bottom:16px;'>Active Suite Navigation Modules</h3>", unsafe_allow_html=True)
-        
         col1, col2, col3 = st.columns(3)
         
         with col1:
@@ -296,7 +293,7 @@ def main():
                 st.session_state.current_page = "Profile Config"
                 st.rerun()
 
-    # ---- 2. CV BUILDER MODULE (LIVE PRODUCTION ENGINE Integration) ----
+    # ---- 2. CV BUILDER MODULE ----
     elif st.session_state.current_page == "Advanced CV Builder":
         if st.button("← Back to System Dashboard Menu", key="ret_from_cv"):
             st.session_state.current_page = "Home Menu"
@@ -326,7 +323,6 @@ def main():
                 st.success("Profile updates successfully written to central system records!")
         st.markdown('</div>', unsafe_allow_html=True)
         
-        # Diagnostic analysis panel below
         st.markdown('<div class="premium-card">', unsafe_allow_html=True)
         st.markdown('<h3>📊 Live Agent Alignment & ATS Diagnostics</h3>', unsafe_allow_html=True)
         target_description_text = st.text_area("Paste Target Job Requirements Specifications", key="in_target_description_text", height=130, placeholder="Paste corporate job criteria details here...")
@@ -336,7 +332,6 @@ def main():
                 with st.spinner("Agent running real-time profile diagnostic match..."):
                     if client:
                         try:
-                            # Construct exact structural prompt instructions for the live agent model
                             prompt = (
                                 f"You are an elite corporate Talent Acquisition AI Agent. Review this user profile and experience data against the target job requirements.\n\n"
                                 f"User Target Role: {st.session_state.cv_data_title}\n"
@@ -353,7 +348,6 @@ def main():
                         except Exception as e:
                             st.error(f"Agent analysis connection dropped: {str(e)}")
                     else:
-                        # Fallback mode mock layout if token hasn't been mapped yet
                         st.warning("Ecosystem running on local preview. Map your GEMINI_API_KEY environment token to unlock live execution parameters.")
                         st.markdown(f"""
                             <div style="background: #EEF2FF; border-left: 5px solid #0226E3; padding: 16px; border-radius: 8px; margin-top: 15px;">
@@ -366,7 +360,7 @@ def main():
                 st.warning("Please supply both professional experience data and target job criteria values.")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Remaining navigation routing views stay sandboxed safely to prevent frame collapse
+    # Fallback protection layout for other pages
     elif st.session_state.current_page in ["Job Matcher Hub", "Branding & Portfolio", "Interview Simulation", "Alumni Outreach", "Profile Config"]:
         if st.button("← Back to System Dashboard Menu", key="ret_from_submodules"):
             st.session_state.current_page = "Home Menu"
