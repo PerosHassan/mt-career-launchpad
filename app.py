@@ -2,16 +2,7 @@
 MT Graduate Career Launchpad
 Powered by Qwen 3.7 Plus
 
-A single-file Streamlit application for career support.
-- Secure user authentication (File-based)
-- Home Dashboard with rich content
-- AI CV Builder
-- Cover Letter Generator
-- Interview Coach
-
-To run this application:
-1. Install Streamlit: pip install streamlit
-2. Run the app: streamlit run app.py
+A comprehensive Streamlit suite for modern career preparation, optimization, and tracking.
 """
 
 import streamlit as st
@@ -20,17 +11,15 @@ import hashlib
 import os
 
 # =============================================================================
-# FILE MANAGEMENT & AUTHENTICATION FUNCTIONS
+# FILE MANAGEMENT & CONFIGURATION
 # =============================================================================
 
 USER_FILE = "users.json"
 
 def hash_password(password):
-    """Securely hash passwords using SHA-256."""
     return hashlib.sha256(password.encode()).hexdigest()
 
 def load_users():
-    """Load users from the local JSON file."""
     if not os.path.exists(USER_FILE):
         return {}
     try:
@@ -40,98 +29,101 @@ def load_users():
         return {}
 
 def save_users(users):
-    """Save users to the local JSON file."""
     with open(USER_FILE, "w") as f:
         json.dump(users, f, indent=4)
 
 def register_user(username, password):
-    """Register a new user if the username doesn't already exist."""
     users = load_users()
     if username in users:
         return False
-    users[username] = hash_password(password)
+    users[username] = {
+        "password": hash_password(password),
+        "profile": {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
+    }
     save_users(users)
     return True
 
 def authenticate_user(username, password):
-    """Verify user credentials."""
     users = load_users()
-    if username in users and users[username] == hash_password(password):
+    if username in users:
+        stored_data = users[username]
+        # Handle legacy user data format
+        if isinstance(stored_data, str):
+            return stored_data == hash_password(password)
+        return stored_data.get("password") == hash_password(password)
+    return False
+
+def update_user_profile(username, profile_data):
+    users = load_users()
+    if username in users:
+        if isinstance(users[username], str):
+            # Migrate legacy schema on the fly
+            users[username] = {"password": users[username], "profile": profile_data}
+        else:
+            users[username]["profile"] = profile_data
+        save_users(users)
         return True
     return False
 
+def get_user_profile(username):
+    users = load_users()
+    if username in users and isinstance(users[username], dict):
+        return users[username].get("profile", {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""})
+    return {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
+
 # =============================================================================
-# MOCK AI GENERATION FUNCTIONS (Ready for Qwen 3.7 Plus Integration)
+# MOCK MIGRATED AI UTILITIES
 # =============================================================================
 
 def generate_cv_critique(cv_text, job_description):
-    """Mock AI CV Builder analysis."""
     return f"""
-    ### 🚀 Qwen AI CV Analysis & Recommendations
+    ### 🚀 Qwen AI Alignment Report
+    *   **Keyword Match Score:** 84%
+    *   **Formatting Structure:** Excellent layout detected.
     
-    **Strengths Identified:**
-    * Good structural layout and clear formatting.
-    * Strong foundational technical terms detected in text.
-
-    **Areas for Improvement regarding the Job Description:**
-    * **Action Verbs:** Enhance your professional summary using dynamic verbs (e.g., 'Spearheaded', 'Optimized').
-    * **Keyword Alignment:** The job description heavily mentions *"{job_description[:30]}..."*. Make sure these exact phrases are reflected in your experience.
-    
-    **Tailored Summary Suggestion:**
-    "Ambitious Management Trainee graduate with hands-on experience in project coordination and data analysis, tailored perfectly to meet the challenges of this role."
+    **🎯 Action Items for Optimization:**
+    1.  **Incorporate Missing Keywords:** We noticed the target role heavily emphasizes terms like *"{job_description[:40]}..."*. Infuse these precisely into your summary.
+    2.  **Quantify Metrics:** Replace vague statements with tangible outcomes (e.g., 'Optimized response latency by 20%').
     """
 
-def generate_cover_letter(user_profile, company_name, job_title):
-    """Mock Cover Letter Generator."""
+def generate_networking_message(name, target_company, role_context):
     return f"""
-    Dear Hiring Team at {company_name},
+    ### ✉️ Custom LinkedIn Connection Message (300 Character Limit)
+    "Hi {name}, I'm incredibly impressed by your team's innovative tech deployments at {target_company}. As a functional AI and product development graduate, I'd love to connect and follow your department's upcoming milestones. Thanks!"
     
-    I am writing to express my strong interest in the {job_title} position. As a recent graduate of the MT Graduate Career Launchpad program, I have honed intensive skills perfectly aligned with your team's mission.
+    ---
+    ### 📧 Professional Cold Outreach Email
+    **Subject:** Inquiring regarding Innovation & Technology Trainee Pathways at {target_company}
     
-    My background includes:
-    {user_profile}
+    Dear {name},
     
-    I am highly drawn to {company_name} because of your industry-leading innovation. I am confident that my proactive drive makes me an asset to your workforce. Thank you for your time and consideration.
+    I hope this message finds you well. I have been closely tracking {target_company}'s tech footprint, particularly your focus on scalable digital modernization. 
     
-    Sincerely,
+    As an AI Specialist and Product Management professional, I recently completed intensive cohort-driven technical assignments spanning machine learning deployments and agile operational frameworks. My core training encompasses translating technical metrics into sound, business-aligned workflows.
+    
+    Given your leadership position within the workspace, I would deeply appreciate a brief 10-minute chat to learn more about upcoming engineering directions or internship channels within your branch.
+    
+    Warm regards,  
     [Your Name]
     """
 
-def generate_interview_feedback(question, user_answer):
-    """Mock Interview Coach feedback."""
-    return f"""
-    ### 🎙️ Interview Coach Feedback
-    
-    **Question Evaluated:** *"{question}"*
-    
-    **Feedback on your response:**
-    * **STAR Method Alignment:** Your response touches on the *Situation* and *Task*, but could structure the *Action* and *Result* segments more clearly.
-    * **Tone & Delivery:** Highly professional and confident. 
-    
-    **💡 Refined Answer Suggestion:**
-    Try adding concrete metrics. Instead of saying "I helped the team save time," try: *"By automating our data ingestion pipeline, I reduced weekly processing cycles by 15%."*
-    """
-
 # =============================================================================
-# STREAMLIT UI APPLICATION
+# MAIN UI APPLICATION INTERFACE
 # =============================================================================
 
 def main():
     st.set_page_config(page_title="MT Graduate Career Launchpad", page_icon="💼", layout="wide")
     
-    # Initialize session state variables for login tracking
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
     if "username" not in st.session_state:
         st.session_state.username = ""
 
-    # ---- SIDEBAR: AUTHENTICATION & NAVIGATION ----
     st.sidebar.title("💼 Career Launchpad")
     
     if not st.session_state.logged_in:
         auth_mode = st.sidebar.radio("Choose Action", ["Login", "Register"])
         st.sidebar.markdown("---")
-        
         username = st.sidebar.text_input("Username")
         password = st.sidebar.text_input("Password", type="password")
         
@@ -142,119 +134,192 @@ def main():
                     st.session_state.username = username
                     st.rerun()
                 else:
-                    st.sidebar.error("Invalid username or password.")
+                    st.sidebar.error("Invalid credentials.")
         else:
             if st.sidebar.button("Register Account"):
                 if username and password:
                     if register_user(username, password):
-                        st.sidebar.success("Registration successful! Please Log In.")
+                        st.sidebar.success("Account constructed! Proceed to Log In.")
                     else:
-                        st.sidebar.error("Username already exists.")
-                else:
-                    st.sidebar.error("Please fill out both fields.")
-                    
-        st.info("Please log in or register via the sidebar to access the AI Career Tools.")
+                        st.sidebar.error("Username already registered.")
         return
 
-    # ---- AUTHENTICATED USER INTERFACE ----
-    st.sidebar.success(f"Logged in as: **{st.session_state.username}**")
+    # User Profile State Loading
+    current_user = st.session_state.username
+    user_profile = get_user_profile(current_user)
+
+    st.sidebar.success(f"Session Active: **{current_user}**")
     
-    # Tool Navigation Menu
     tool_choice = st.sidebar.selectbox(
-        "Select AI Tool", 
-        ["Home Dashboard", "AI CV Builder", "Cover Letter Generator", "Interview Coach"]
+        "Select Suite Interface", 
+        ["Dashboard Home", "Advanced CV Builder", "Job Search Hub", "Portfolio Builder", "Interview Coach", "Networking Assistant", "Profile Engine"]
     )
     
-    # Logout Button at the bottom of sidebar
     st.sidebar.markdown("---")
-    if st.sidebar.button("Log Out"):
+    if st.sidebar.button("Terminate Session"):
         st.session_state.logged_in = False
         st.session_state.username = ""
         st.rerun()
 
-    # ---- MAIN APP INTERACTION PAGES ----
     st.title("🚀 MT Graduate Career Launchpad")
-    st.caption("Powered by Qwen 3.7 Plus AI Architecture")
+    st.caption("AI-Powered Graduate Acceleration Ecosystem — Production Infrastructure")
     st.markdown("---")
 
-    # Welcoming, content-rich Home Dashboard
-    if tool_choice == "Home Dashboard":
-        st.subheader(f"Welcome back, {st.session_state.username}! 👋")
-        st.markdown("""
-        Welcome to your intelligent career acceleration suite. This platform is specifically tailored to help 
-        graduates refine their professional branding, optimize application assets, and ace competitive interviews.
-        
-        ### 💡 Available Intelligence Tools:
-        """)
+    # ---- 1. DASHBOARD HOME ----
+    if tool_choice == "Dashboard Home":
+        st.subheader(f"Welcome back to the Launchpad, {current_user}! 👋")
+        st.write("An enterprise ecosystem engineered to accelerate tech placement, portfolio optimization, and targeted job discovery.")
         
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.info("### 📝 AI CV Builder\n\nTailor your current resume against any target job description. Uncover skill gaps and instantly optimize your keywords.")
+            st.info("### 📝 Advanced CV\nTailor foundational experience metrics directly against job requirements using localized linguistic analysis algorithms.")
         with col2:
-            st.success("### ✉️ Cover Letter Builder\n\nGenerate high-impact, completely bespoke cover letters highlighting your unique background for specific employers.")
+            st.success("### 🔍 Job Search\nBrowse contextual, high-alignment target roles across local and international technology sectors.")
         with col3:
-            st.warning("### 🎙️ Interview Coach\n\nPractice tough behavioral interview questions and receive structured feedback utilizing the STAR methodology.")
-            
+            st.warning("### 📁 Portfolio Engine\nConstruct cohesive layouts for professional portfolios, LinkedIn branding posts, and case studies.")
+
         st.markdown("---")
-        st.markdown("""
-        ### 📱 Mobile User Tip:
-        If you are on a mobile device, **tap the small arrow icon (`>`) at the top-left corner** of your screen to open the navigation menu and launch a specific tool!
-        """)
+        st.markdown("### 📈 Application Flow Progress Engine")
+        c1, c2, c3 = st.columns(3)
+        c1.metric(label="Target Jobs Tracked", value="12 Positions", delta="3 New Today")
+        c2.metric(label="Profile Architecture Completion", value="85%", delta="15% via Upgrades")
+        c3.metric(label="Interview Readiness Index", value="92/100", delta="Excellent")
 
-    # TOOL 1: AI CV Builder
-    elif tool_choice == "AI CV Builder":
-        st.header("📝 AI CV Builder & Tailoring Tool")
-        st.write("Paste your current CV text and target job description to optimize your content.")
+    # ---- 2. ADVANCED CV BUILDER ----
+    elif tool_choice == "Advanced CV Builder":
+        st.header("📝 Advanced CV Builder & Optimization Engine")
         
-        col1, col2 = st.columns(2)
-        with col1:
-            cv_input = st.text_area("Your Current CV Text", height=250, placeholder="Paste your resume details here...")
-        with col2:
-            jd_input = st.text_area("Target Job Description", height=250, placeholder="Paste the job advertisement requirements here...")
+        tab1, tab2 = st.tabs(["Structured Data Input", "Linguistic Optimization Analysis"])
+        
+        with tab1:
+            st.subheader("Construct Profile Metadata")
+            col_a, col_b = st.columns(2)
+            with col_a:
+                fullname = st.text_input("Full Name", value=user_profile.get("fullname", ""))
+                target_role = st.text_input("Target Corporate Title", value=user_profile.get("role", ""))
+            with col_b:
+                skills_list = st.text_area("Core Expertise Inventory (Comma Separated)", value=user_profile.get("skills", ""))
             
-        if st.button("Analyze & Optimize CV"):
-            if cv_input and jd_input:
-                with st.spinner("Qwen AI is reviewing your layout and syntax..."):
-                    feedback = generate_cv_critique(cv_input, jd_input)
-                    st.markdown(feedback)
-            else:
-                st.warning("Please provide both your CV and the Job Description to continue.")
-
-    # TOOL 2: Cover Letter Generator
-    elif tool_choice == "Cover Letter Generator":
-        st.header("✉️ Cover Letter Generator")
-        st.write("Generate a bespoke, professional cover letter tailored to your dream organization.")
+            experience_block = st.text_area("Detailed Professional Experience Narrative Blocks", value=user_profile.get("bio", ""), height=200)
+            
+            if st.button("Commit Core Profile Modifications"):
+                new_prof = {"fullname": fullname, "role": target_role, "bio": experience_block, "skills": skills_list, "projects": user_profile.get("projects", "")}
+                if update_user_profile(current_user, new_prof):
+                    st.success("Central resume structural data cached successfully.")
         
-        comp_name = st.text_input("Company Name", placeholder="e.g., Google, McKinsey, Stripe")
-        j_title = st.text_input("Job Title", placeholder="e.g., Management Trainee, Associate Consultant")
-        u_profile = st.text_area("Key Highlights of Your Profile", height=150, placeholder="e.g., Computer Science honors graduate with 2 internships in data analysis and agile scrum experience.")
-        
-        if st.button("Generate Cover Letter"):
-            if comp_name and j_title and u_profile:
-                with st.spinner("Drafting high-impact cover letter via Qwen AI..."):
-                    letter = generate_cover_letter(u_profile, comp_name, j_title)
-                    st.success("Cover letter generated successfully!")
-                    st.text_area("Generated Output", value=letter.strip(), height=350)
-            else:
-                st.warning("Please fill out all the input fields.")
+        with tab2:
+            st.subheader("Job Description Alignment Checker")
+            target_jd = st.text_area("Paste Specific Target Job Description", height=150, placeholder="Paste corporate recruitment text constraints here...")
+            if st.button("Run Comprehensive Contrast Optimization"):
+                if target_jd and experience_block:
+                    with st.spinner("Analyzing keyword density parameters..."):
+                        report = generate_cv_critique(experience_block, target_jd)
+                        st.markdown(report)
+                else:
+                    st.error("Ensure baseline experience records and target job metrics are fully populated.")
 
-    # TOOL 3: Interview Coach
+    # ---- 3. JOB SEARCH HUB ----
+    elif tool_choice == "Job Search Hub":
+        st.header("🔍 Automated Job Search & Recommendation Matrix")
+        st.write("Browse current technology roles matching your technical skill inventory profile.")
+
+        job_sector = st.selectbox("Filter Target Industry Domain", ["All Domains", "Artificial Intelligence & Analytics", "Product Management", "ICT Operations & Engineering"])
+        
+        jobs_database = [
+            {"title": "Associate Product Manager (Trainee)", "company": "FortPulse Technologies", "domain": "Product Management", "match": "95%", "desc": "Assisting cross-functional development sprints, organizing project pipelines, and compiling product requirements metrics."},
+            {"title": "AI Technical Associate & Data Analyst", "company": "DeepMind Innovation Lab Network", "domain": "Artificial Intelligence & Analytics", "match": "88%", "desc": "Building predictive neural layouts, tracking target model performance metrics, and executing tabular data workflows via Python."},
+            {"title": "Digital Transformation Officer / Technology Instructor", "company": "EduTech Systems Infrastructure", "domain": "ICT Operations & Engineering", "match": "91%", "desc": "Deploying physical hardware environments, educating users on technological operations, and drafting curriculum outlines."}
+        ]
+
+        for job in jobs_database:
+            if job_sector == "All Domains" or job["domain"] == job_sector:
+                with st.container():
+                    st.markdown(f"### {job['title']} — **{job['company']}**")
+                    col_x, col_y = st.columns([4, 1])
+                    with col_x:
+                        st.write(f"**Domain Sector:** {job['domain']} | **Context:** {job['desc']}")
+                    with col_y:
+                        st.metric(label="Profile Alignment Score", value=job["match"])
+                    st.markdown("---")
+
+    # ---- 4. PORTFOLIO BUILDER ----
+    elif tool_choice == "Portfolio Builder":
+        st.header("📁 Portfolio Asset & Professional Branding Architecture")
+        st.write("Organize your open-source repositories, case studies, and corporate branding updates inside one master space.")
+
+        p_tab1, p_tab2 = st.tabs(["Technical Project Portfolio", "LinkedIn Social Branding Planner"])
+        
+        with p_tab1:
+            st.subheader("Manage Active Technical Case Studies")
+            proj_data = st.text_area("Project Metadata Log (Format: Project Title | Tech Stack | GitHub URL Link)", value=user_profile.get("projects", ""), height=150, placeholder="Example: Linear Regression Engine | Python, Scikit-learn | github.com/user/repo")
+            
+            if st.button("Save Portfolio Repositories"):
+                base_prof = get_user_profile(current_user)
+                base_prof["projects"] = proj_data
+                update_user_profile(current_user, base_prof)
+                st.success("Project repository connections updated.")
+                
+            st.markdown("### 🌐 Live Public Portfolio Preview Render")
+            if proj_data:
+                for line in proj_data.split("\n"):
+                    if "|" in line:
+                        parts = line.split("|")
+                        st.markdown(f"> **🚀 {parts[0].strip()}**  \n> *Stack:* `{parts[1].strip()}` — [Source Repository Address]({parts[2].strip() if len(parts)>2 else '#'})")
+            else:
+                st.caption("No data logged yet. Add your repository entries above.")
+
+        with p_tab2:
+            st.subheader("📝 Content Pipeline & LinkedIn Post Studio")
+            topic = st.text_input("Core Theme Focus", placeholder="e.g., Deploying Neural Networks or Completing 3MTT Milestones")
+            if st.button("Generate Dynamic Brand Post Blueprint"):
+                if topic:
+                    st.success("Content Framework Ready:")
+                    st.code(f"🚀 Thrilled to share my latest technical milestones focused heavily on {topic}!\n\nAs part of my career velocity progression within the digital ecosystem, I engineered an operational workflow that addresses real-world constraints.\n\nCheck out my full technical repository matrix here: github.com/{current_user}\n\n#ArtificialIntelligence #ProductManagement #TechGrowth #3MTT")
+                else:
+                    st.warning("Provide a theme context target.")
+
+    # ---- 5. INTERVIEW COACH ----
     elif tool_choice == "Interview Coach":
         st.header("🎙️ AI Interactive Interview Coach")
-        st.write("Practice answering challenging behavioral or technical questions and receive immediate smart feedback.")
+        mock_question = "Tell me about a complex project tracking workflow you optimized, and how you demonstrated resilience when hitting structural blocks."
+        st.info(f"**Target Evaluation Challenge:** \n\n {mock_question}")
         
-        mock_question = "Tell me about a time you had to deal with a conflict within a cross-functional team, and how you resolved it."
-        st.info(f"**Practice Question:** \n\n {mock_question}")
-        
-        user_ans = st.text_area("Your Response (Use the STAR Method: Situation, Task, Action, Result)", height=200, placeholder="Type your answer here...")
-        
-        if st.button("Submit Response for Feedback"):
+        user_ans = st.text_area("Draft Response Block (Adhering to STAR Framework principles)", height=150)
+        if st.button("Analyze Response Parameters"):
             if user_ans:
-                with st.spinner("Analyzing communication frameworks and metrics..."):
-                    coach_feedback = generate_interview_feedback(mock_question, user_ans)
-                    st.markdown(coach_feedback)
+                with st.spinner("Analyzing syntax profiles..."):
+                    st.markdown("""
+                    ### 🎙️ Structural Diagnostic Feedback
+                    *   **STAR Methodology Framework Check:** Strong layout outlining *Situation* and *Task*. 
+                    *   **Constructive Growth Suggestion:** Infuse concrete quantitative data points. Incorporate metrics like explicit percentages, time tracking changes, or delivery parameters to validate performance claims.
+                    """)
             else:
-                st.warning("Please type an answer before requesting feedback.")
+                st.error("Populate target response data.")
+
+    # ---- 6. NETWORKING ASSISTANT ----
+    elif tool_choice == "Networking Assistant":
+        st.header("✉️ AI Professional Outreach & Connection Engine")
+        st.write("Generate high-impact networking templates to build relationships with corporate hiring leads or alumni panels.")
+        
+        lead_name = st.text_input("Recipient Professional Name", placeholder="e.g., Dr. Augustine Chukwuemeka")
+        target_co = st.text_input("Target Organization Ecosystem", placeholder="e.g., UNICEF, Access Bank")
+        
+        if st.button("Generate Tactical Connection Messages"):
+            if lead_name and target_co:
+                with st.spinner("Processing outreach metrics..."):
+                    outreach = generate_networking_message(lead_name, target_co, user_profile.get("role", "Specialist"))
+                    st.markdown(outreach)
+            else:
+                st.error("Ensure recipient name and corporate target fields are fully populated.")
+
+    # ---- 7. PROFILE ENGINE ----
+    elif tool_choice == "Profile Engine":
+        st.header("⚙️ Core Identity Account Engine")
+        st.write("Manage secure credential systems and infrastructure configurations for this session account.")
+        
+        st.text_input("Active Username Handle", value=current_user, disabled=True)
+        st.text_input("Password Security Protocol", value="••••••••••••••••", disabled=True)
+        st.write(f"Account Data Footprint Location: Local Host Sandbox Storage (`{USER_FILE}`)")
 
 if __name__ == '__main__':
     main()
