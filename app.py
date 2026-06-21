@@ -1,6 +1,6 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition - Crash Protected
+Enterprise AI Agent Edition - Green Premium Theme
 
 Integrated with live Gemini AI Agent processing models. Wraps 
 external dependencies cleanly to safeguard production uptime.
@@ -92,13 +92,13 @@ def get_user_profile(username):
     return {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
 
 # =============================================================================
-# PREMIUM DESIGN SYSTEM (CSS INJECTION)
+# PREMIUM GREEN DESIGN SYSTEM (CSS INJECTION)
 # =============================================================================
 def inject_premium_styles():
     st.markdown("""
         <style>
         .stApp {
-            background: linear-gradient(180deg, #0226E3 0%, #7625FF 50%, #F5F7FF 100%) !important;
+            background: linear-gradient(180deg, #0A4D2E 0%, #157347 50%, #F4F9F6 100%) !important;
             color: #1F2937;
         }
         
@@ -115,42 +115,42 @@ def inject_premium_styles():
             margin-bottom: 5px !important;
         }
         .premium-hero p {
-            color: #E0E7FF !important;
+            color: #E8F5E9 !important;
             margin: 0 auto !important;
             opacity: 0.95;
         }
         
         .premium-card {
-            background: rgba(255, 255, 255, 0.96);
+            background: rgba(255, 255, 255, 0.97);
             padding: 24px;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             margin-bottom: 24px;
         }
         
         .premium-card h3 {
-            color: #0226E3 !important;
+            color: #0A4D2E !important;
             font-size: 20px !important;
             font-weight: 700 !important;
             margin-bottom: 12px !important;
         }
         
         div.stButton > button {
-            background: linear-gradient(90deg, #0226E3 0%, #571CE3 100%) !important;
+            background: linear-gradient(90deg, #0A4D2E 0%, #198754 100%) !important;
             color: white !important;
             border-radius: 50px !important;
             border: none !important;
             padding: 12px 28px !important;
             font-weight: 600 !important;
             font-size: 14px !important;
-            box-shadow: 0 4px 14px rgba(2, 38, 227, 0.4) !important;
+            box-shadow: 0 4px 14px rgba(10, 77, 46, 0.35) !important;
             transition: all 0.2s ease;
             width: 100%;
         }
         div.stButton > button:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(2, 38, 227, 0.6) !important;
+            box-shadow: 0 6px 20px rgba(10, 77, 46, 0.5) !important;
         }
         
         .stTextInput input, .stTextArea textarea, .stSelectbox div {
@@ -347,14 +347,14 @@ def main():
                                 model='gemini-2.5-flash',
                                 contents=prompt
                             )
-                            st.markdown(f'<div style="background: #EEF2FF; border-left: 5px solid #0226E3; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                         except Exception as e:
                             st.error(f"Agent analysis connection dropped: {str(e)}")
                     else:
                         st.warning("Ecosystem running on local preview. Map your GEMINI_API_KEY environment token to unlock live execution parameters.")
                         st.markdown(f"""
-                            <div style="background: #EEF2FF; border-left: 5px solid #0226E3; padding: 16px; border-radius: 8px; margin-top: 15px;">
-                                <h4 style="color: #0226E3; margin-top: 0;">✨ AI Optimization Preview</h4>
+                            <div style="background: #E8F5E9; border-left: 5px solid #0A4D2E; padding: 16px; border-radius: 8px; margin-top: 15px;">
+                                <h4 style="color: #0A4D2E; margin-top: 0;">✨ AI Optimization Preview</h4>
                                 <p><b>Mock Match Rating Index:</b> 88% Alignment</p>
                                 <p style="font-size:13px;"><i>System ready to stream live analytical feedback once the Gemini connection tokens are registered.</i></p>
                             </div>
