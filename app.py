@@ -1,9 +1,11 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition - Premium Design System (Green Theme)
+Enterprise AI Agent Edition - Premium Green Theme (Presentation Optimized)
 
-Integrated with live Gemini AI Agent processing models. Contains upgraded
-frontend typography, an inline CSS logo brand identity, and complete feature suites.
+Fixed features:
+1. Native API integration to bypass 'API_KEY_INVALID' blocks.
+2. Premium high-contrast CSS typography for perfect readability over gradients.
+3. Clean layout architecture for desktop and mobile screen presentations.
 """
 
 import streamlit as st
@@ -11,21 +13,21 @@ import json
 import hashlib
 import os
 
-# Safe wrapper for the Google GenAI SDK to prevent app-breaking ImportErrors
+# =============================================================================
+# INITIALIZE LIVE AI AGENT ENGINE (NATIVE FIX)
+# =============================================================================
 try:
     from google import genai
     AI_LIBRARY_AVAILABLE = True
 except ImportError:
     AI_LIBRARY_AVAILABLE = False
 
-# =============================================================================
-# INITIALIZE LIVE AI AGENT ENGINE
-# =============================================================================
 def get_ai_agent():
     """Initializes the official Google GenAI client using secure environment tokens."""
     if not AI_LIBRARY_AVAILABLE:
         return None
-    api_key = os.environ.get("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
+    # Prioritize Streamlit Secrets for cloud deployment stability
+    api_key = st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return None
     try:
@@ -36,7 +38,7 @@ def get_ai_agent():
 # =============================================================================
 # FILE MANAGEMENT & CONFIGURATION (BACKEND DATA STORE)
 # =============================================================================
-USER_FILE = "users.json"
+USER_FILE = os.path.join(os.path.dirname(__file__), "users.json") if '__file__' in locals() else "users.json"
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -92,7 +94,7 @@ def get_user_profile(username):
     return {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
 
 # =============================================================================
-# FRONTEND SYSTEM DESIGN (FONTS, LOGO, ACCENTS)
+# FRONTEND SYSTEM DESIGN (HIGH CONTRAST / ACCESSIBILITY FIX)
 # =============================================================================
 def inject_premium_styles():
     st.markdown("""
@@ -102,9 +104,26 @@ def inject_premium_styles():
         
         /* Global Canvas Rules */
         .stApp {
-            background: linear-gradient(180deg, #063c22 0%, #0d6137 40%, #f4f8f5 100%) !important;
+            background: linear-gradient(180deg, #063c22 0%, #0d6137 50%, #114d2e 100%) !important;
             font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
-            color: #1f2937;
+            color: #ffffff !important;
+        }
+        
+        /* Strict Typography Fixes - Force Crisp Visibility on Labels & Inputs */
+        div[data-testid="stWidgetLabel"] p, 
+        .stSelectbox label p, 
+        .stTextInput label p, 
+        .stTextArea label p,
+        .stWidgetFormModifier label {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            font-size: 15px !important;
+            letter-spacing: -0.1px;
+        }
+        
+        /* Text Color Inheritance Fixes for Native Subheadings */
+        h1, h2, h3, h4, h5, h6, p, span, li {
+            color: #ffffff !important;
         }
         
         /* Premium Branding / Logo Mark Geometry */
@@ -137,7 +156,6 @@ def inject_premium_styles():
             color: white;
         }
         .premium-hero h1 {
-            color: white !important;
             font-family: 'Plus Jakarta Sans', sans-serif !important;
             font-size: 42px !important;
             font-weight: 800 !important;
@@ -153,19 +171,26 @@ def inject_premium_styles():
             letter-spacing: -0.2px;
         }
         
-        /* Cards System */
+        /* Form Field Text Overrides (Ensures inputs are readable inside white boxes) */
+        .stTextInput input, .stTextArea textarea {
+            color: #1f2937 !important;
+            font-weight: 500 !important;
+            background-color: #ffffff !important;
+            border-radius: 12px !important;
+            border: 1px solid #d1d5db !important;
+        }
+        
+        /* Custom Elegant Container Cards */
         .premium-card {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, 0.12);
             padding: 24px;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             margin-bottom: 24px;
-            transition: transform 0.2s ease;
         }
         .premium-card h3 {
-            color: #063c22 !important;
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            color: #ffffff !important;
             font-size: 20px !important;
             font-weight: 700 !important;
             margin-top: 0 !important;
@@ -174,34 +199,27 @@ def inject_premium_styles():
         .premium-card p {
             font-size: 14px !important;
             line-height: 1.5 !important;
-            color: #4b5563 !important;
+            color: #e5e7eb !important;
         }
         
-        /* Global Button Layout Matrices */
+        /* Global Button Layout Engine */
         div.stButton > button {
-            background: linear-gradient(90deg, #063c22 0%, #198754 100%) !important;
-            color: white !important;
+            background: linear-gradient(90deg, #2ae083 0%, #198754 100%) !important;
+            color: #063c22 !important;
             font-family: 'Plus Jakarta Sans', sans-serif !important;
             border-radius: 12px !important;
             border: none !important;
             padding: 12px 24px !important;
-            font-weight: 600 !important;
+            font-weight: 700 !important;
             font-size: 14px !important;
-            box-shadow: 0 4px 14px rgba(6, 60, 34, 0.3) !important;
+            box-shadow: 0 4px 14px rgba(42, 224, 131, 0.2) !important;
             transition: all 0.2s ease-in-out;
             width: 100%;
         }
         div.stButton > button:hover {
             transform: translateY(-1.5px);
-            box-shadow: 0 6px 20px rgba(6, 60, 34, 0.45) !important;
-            background: linear-gradient(90deg, #0d6137 0%, #1db972 100%) !important;
-        }
-        
-        /* Forms & Interactive Fields */
-        .stTextInput input, .stTextArea textarea, .stSelectbox div {
-            border-radius: 12px !important;
-            border: 1px solid #d1d5db !important;
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            box-shadow: 0 6px 20px rgba(42, 224, 131, 0.4) !important;
+            color: white !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -241,7 +259,7 @@ def main():
                 <h1>Graduate Career Launchpad</h1>
             </div>
             <p class="tagline">your professional profile, <span style="font-weight: 300; opacity: 0.9;">ready everywhere.</span></p>
-            <p style="max-width: 600px; margin: 0 auto; font-size: 14px; opacity: 0.75;">
+            <p style="max-width: 600px; margin: 0 auto; font-size: 14px; opacity: 0.85;">
                 Create a clean digital CV and personal workspace powered by live AI Agent analysis engines.
             </p>
         </div>
@@ -249,7 +267,7 @@ def main():
 
     # Check for System Dependency Warning
     if not AI_LIBRARY_AVAILABLE:
-        st.error("🚨 System Dependency Error: 'google-genai' is missing from requirements.txt. Please add it to your repository so Streamlit Cloud can install it.")
+        st.error("🚨 System Dependency Error: 'google-genai' is missing from requirements.txt. Please add it to your repository.")
 
     # ---- UNAUTHORIZED SYSTEM PORTAL ----
     if not st.session_state.logged_in:
@@ -294,9 +312,9 @@ def main():
     c_status_left, c_status_right = st.columns([5, 1])
     with c_status_left:
         if client:
-            st.markdown(f"<span style='color: white;'>🟢 <b>AI Agent Cloud Connected:</b> `ID: {current_user}` | Mode: `Live Production Engines Active`</span>", unsafe_allow_html=True)
+            st.markdown(f"<span>🟢 <b>AI Agent Cloud Connected:</b> `ID: {current_user}` | Mode: `Live Production Engines Active`</span>", unsafe_allow_html=True)
         else:
-            st.markdown(f"<span style='color: #FEE2E2;'>⚠️ <b>AI Preview Mode:</b> Please configure your <code>GEMINI_API_KEY</code> token inside Streamlit Secrets to take this agent live.</span>", unsafe_allow_html=True)
+            st.markdown(f"<span style='color: #FCA5A5;'>⚠️ <b>AI Preview Mode:</b> Please configure a valid <code>GEMINI_API_KEY</code> key string within your Streamlit Secrets dashboard layer.</span>", unsafe_allow_html=True)
     with c_status_right:
         if st.button("Disconnect Agent", key="btn_global_disconnect"):
             st.session_state.logged_in = False
@@ -310,7 +328,7 @@ def main():
     # NAVIGATION AND MAIN MODULE ROUTING
     # =============================================================================
     if st.session_state.current_page == "Home Menu":
-        st.markdown("<h3 style='color: white; font-weight:600; margin-bottom:16px;'>Active Suite Navigation Modules</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='font-weight:600; margin-bottom:16px;'>Active Suite Navigation Modules</h3>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
         
         with col1:
@@ -394,7 +412,7 @@ def main():
                                 f"Provide a comprehensive critique containing a quantified Match Index %, missing structural industry terms, and clear recommendations using Markdown formatting."
                             )
                             response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                         except Exception as e:
                             st.error(f"Agent analysis connection dropped: {str(e)}")
                     else:
@@ -430,7 +448,7 @@ def main():
                                 f"Analyze if they utilized the STAR method properly. Highlight clear strengths, identify delivery gaps, and provide a perfectly restructured 'Ideal Revision' version of their answer."
                             )
                             response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                         except Exception as e:
                             st.error(f"Error executing interview assessment: {str(e)}")
                     else:
@@ -449,7 +467,7 @@ def main():
         st.markdown('<h3>🔍 Strategic Job Placement & Skill Match Matrix</h3>', unsafe_allow_html=True)
         st.write("Scan your core skill tokens against competitive market roles to map open gaps.")
         
-        industry_focus = st.text_input("Target Industry Sector (e.g., FinTech, Healthcare, Enterprise AI, Agritech)", value="Technology")
+        industry_focus = st.text_input("Target Industry Sector", value="FinTech")
         
         if st.button("Generate Tailored Job Placement Blueprint", key="btn_run_job_matcher"):
             with st.spinner("Mapping dynamic roles matrix pipelines..."):
@@ -463,9 +481,9 @@ def main():
                             f"Format as an itemized breakdown. For each title provide: 1. Core Responsibilities, 2. Critical Skill gaps the user needs to study next, and 3. Suggested pipeline strategy."
                         )
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                        st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                     except Exception as e:
-                        st.error(f"Error searching match engine blueprints: {str(e)}")
+                        st.error(f"Error processing matrix pipeline metrics: {str(e)}")
                 else:
                     st.warning("Ecosystem running on preview mode. Live API client required.")
         st.markdown('</div>', unsafe_allow_html=True)
@@ -481,10 +499,10 @@ def main():
         
         col_out1, col_out2 = st.columns(2)
         with col_out1:
-            recipient_title = st.text_input("Recipient Professional Role (e.g., Talent Partner, Engineering Manager)", value="Hiring Manager")
+            recipient_title = st.text_input("Recipient Professional Role", value="Hiring Manager")
             platform = st.selectbox("Target Communication Channel", ["LinkedIn InMail Template", "Cold Email Framework", "Alumni Referral Request"])
         with col_out2:
-            company_target = st.text_input("Target Corporate Institution / Company", value="Target Organization")
+            company_target = st.text_input("Target Corporate Institution", value="Target Organization")
             tone_style = st.selectbox("Tone Setting", ["Warm & Value-First", "Direct & Technical Corporate", "High-Impact Graduate Enthusiast"])
             
         if st.button("Generate High-Conversion Messaging Strategy", key="btn_gen_outreach"):
@@ -500,7 +518,7 @@ def main():
                             f"Ensure it avoids boring cliches, clearly highlights why their experience matters, and leaves a sharp, professional call-to-action."
                         )
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                        st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                     except Exception as e:
                         st.error(f"Error processing text generation: {str(e)}")
                 else:
@@ -529,7 +547,7 @@ def main():
                                 f"Reformat them with clear headings, clean feature bullet points, technical architecture breakdowns, and impact summaries."
                             )
                             response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: #E8F5E9; border-left: 5px solid #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
                         except Exception as e:
                             st.error(f"Portfolio agent connection lost: {str(e)}")
                     else:
