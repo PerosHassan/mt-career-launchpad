@@ -339,10 +339,9 @@ def main():
     # MODULE ROUTING ROUTER RUN MATRIX
     # =============================================================================
     
-    # ---- HUB MODALITY DIRECTION: UNIFIED HIGH-IMPACT INTEGRATED DASHBOARD ----
     if st.session_state.current_page == "Dashboard Workspace":
-        st.markdown(f"## Welcome back, {current_user} 👋")        
-        # Career Readiness Score Banner Block
+        st.markdown(f"## Welcome back, {current_user} 👋")
+                # Career Readiness Score Banner Block
         st.markdown('<div class="premium-card" style="border-top: 4px solid #19D17B;">', unsafe_allow_html=True)
         col_crs_left, col_crs_right = st.columns([1, 2])
         with col_crs_left:
@@ -366,11 +365,9 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-        # Main Split Frame Grid Column Layout Setup
         col_main_left, col_main_right = st.columns([3, 2])
 
         with col_main_left:
-            # Interactive Career Assessment Entry
             st.markdown('<div class="premium-card"><h3>🧠 Core Cognitive Assessment Engine</h3></div>', unsafe_allow_html=True)
             ans = st.radio("Do you prioritize building scalable technical software architectures or managing business delivery workflows?", 
                           ["Select Preference Track...", "Software System & AI Development", "Product & Project Strategy Workflows"])
@@ -378,7 +375,6 @@ def main():
             if "AI Development" in ans or "Strategy" in ans:
                 st.markdown("<div class='badge-green'>🟩 <b>Calculated Persona Classification:</b> Strategic High-Growth Technical Leader</div>", unsafe_allow_html=True)
                 
-                # Employability Prediction Engine Widget
                 st.markdown('<div class="premium-card"><h3>🔮 Forward Predictive Employability Projections</h3></div>', unsafe_allow_html=True)
                 col_prob_l, col_prob_r = st.columns([1, 2])
                 with col_prob_l:
@@ -390,12 +386,11 @@ def main():
                     st.markdown("<span style='color:#22C55E;'>✓</span> <b>High Structural Career Alignment Match</b><br/>", unsafe_allow_html=True)
                     st.markdown("<span style='color:#EF4444;'>⚠</span> <span style='color:#7F1D1D;'>Missing High-Fidelity Capstone Framework Portfolios</span>", unsafe_allow_html=True)
 
-                # Strategic Job Match Engine Mapping                st.markdown('<div class="premium-card"><h3>💼 Strategic Job Match Engine Mapping</h3></div>', unsafe_allow_html=True)
+                st.markdown('<div class="premium-card"><h3>💼 Strategic Job Match Engine Mapping</h3></div>', unsafe_allow_html=True)
                 
                 jobs_data = [
                     {"title": "Project Coordinator / Product Associate", "match": "94%"},
-                    {"title": "Junior Business Systems Analyst", "match": "89%"},
-                    {"title": "Technical Operations Specialist", "match": "87%"}
+                    {"title": "Junior Business Systems Analyst", "match": "89%"},                    {"title": "Technical Operations Specialist", "match": "87%"}
                 ]
                 for j in jobs_data:
                     c_j1, c_j2 = st.columns([3, 2])
@@ -406,12 +401,10 @@ def main():
                         st.button("Apply Instantly", key=f"apply_{j['title']}")
                         st.markdown("</div>", unsafe_allow_html=True)
 
-            # Skills Gap Diagnostic Matrix
             st.markdown('<div class="premium-card"><h3>🔍 Operational Skills Gap Audit Engine</h3></div>', unsafe_allow_html=True)
             st.markdown("<div class='badge-blue'>🔷 <b>Current Operational Skill Matrix:</b> MS Word, Advanced Excel Data Formats, Functional Interpersonal Presentation.</div>", unsafe_allow_html=True)
             st.markdown("<div class='badge-red'>🟥 <b>Identified Missing Target Skills Base:</b> Cloud Infrastructure Architecture, Scalable Project Management Frameworks, Automated Power BI Analytics Dashboards.</div>", unsafe_allow_html=True)
 
-            # Dynamic Personalized Learning Roadmap
             st.markdown('<div class="premium-card"><h3>📚 Curriculum Learning Roadmap Timeline Engine</h3></div>', unsafe_allow_html=True)
             col_m1, col_m2, col_m3, col_m4 = st.columns(4)
             with col_m1: 
@@ -424,7 +417,6 @@ def main():
                 st.markdown("<div class='badge-orange'>🔸 <b>Month 4</b><br/>Portfolio Blueprint</div>", unsafe_allow_html=True)
 
         with col_main_right:
-            # MT Employability Score Component
             st.markdown('<div class="premium-card" style="border: 2px solid #0B6B3A; background-color: #F0FDF4;">', unsafe_allow_html=True)
             st.markdown("<h3 style='color: #0B6B3A !important; margin-bottom: 2px;'>🏆 MT Employability Score™</h3>", unsafe_allow_html=True)
             st.markdown("<div style='font-size: 42px; font-weight: 800; color: #0B6B3A; margin-bottom:10px;'>84 <span style='font-size:20px; font-weight:500; color:#64748B;'>/ 100</span></div>", unsafe_allow_html=True)
@@ -434,32 +426,31 @@ def main():
             st.markdown("<p style='margin:3px 0; font-size:14px;'>🎤 <b>Behavioral Interview Capability Skill:</b> 76%</p>", unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-            # AI Career Copilot Chat Component
             st.markdown('<div class="premium-card"><h3>🤖 Ask Launchpad AI Career Copilot</h3></div>', unsafe_allow_html=True)
             
             st.markdown("<p style='font-size:12px; font-weight:700; color:#64748B; margin-bottom:4px;'>QUICK ACTION CHIPS PROMPTS:</p>", unsafe_allow_html=True)
             c_chip1, c_chip2 = st.columns(2)
-            with c_chip1:                if st.button("📄 How do I improve my CV?", use_container_width=True):
+            with c_chip1:
+                if st.button("📄 How do I improve my CV?", use_container_width=True):
                     st.session_state.copilot_messages.append({"role": "user", "content": "How do I improve my CV?"})
                     if client:
-                        resp = client.models.generate_content(model='gemini-2.5-flash', 
-                            contents="Give 3 short actionable points to improve a graduate CV specifically focusing on technical skills impact mapping.")
-                        st.session_state.copilot_messages.append({"role": "assistant", "content": resp.text})
-                    else:
-                        st.session_state.copilot_messages.append({"role": "assistant", 
-                            "content": "To enhance your CV profile: 1. Inject clear action verbs. 2. Align keywords directly with the target job descriptions block. 3. Quantify metric results across technical projects."})
+                        try:
+                            resp = client.models.generate_content(model='gemini-2.5-flash', 
+                                contents="Give 3 short actionable points to improve a graduate CV specifically focusing on technical skills impact mapping.")
+                            st.session_state.copilot_messages.append({"role": "assistant", "content": resp.text})
+                        except:
+                            st.session_state.copilot_messages.append({"role": "assistant", "content": "To enhance your CV: 1. Use action verbs 2. Align keywords with job descriptions 3. Quantify results"})                    else:
+                        st.session_state.copilot_messages.append({"role": "assistant", "content": "To enhance your CV profile: 1. Inject clear action verbs. 2. Align keywords with target jobs. 3. Quantify metric results."})
             with c_chip2:
                 if st.button("✉️ Create a cover letter", use_container_width=True):
                     st.session_state.copilot_messages.append({"role": "user", "content": "Create a cover letter template"})
-                    st.session_state.copilot_messages.append({"role": "assistant", 
-                        "content": "Subject: Application for Target Role Profile...\n\nDear Hiring Team,\n\nI am writing to explore system alignments between my core technical background capabilities and your active vacancy development goals..."})
+                    st.session_state.copilot_messages.append({"role": "assistant", "content": "Subject: Application for Target Role\n\nDear Hiring Team,\n\nI am writing to express my interest in the position..."})
 
-            # Real-time message streaming
             for msg in st.session_state.copilot_messages[-4:]:
                 if msg["role"] == "user":
                     st.markdown(f"<div style='text-align:right; margin:6px 0;'><span style='background-color:#E2E8F0; padding:8px 12px; border-radius:12px; display:inline-block; font-size:14px;'><b>You:</b> {msg['content']}</span></div>", unsafe_allow_html=True)
                 else:
-                    st.markdown(f"<div style='text-align:left; margin:6px 0;'><span style='background-color:#DCFCE7; padding:8px 12px; border-radius:12px; display:inline-block; font-size:14px; border-left:4px solid #0B6B3A;'><b>AI Agent:</b> {msg['content']}</span></div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='text-align:left; margin:6px 0;'><span style='background-color:#DCFCE7; padding:8px 12px; border-radius:12px; display:inline-block; font-size:14px; border-left:4px solid #0B6B3A;'><b>AI:</b> {msg['content']}</span></div>", unsafe_allow_html=True)
             
             chat_box_input = st.text_input("Consult Copilot Stream Intelligence...", key="copilot_live_chat_input_field")
             if st.button("Dispatch Query Pipeline Line", key="btn_send_chat_copilot"):
@@ -469,124 +460,112 @@ def main():
                         try:
                             r = client.models.generate_content(model='gemini-2.5-flash', contents=chat_box_input)
                             st.session_state.copilot_messages.append({"role": "assistant", "content": r.text})
-                        except Exception:
-                            st.session_state.copilot_messages.append({"role": "assistant", 
-                                "content": "Ecosystem API layer processed query request parameters cleanly inside sandboxed memory."})
+                        except:
+                            st.session_state.copilot_messages.append({"role": "assistant", "content": "Query processed successfully."})
                     else:
-                        st.session_state.copilot_messages.append({"role": "assistant", 
-                            "content": "Ecosystem local execution processing sandbox model return line completed."})
+                        st.session_state.copilot_messages.append({"role": "assistant", "content": "Local processing completed."})
                     st.rerun()
 
-            # Career Journey Progress Tracker
             st.markdown('<div class="premium-card"><h3>🏁 Operational Career Journey Progress Tracker</h3></div>', unsafe_allow_html=True)
-            st.markdown("🔹 **Profile Handshake Setup Infrastructure**                                     🟢 `COMPLETED`", unsafe_allow_html=True)
-            st.markdown("🔹 **Core Cognitive Employability Assessment**                      🟢 `COMPLETED`", unsafe_allow_html=True)
-            st.markdown("🔹 **Dynamic AI CV Parameter Optimization**                    🟢 `COMPLETED`", unsafe_allow_html=True)
-            st.markdown("🔹 **Live Behavioral Interview Simulation**                       ⏳ `IN PROGRESS`", unsafe_allow_html=True)
-            st.markdown("🔹 **Marketplace Employment Job Placement**                      ⏳ `PENDING PIPELINE`", unsafe_allow_html=True)
+            st.markdown("🔹 **Profile Setup** ✅ `COMPLETED`", unsafe_allow_html=True)
+            st.markdown("🔹 **Cognitive Assessment** ✅ `COMPLETED`", unsafe_allow_html=True)
+            st.markdown("🔹 **AI CV Optimization** ✅ `COMPLETED`", unsafe_allow_html=True)
+            st.markdown("🔹 **Interview Simulation** ⏳ `IN PROGRESS`", unsafe_allow_html=True)
+            st.markdown("🔹 **Job Placement** ⏳ `PENDING`", unsafe_allow_html=True)
 
         render_impact_section()
 
-    # ---- MODULE: ADVANCED CV ENGINE ----
-    elif st.session_state.current_page == "Advanced CV Builder":        st.markdown('<div class="premium-card"><h3>📄 Enterprise AI CV Optimization Workspace</h3></div>', unsafe_allow_html=True)
+    elif st.session_state.current_page == "Advanced CV Builder":
+        st.markdown('<div class="premium-card"><h3>📄 Enterprise AI CV Optimization Workspace</h3></div>', unsafe_allow_html=True)
         
-        st.file_uploader("Drag & Drop CV or Profile Document Data Array here", type=["pdf", "docx"])
-        st.session_state.cv_data_name = st.text_input("Full Legal Profile Name Identity", value=st.session_state.cv_data_name)
-        st.session_state.cv_data_title = st.text_input("Target Strategic Professional Title", value=st.session_state.cv_data_title)
-        st.session_state.cv_data_skills = st.text_area("Technical Stack Keywords Configuration", value=st.session_state.cv_data_skills)
-        st.session_state.cv_data_exp = st.text_area("Comprehensive Career Experience Blocks", value=st.session_state.cv_data_exp)
+        st.file_uploader("Drag & Drop CV or Profile Document", type=["pdf", "docx"])
+        st.session_state.cv_data_name = st.text_input("Full Legal Name", value=st.session_state.cv_data_name)
+        st.session_state.cv_data_title = st.text_input("Target Professional Title", value=st.session_state.cv_data_title)
+        st.session_state.cv_data_skills = st.text_area("Technical Skills", value=st.session_state.cv_data_skills)
+        st.session_state.cv_data_exp = st.text_area("Career Experience", value=st.session_state.cv_data_exp)
         
-        if st.button("Save Core Profile Parameters"):
+        if st.button("Save Profile Parameters"):
             p = {"fullname": st.session_state.cv_data_name, "role": st.session_state.cv_data_title, 
                  "skills": st.session_state.cv_data_skills, "bio": st.session_state.cv_data_exp, 
                  "projects": st.session_state.cv_data_projects}
-            update_user_profile(current_user, p)
-            st.success("Profile parameters stored successfully inside local system stores!")
+            update_user_profile(current_user, p)            st.success("Profile saved successfully!")
 
-        target_description_text = st.text_area("Paste Core Target Job Requirements Specifications Block")
-        if st.button("Execute Live Agent CV Optimization Analysis"):
+        target_description_text = st.text_area("Paste Target Job Description")
+        if st.button("Execute CV Optimization Analysis"):
             if client:
-                with st.spinner("Processing deep content alignment metrics..."):
-                    prompt = f"Perform an ATS audit for {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Target Role: {target_description_text}."
+                with st.spinner("Processing..."):
+                    prompt = f"ATS audit for {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Target: {target_description_text}"
                     try:
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         st.session_state["last_cv_output"] = response.text
                     except Exception as e:
-                        st.error(f"Ecosystem Agent Connection Dropdown: {str(e)}")
+                        st.error(f"Error: {str(e)}")
             else:
-                st.session_state["last_cv_output"] = "### ATS SCORE DIAGNOSTICS: 88%\n\n**Strengths:** Clear layout structures.\n**Weaknesses:** Requires high-impact industry action keywords configuration.\n\n**Injected Keywords:** Agile Delivery pipelines, Cross-functional communications."
+                st.session_state["last_cv_output"] = "### ATS SCORE: 88%\n\n**Strengths:** Clear layout\n**Weaknesses:** Needs action keywords"
 
         if "last_cv_output" in st.session_state:
             st.info(st.session_state["last_cv_output"])
-            cv_html_content = f"<html><body style=\"font-family:'Segoe UI',Arial; padding:30px; line-height:1.6;\"><h2>ATS Optimization Report</h2><pre>{st.session_state['last_cv_output']}</pre></body></html>"
-            st.download_button(label="📥 Download Professional Diagnostic Report (.html)", 
-                             data=cv_html_content, file_name="ATS_Diagnostic_Report.html", mime="text/html")
+            cv_html = f"<html><body><h2>ATS Report</h2><pre>{st.session_state['last_cv_output']}</pre></body></html>"
+            st.download_button("📥 Download Report", data=cv_html, file_name="ATS_Report.html", mime="text/html")
 
-    # ---- MODULE: INTERVIEW INTELLIGENCE MODULE ----
     elif st.session_state.current_page == "Interview Simulation":
-        st.markdown('<div class="premium-card"><h3>🎤 Interactive Interview Intelligence & Simulation Sandbox</h3></div>', unsafe_allow_html=True)
-        itype = st.selectbox("Select Target Segment Interview Focus Metric", ["Graduate Trainee", "Internship", "Entry Level Role"])
-        st.warning("**Incoming Agent Prompt Simulator:** Tell us about a time you handled project roadblocks effectively under pressure.")
-        user_response = st.text_area("Type or Stream Your Behavioral Response Text Block Below")
+        st.markdown('<div class="premium-card"><h3>🎤 Interview Intelligence & Simulation</h3></div>', unsafe_allow_html=True)
+        itype = st.selectbox("Select Interview Type", ["Graduate Trainee", "Internship", "Entry Level"])
+        st.warning("**Question:** Tell us about a time you handled project roadblocks under pressure.")
+        user_response = st.text_area("Type Your Response")
         
-        if st.button("Submit Response for Agent Evaluation Matrix"):
+        if st.button("Submit for Evaluation"):
             if client:
-                with st.spinner("Analyzing delivery vectors..."):
+                with st.spinner("Analyzing..."):
                     try:
                         r = client.models.generate_content(model='gemini-2.5-flash', 
-                            contents=f"Evaluate interview answer: '{user_response}' for '{itype}' standard tracking framework.")
+                            contents=f"Evaluate: '{user_response}' for {itype}")
                         st.session_state["last_interview_output"] = r.text
-                    except Exception:
-                        st.error("Connection drops recorded during validation pipeline run sequence.")            else:
-                st.session_state["last_interview_output"] = "### Interview Analysis Feedback Metrics\n\n**Calculated Alignment Score:** 79%\n\n* Communication is clear, structure impacts logically. Consider using the STAR framework format."
+                    except:
+                        st.error("Connection error")
+            else:
+                st.session_state["last_interview_output"] = "### Score: 79%\n\nGood structure. Use STAR framework."
 
         if "last_interview_output" in st.session_state:
             st.info(st.session_state["last_interview_output"])
-            int_html = f"<html><body style=\"font-family:'Segoe UI',Arial; padding:30px;\"><h2>Interview Simulation Feedback</h2><pre>{st.session_state['last_interview_output']}</pre></body></html>"
-            st.download_button(label="📥 Download Professional Interview Feedback (.html)", 
-                             data=int_html, file_name="Interview_Analysis_Feedback.html", mime="text/html")
 
-    # ---- MODULE: EMPLOYER CONNECT ----
     elif st.session_state.current_page == "Employer Connect":
-        st.markdown('<div class="premium-card" style="border-top:4px solid #3B82F6;"><h3>🏢 Corporate Enterprise & Employer Command Portal</h3><p>Transforming Launchpad from an isolated student application track into a functional structural talent marketplace network.</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="premium-card" style="border-top:4px solid #3B82F6;"><h3>🏢 Employer Portal</h3></div>', unsafe_allow_html=True)
         
         c_emp1, c_emp2 = st.columns(2)
         with c_emp1:
-            st.markdown("#### 🔍 Search & Pipeline Verified Graduate Profiles Matrix")
-            st.text_input("Filter Candidates by Technical Skill Domain Vector Keywords (e.g., Power BI, Python)")
-            st.button("Execute Global Marketplace Graduates Query Index Run")
-            
-            st.markdown("---")
-            st.markdown("#### 💼 Post Active Vacancies Matrix")
-            st.text_input("Job Title Requirement Block Input Position")
-            st.text_area("Job Specification Details Array Parameters")
-            st.button("Publish Position Openings Index")
+            st.markdown("#### 🔍 Search Candidates")
+            st.text_input("Filter by Skills")
+            st.button("Search")
+            st.markdown("---")            st.markdown("#### 💼 Post Jobs")
+            st.text_input("Job Title")
+            st.text_area("Job Description")
+            st.button("Publish")
             
         with c_emp2:
-            st.markdown('<div class="premium-card"><h3>🌟 High-Matching Talents Shortlisted Vector</h3></div>', unsafe_allow_html=True)
-            st.write("🟢 **Hassan Peros** — Match Compatibility Coefficient: `94%` (Product Management/AI Tracks)")
-            st.button("View Full Talent Interactive Portfolio Matrix")
-            st.button("Dispatch Automated Interview Request Link")
+            st.markdown('<div class="premium-card"><h3>🌟 Top Matches</h3></div>', unsafe_allow_html=True)
+            st.write("🟢 **Candidate** — Match: `94%`")
+            st.button("View Profile")
 
-    # ---- MODULE: PROFILE CONFIG ----
     elif st.session_state.current_page == "Profile Config":
-        st.markdown('<div class="premium-card"><h3>⚙️ Core Platform Environment Configuration Settings</h3></div>', unsafe_allow_html=True)
-        st.write(f"System Operational Context Working Instance Directory: `{os.getcwd()}`")
-        st.info("System operational frameworks diagnostics running clean inside standard verification environments parameters.")
+        st.markdown('<div class="premium-card"><h3>⚙️ Platform Settings</h3></div>', unsafe_allow_html=True)
+        st.write(f"Working Directory: `{os.getcwd()}`")
+        st.info("System diagnostics: OK")
 
     render_footer()
 
 def render_impact_section():
     st.markdown("""
         <div class="premium-card" style="margin-top: 35px; border-top: 4px solid #0B6B3A; background: #F8FAFC;">
-            <h3 style="text-align:center; color:#0B6B3A !important; font-weight:800;">📈 Graduate Career Launchpad Impact Matrix Projections</h3>
+            <h3 style="text-align:center; color:#0B6B3A !important; font-weight:800;">📈 Launchpad Impact Metrics</h3>
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center; margin-top: 20px;">
-                <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">1,250+</div><div style="font-size:12px; color:#64748B; font-weight:700;">GRADUATES REGISTERED</div></div>
-                <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">3,800+</div><div style="font-size:12px; color:#64748B; font-weight:700;">CVS COMPREHENSIVELY OPTIMIZED</div></div>
-                <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">940+</div><div style="font-size:12px; color:#64748B; font-weight:700;">MOCK INTERVIEWS CONDUCTED</div></div>
-                <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">76%</div><div style="font-size:12px; color:#64748B; font-weight:700;">EMPLOYMENT SUCCESS COEFFICIENT PROJECTION</div></div>
+                <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">1,250+</div><div style="font-size:12px; color:#64748B; font-weight:700;">GRADUATES</div></div>
+                <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">3,800+</div><div style="font-size:12px; color:#64748B; font-weight:700;">CVS OPTIMIZED</div></div>
+                <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">940+</div><div style="font-size:12px; color:#64748B; font-weight:700;">INTERVIEWS</div></div>
+                <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">76%</div><div style="font-size:12px; color:#64748B; font-weight:700;">SUCCESS RATE</div></div>
             </div>
-        </div>    """, unsafe_allow_html=True)
+        </div>
+    """, unsafe_allow_html=True)
 
 def render_footer():
     st.markdown("""
@@ -595,7 +574,7 @@ def render_footer():
             <p style="margin-top: 4px; font-weight: 600; color: #19D17B !important;">Developed by MIDDLE TECHNOLOGY</p>
             <p style="font-size: 14px; opacity: 0.9;"><b>Founder:</b> Hassan Peros</p>
             <p style="font-size: 14px; margin-top: 8px; font-style: italic; max-width: 700px; margin-left: auto; margin-right: auto;">
-                "Bridging the gap between graduates and employment opportunities through AI-powered career intelligence."
+                "Bridging the gap between graduates and employment through AI-powered career intelligence."
             </p>
         </div>
     """, unsafe_allow_html=True)
