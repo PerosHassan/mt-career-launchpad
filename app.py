@@ -412,12 +412,29 @@ def main():
             st.markdown("### 📊 Optimizations Report Matrix Output")
             st.info(st.session_state["last_cv_output"])
             
-            # Permanent Download Interface Suitability Array
+            # Formatted HTML structure with premium font styling
+            cv_html_content = f"""
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #1E293B; line-height: 1.6; padding: 30px; }}
+                    h1, h2, h3 {{ color: #0B6B3A; }}
+                    pre {{ font-family: 'Segoe UI', Arial, sans-serif; white-space: pre-wrap; font-size: 15px; }}
+                </style>
+            </head>
+            <body>
+                <h2>ATS Diagnostic & Optimization Report</h2>
+                <hr/>
+                <pre>{st.session_state["last_cv_output"]}</pre>
+            </body>
+            </html>
+            """
+            
             st.download_button(
-                label="📥 Download Diagnostic Report (.txt)",
-                data=st.session_state["last_cv_output"],
-                file_name="ATS_Diagnostic_Report.txt",
-                mime="text/plain"
+                label="📥 Download Professional Diagnostic Report (.html)",
+                data=cv_html_content,
+                file_name="ATS_Diagnostic_Report.html",
+                mime="text/html"
             )
             st.button("Export to LinkedIn Framework Layout Format")
 
@@ -446,11 +463,29 @@ def main():
         if "last_interview_output" in st.session_state:
             st.markdown("### 🎙️ AI Simulation Feedback Report")
             st.info(st.session_state["last_interview_output"])
+            
+            interview_html_content = f"""
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #1E293B; line-height: 1.6; padding: 30px; }}
+                    h1, h2, h3 {{ color: #0B6B3A; }}
+                    pre {{ font-family: 'Segoe UI', Arial, sans-serif; white-space: pre-wrap; font-size: 15px; }}
+                </style>
+            </head>
+            <body>
+                <h2>AI Interview Simulation Feedback</h2>
+                <hr/>
+                <pre>{st.session_state["last_interview_output"]}</pre>
+            </body>
+            </html>
+            """
+            
             st.download_button(
-                label="📥 Download Interview Feedback (.txt)",
-                data=st.session_state["last_interview_output"],
-                file_name="Interview_Analysis_Feedback.txt",
-                mime="text/plain"
+                label="📥 Download Professional Interview Feedback (.html)",
+                data=interview_html_content,
+                file_name="Interview_Analysis_Feedback.html",
+                mime="text/html"
             )
 
     # ---- 8. SMART JOB EXPLORER ----
@@ -480,11 +515,29 @@ def main():
         if "last_job_output" in st.session_state:
             st.markdown("### 🔍 Career Placement Map Recommendations")
             st.info(st.session_state["last_job_output"])
+            
+            job_html_content = f"""
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #1E293B; line-height: 1.6; padding: 30px; }}
+                    h1, h2, h3 {{ color: #0B6B3A; }}
+                    pre {{ font-family: 'Segoe UI', Arial, sans-serif; white-space: pre-wrap; font-size: 15px; }}
+                </style>
+            </head>
+            <body>
+                <h2>Target Career Placement Map</h2>
+                <hr/>
+                <pre>{st.session_state["last_job_output"]}</pre>
+            </body>
+            </html>
+            """
+            
             st.download_button(
-                label="📥 Download Career Roadmap Blueprint (.txt)",
-                data=st.session_state["last_job_output"],
-                file_name="Target_Placement_Map.txt",
-                mime="text/plain"
+                label="📥 Download Career Roadmap Blueprint (.html)",
+                data=job_html_content,
+                file_name="Target_Placement_Map.html",
+                mime="text/html"
             )
 
     # ---- 9. LEARNING & UPSKILLING HUB ----
@@ -554,11 +607,27 @@ def main():
         if "last_copilot_output" in st.session_state:
             st.markdown("### ✉️ Generated Copilot Output System Stream")
             st.info(st.session_state["last_copilot_output"])
+            
+            copilot_html_content = f"""
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #1E293B; line-height: 1.6; padding: 40px; }}
+                    h1, h2, h3 {{ color: #0B6B3A; }}
+                    pre {{ font-family: 'Segoe UI', Arial, sans-serif; white-space: pre-wrap; font-size: 16px; }}
+                </style>
+            </head>
+            <body>
+                <pre>{st.session_state["last_copilot_output"]}</pre>
+            </body>
+            </html>
+            """
+            
             st.download_button(
-                label="📥 Download Pitch Template (.txt)",
-                data=st.session_state["last_copilot_output"],
-                file_name="AI_Copilot_Output_Pitch.txt",
-                mime="text/plain"
+                label="📥 Download Professional Pitch Template (.html)",
+                data=copilot_html_content,
+                file_name="AI_Copilot_Output_Pitch.html",
+                mime="text/html"
             )
 
     # ---- 12. ANALYTICS & GROWTH METRICS ----
