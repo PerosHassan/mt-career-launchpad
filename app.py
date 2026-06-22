@@ -6,6 +6,7 @@ Fixed features:
 1. Native API integration to resolve 'API_KEY_INVALID' blocks.
 2. High-contrast mobile typography to fix unreadable headings.
 3. Stable native alert styling to eliminate blank output screens.
+4. Added an automatic 503 service fallback model layer for high-demand spikes.
 """
 
 import streamlit as st
@@ -337,16 +338,30 @@ def main():
         if st.button("Execute Live Agent Analysis", key="btn_execute_ai_analysis"):
             if client:
                 with st.spinner("Agent running real-time profile diagnostic match..."):
+                    prompt = f"Critique this candidate profile for role {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Bio: {st.session_state.cv_data_exp}. Job spec: {target_description_text}"
                     try:
-                        prompt = f"Critique this candidate profile for role {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Bio: {st.session_state.cv_data_exp}. Job spec: {target_description_text}"
+                        # Primary production layer request
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 📊 Live Agent Diagnostic Output")
                             st.info(response.text)
                         else:
                             st.warning("Empty response received. Please try again.")
-                    except Exception as e:
-                        st.error(f"Error connecting: {str(e)}")
+                    except Exception as primary_error:
+                        # Checking for 503 error to execute high-availability fallback route
+                        if "503" in str(primary_error) or "UNAVAILABLE" in str(primary_error).upper():
+                            try:
+                                # Safe alternate stable production pipeline routing
+                                response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+                                if response.text:
+                                    st.markdown("### 📊 Live Agent Diagnostic Output (Fallback Route)")
+                                    st.info(response.text)
+                                else:
+                                    st.warning("Empty fallback response received. Please try again.")
+                            except Exception as fallback_error:
+                                st.error(f"Ecosystem high-load limit reached on all paths: {str(fallback_error)}")
+                        else:
+                            st.error(f"Error connecting: {str(primary_error)}")
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
@@ -364,16 +379,27 @@ def main():
         if st.button("Submit Response for Agent Evaluation", key="btn_eval_interview"):
             if client:
                 with st.spinner("AI Coach analyzing core delivery structure..."):
+                    prompt = f"Evaluate this answer: {user_response} to question: {mock_question}"
                     try:
-                        prompt = f"Evaluate this answer: {user_response} to question: {mock_question}"
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 🎙️ AI Coach Evaluation Feedback")
                             st.info(response.text)
                         else:
                             st.warning("Empty response received. Please try again.")
-                    except Exception as e:
-                        st.error(f"Error: {str(e)}")
+                    except Exception as primary_error:
+                        if "503" in str(primary_error) or "UNAVAILABLE" in str(primary_error).upper():
+                            try:
+                                response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+                                if response.text:
+                                    st.markdown("### 🎙️ AI Coach Evaluation Feedback (Fallback Route)")
+                                    st.info(response.text)
+                                else:
+                                    st.warning("Empty fallback response received.")
+                            except Exception as fallback_error:
+                                st.error(f"Service capacity limit reached: {str(fallback_error)}")
+                        else:
+                            st.error(f"Error: {str(primary_error)}")
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
@@ -389,16 +415,27 @@ def main():
         if st.button("Generate Tailored Job Placement Blueprint", key="btn_run_job_matcher"):
             if client:
                 with st.spinner("Mapping dynamic roles matrix pipelines..."):
+                    prompt = f"Provide 3 relevant target roles for tech candidate in {industry_focus} industry. User skills: {st.session_state.cv_data_skills}"
                     try:
-                        prompt = f"Provide 3 relevant target roles for tech candidate in {industry_focus} industry. User skills: {st.session_state.cv_data_skills}"
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 🔍 Strategic Career Placement Map")
                             st.info(response.text)
                         else:
                             st.warning("Empty response received. Please try again.")
-                    except Exception as e:
-                        st.error(f"Error running match query: {str(e)}")
+                    except Exception as primary_error:
+                        if "503" in str(primary_error) or "UNAVAILABLE" in str(primary_error).upper():
+                            try:
+                                response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+                                if response.text:
+                                    st.markdown("### 🔍 Strategic Career Placement Map (Fallback Route)")
+                                    st.info(response.text)
+                                else:
+                                    st.warning("Empty fallback response received.")
+                            except Exception as fallback_error:
+                                st.error(f"Service capacity limit reached: {str(fallback_error)}")
+                        else:
+                            st.error(f"Error running match query: {str(primary_error)}")
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
@@ -416,16 +453,27 @@ def main():
         if st.button("Generate High-Conversion Messaging Strategy", key="btn_gen_outreach"):
             if client:
                 with st.spinner("Compiling structural messaging frameworks..."):
+                    prompt = f"Write pitch template to {recipient_title} at {company_target} on platform {platform}."
                     try:
-                        prompt = f"Write pitch template to {recipient_title} at {company_target} on platform {platform}."
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### ✉️ Strategic Communication Pitch")
                             st.info(response.text)
                         else:
                             st.warning("Empty response received. Please try again.")
-                    except Exception as e:
-                        st.error(f"Error: {str(e)}")
+                    except Exception as primary_error:
+                        if "503" in str(primary_error) or "UNAVAILABLE" in str(primary_error).upper():
+                            try:
+                                response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+                                if response.text:
+                                    st.markdown("### ✉️ Strategic Communication Pitch (Fallback Route)")
+                                    st.info(response.text)
+                                else:
+                                    st.warning("Empty fallback response received.")
+                            except Exception as fallback_error:
+                                st.error(f"Service capacity limit reached: {str(fallback_error)}")
+                        else:
+                            st.error(f"Error: {str(primary_error)}")
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
