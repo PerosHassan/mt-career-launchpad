@@ -6,7 +6,7 @@ Fixed features:
 1. Native API integration to resolve 'API_KEY_INVALID' blocks.
 2. High-contrast mobile typography to fix unreadable headings.
 3. Stable native alert styling to eliminate blank output screens.
-4. Shifted entirely to stable Free Tier models (gemini-1.5-flash) to bypass 403 restriction.
+4. Updated to an active, stable model (gemini-2.5-flash) to bypass the 404 retirement error.
 """
 
 import streamlit as st
@@ -98,7 +98,7 @@ def get_user_profile(username):
 def inject_premium_styles():
     st.markdown("""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
         
         /* Force App Base Background & Universal Inheritance */
         .stApp {
@@ -340,8 +340,8 @@ def main():
                 with st.spinner("Agent running real-time profile diagnostic match..."):
                     prompt = f"Critique this candidate profile for role {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Bio: {st.session_state.cv_data_exp}. Job spec: {target_description_text}"
                     try:
-                        # Fixed to run cleanly on Free Tier keys
-                        response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+                        # Rerouted to active stable tier model
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 📊 Live Agent Diagnostic Output")
                             st.info(response.text)
@@ -368,7 +368,7 @@ def main():
                 with st.spinner("AI Coach analyzing core delivery structure..."):
                     prompt = f"Evaluate this answer: {user_response} to question: {mock_question}"
                     try:
-                        response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 🎙️ AI Coach Evaluation Feedback")
                             st.info(response.text)
@@ -393,7 +393,7 @@ def main():
                 with st.spinner("Mapping dynamic roles matrix pipelines..."):
                     prompt = f"Provide 3 relevant target roles for tech candidate in {industry_focus} industry. User skills: {st.session_state.cv_data_skills}"
                     try:
-                        response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 🔍 Strategic Career Placement Map")
                             st.info(response.text)
@@ -420,7 +420,7 @@ def main():
                 with st.spinner("Compiling structural messaging frameworks..."):
                     prompt = f"Write pitch template to {recipient_title} at {company_target} on platform {platform}."
                     try:
-                        response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### ✉️ Strategic Communication Pitch")
                             st.info(response.text)
