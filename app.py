@@ -8,6 +8,7 @@ import streamlit as st
 import json
 import hashlib
 import os
+import pandas as pd  # Added for the Job Tracker
 
 # =============================================================================
 # PERSISTENT ENVIRONMENT MEMORY ENGINE
@@ -19,7 +20,7 @@ def get_global_memory_bridge():
 global_bridge = get_global_memory_bridge()
 
 # =============================================================================
-# INITIALIZE STABLE PROD AI AGENT ENGINE (PERMANENT API FIX)
+# INITIALIZE STABLE PROD AI AGENT ENGINE
 # =============================================================================
 try:
     from google import genai
@@ -46,8 +47,7 @@ USER_FILE = os.path.join(os.path.dirname(__file__), "users.json") if '__file__' 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-def load_users():
-    if not os.path.exists(USER_FILE):
+def load_users():    if not os.path.exists(USER_FILE):
         return {}
     try:
         with open(USER_FILE, "r") as f:
@@ -96,13 +96,19 @@ def get_user_profile(username):
         return users[username].get("profile", {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""})
     return {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
 
-# =============================================================================
-# FRONTEND SYSTEM DESIGN & HIGH-IMPACT CORPORATE THEME CONFIGURATION
+# =============================================================================# FRONTEND SYSTEM DESIGN & HIGH-IMPACT CORPORATE THEME CONFIGURATION
 # =============================================================================
 def inject_premium_styles():
     st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+        
+        /* --- HIDE STREAMLIT HEADER TOOLBAR ICONS (GitHub, Share, Star, Menu) --- */
+        #MainMenu {visibility: hidden !important;}
+        header {visibility: hidden !important;}
+        [data-testid="stToolbar"] {display: none !important;}
+        .stApp header {display: none !important;}
+        .view-content {padding-top: 0 !important;}
         
         /* Universal Canvas Background Slate (#F8FAFC) */
         .stApp {
@@ -115,13 +121,6 @@ def inject_premium_styles():
             color: #1E293B !important;
         }
 
-        /* Input Labels Typography Overrides */
-        div[data-testid="stWidgetLabel"] p, label p {
-            color: #1E293B !important;
-            font-weight: 700 !important;
-            font-size: 15px !important;
-        }
-        
         /* Corporate Emerald Green Header Box (#0B6B3A) */
         .premium-hero {
             background: linear-gradient(135deg, #0B6B3A 0%, #063c22 100%);
@@ -146,8 +145,7 @@ def inject_premium_styles():
         
         /* Base SaaS Premium Container Cards */
         .premium-card {
-            background: #ffffff;
-            padding: 24px;
+            background: #ffffff;            padding: 24px;
             border-radius: 16px;
             border: 1px solid #E2E8F0;
             margin-bottom: 20px;
@@ -160,7 +158,7 @@ def inject_premium_styles():
             color: #0B6B3A !important;
         }
 
-        /* 8. VISUAL DESIGN SYSTEM IMPLEMENTATION (COLOR-CODED WIDGETS) */
+        /* Color-Coded Widgets */
         .badge-green {
             background-color: #DCFCE7 !important;
             border-left: 5px solid #22C55E !important;
@@ -179,14 +177,8 @@ def inject_premium_styles():
             color: #7C2D12 !important;
             padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; font-weight: 500;
         }
-        .badge-red {
-            background-color: #FEE2E2 !important;
-            border-left: 5px solid #EF4444 !important;
-            color: #7F1D1D !important;
-            padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; font-weight: 500;
-        }
-
-        /* 2. REAL SaaS PLATFORM ANALYTICS GRID */
+        
+        /* SaaS Platform Analytics Grid */
         .saas-grid {
             display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;
         }
@@ -202,16 +194,14 @@ def inject_premium_styles():
         div.stButton > button, div.stDownloadButton > button {
             background: linear-gradient(90deg, #0B6B3A 0%, #19D17B 100%) !important;
             color: #ffffff !important;
-            border-radius: 12px !important;
-            border: none !important;
+            border-radius: 12px !important;            border: none !important;
             padding: 10px 20px !important;
             font-weight: 700 !important;
             transition: all 0.3s ease;
         }
-        div.stButton > button:hover, div.stDownloadButton > button:hover {
+        div.stButton > button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(25, 209, 123, 0.3);
-            color: #ffffff !important;
         }
 
         /* Platform Bottom Branding Footer */
@@ -219,7 +209,7 @@ def inject_premium_styles():
             margin-top: 40px; padding: 30px; background-color: #0B6B3A;
             border-radius: 16px; color: #ffffff !important; text-align: center;
         }
-        .system-footer h4, .system-footer p, .system-footer span { color: #ffffff !important; }
+        .system-footer h4, .system-footer p { color: #ffffff !important; }
         </style>
     """, unsafe_allow_html=True)
 
@@ -243,14 +233,17 @@ def main():
         st.session_state.copilot_messages = [
             {"role": "assistant", "content": "Hello! I am your Launchpad AI Career Copilot. How can I accelerate your career journey today?"}
         ]
+        # Initialize Job Tracker DataFrame
+        st.session_state.job_apps = pd.DataFrame(
+            columns=["Company", "Role", "Status", "Date Applied", "Notes"]
+        )
 
     # Platform Title Presentation Box
     st.markdown("""
         <div class="premium-hero">
             <h1>Graduate Career Launchpad</h1>
             <p class="tagline">Enterprise AI-Powered Employability & Acceleration Ecosystem</p>
-        </div>
-    """, unsafe_allow_html=True)
+        </div>    """, unsafe_allow_html=True)
 
     # Secure Multi-Channel Authentication Gateway UI Canvas
     if not st.session_state.logged_in:
@@ -299,9 +292,7 @@ def main():
                     else:
                         st.error("Selected username parameter is already assigned.")
         
-        # 10. DYNAMIC ECOSYSTEM ROADMAP AND VISION IMPACT GRID
-        render_impact_section()
-        return
+        render_impact_section()        return
 
     current_user = st.session_state.username
     client = get_ai_agent()
@@ -319,8 +310,10 @@ def main():
 
     # Unified Left Core Sidebar Navigation Control Panel
     with st.sidebar:
-        st.markdown("### 🧭 Platform Navigation Matrix")
+        st.markdown("###  Platform Navigation Matrix")
         if st.button("🏠 Comprehensive Unified Dashboard", use_container_width=True): st.session_state.current_page = "Dashboard Workspace"; st.rerun()
+        if st.button("📝 AI Resume Optimizer", use_container_width=True): st.session_state.current_page = "Resume AI Optimizer"; st.rerun()
+        if st.button("📊 Job Application Tracker", use_container_width=True): st.session_state.current_page = "Job Tracker"; st.rerun()
         if st.button("📄 Enterprise CV Evaluation Core", use_container_width=True): st.session_state.current_page = "Advanced CV Builder"; st.rerun()
         if st.button("🎤 Live Interview Simulator Hub", use_container_width=True): st.session_state.current_page = "Interview Simulation"; st.rerun()
         if st.button("🤝 Employer Hiring Marketplace", use_container_width=True): st.session_state.current_page = "Employer Connect"; st.rerun()
@@ -330,8 +323,60 @@ def main():
     # MODULE ROUTING ROUTER RUN MATRIX
     # =============================================================================
     
+    # ---- NEW FEATURE: AI RESUME OPTIMIZER ----
+    if st.session_state.current_page == "Resume AI Optimizer":
+        st.markdown('<div class="premium-card"><h3>📝 AI Resume Optimization Engine</h3></div>', unsafe_allow_html=True)
+        st.write("Paste your current resume text and the target job description below. Our AI will analyze the gap and suggest improvements.")
+        
+        col_r1, col_r2 = st.columns(2)
+        with col_r1:
+            resume_text = st.text_area("Paste Resume Text", height=200, placeholder="Experience: ...\nSkills: ...")
+        with col_r2:
+            job_desc = st.text_area("Paste Target Job Description", height=200, placeholder="Requirements: ...\nResponsibilities: ...")
+            
+        if st.button("🚀 Optimize Resume"):
+            if resume_text and job_desc:
+                if client:
+                    with st.spinner("AI is analyzing alignment metrics..."):
+                        prompt = f"Act as an expert recruiter. Analyze this resume against this job description. Provide 3 specific bullet points on how to improve the resume to better match the job keywords and requirements.\n\nResume: {resume_text}\n\nJob Description: {job_desc}"
+                        try:
+                            response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                            st.markdown(f'<div class="badge-green">💡 <b>AI Optimization Recommendations:</b><br/>{response.text}</div>', unsafe_allow_html=True)                        except Exception as e:
+                            st.error(f"Ecosystem Agent Connection Dropdown: {str(e)}")
+                else:
+                    st.info("AI Agent offline. Please ensure GEMINI_API_KEY is set.")
+            else:
+                st.warning("Please fill in both text fields.")
+
+    # ---- NEW FEATURE: JOB APPLICATION TRACKER ----
+    elif st.session_state.current_page == "Job Tracker":
+        st.markdown('<div class="premium-card"><h3>📊 Job Application Tracker</h3></div>', unsafe_allow_html=True)
+        st.write("Track your applications, interviews, and offers. Data is saved for this session.")
+        
+        # Interactive Data Editor
+        edited_df = st.data_editor(
+            st.session_state.job_apps,
+            num_rows="dynamic",
+            use_container_width=True,
+            column_config={
+                "Status": st.column_config.SelectboxColumn(
+                    "Status",
+                    options=["Applied", "Interviewing", "Offer", "Rejected"],
+                    required=True,
+                    default="Applied"
+                ),
+                "Date Applied": st.column_config.DateColumn("Date Applied"),
+                "Company": st.column_config.TextColumn("Company", width="medium"),
+                "Role": st.column_config.TextColumn("Role", width="medium"),
+                "Notes": st.column_config.TextColumn("Notes", width="large"),
+            },
+            hide_index=True,
+        )
+        st.session_state.job_apps = edited_df
+        st.success("Tracker updates automatically as you edit!")
+
     # ---- HUB MODALITY DIRECTION: UNIFIED HIGH-IMPACT INTEGRATED DASHBOARD ----
-    if st.session_state.current_page == "Dashboard Workspace":
+    elif st.session_state.current_page == "Dashboard Workspace":
         st.markdown(f"## Welcome back, Hassan 👋")
         
         # 1. HIGH-PRIORITY FEATURE: CAREER READINESS SCORE BANNER BLOCK
@@ -345,8 +390,7 @@ def main():
             st.markdown("<p style='margin: 4px 0;'>🟩 <b>Profile Strength:</b> 90%</p>", unsafe_allow_html=True)
             st.markdown("<p style='margin: 4px 0;'>🟩 <b>Skills Match Coefficient:</b> 78%</p>", unsafe_allow_html=True)
             st.markdown("<p style='margin: 4px 0;'>🟩 <b>Ecosystem CV Quality index:</b> 88%</p>", unsafe_allow_html=True)
-            st.markdown("<p style='margin: 4px 0;'>🟩 <b>Interview Readiness Score:</b> 72%</p>", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown("<p style='margin: 4px 0;'>🟩 <b>Interview Readiness Score:</b> 72%</p>", unsafe_allow_html=True)        st.markdown('</div>', unsafe_allow_html=True)
 
         # 2. FEATURE IMPLEMENTATION: HIGH-IMPACT COMPACT SAAS PLATFORM ANALYTICS GRID
         st.markdown("""
@@ -370,7 +414,7 @@ def main():
                 st.markdown("<div class='badge-green'>🟩 <b>Calculated Persona Classification:</b> Strategic High-Growth Technical Leader</div>", unsafe_allow_html=True)
                 
                 # 4. EXCLUSIVE COMPONENT: EMPLOYABILITY PREDICTION ENGINE WIDGET
-                st.markdown('<div class="premium-card"><h3>🔮 Forward Predictive Employability Projections</h3></div>', unsafe_allow_html=True)
+                st.markdown('<div class="premium-card"><h3> Forward Predictive Employability Projections</h3></div>', unsafe_allow_html=True)
                 col_prob_l, col_prob_r = st.columns([1, 2])
                 with col_prob_l:
                     st.markdown("<div style='font-size: 36px; font-weight:800; color:#0B6B3A; text-align:center;'>87%</div>", unsafe_allow_html=True)
@@ -395,21 +439,12 @@ def main():
                         st.markdown(f"<div class='badge-blue'>🔷 <b>{j['title']}</b> ({j['match']} Match Profile Correlation)</div>", unsafe_allow_html=True)
                     with c_j2:
                         st.markdown("<div style='margin-top:4px;'>", unsafe_allow_html=True)
-                        st.button("Apply Instantly", key=f"apply_{j['title']}")
-                        st.markdown("</div>", unsafe_allow_html=True)
+                        st.button("Apply Instantly", key=f"apply_{j['title']}")                        st.markdown("</div>", unsafe_allow_html=True)
 
-            # 🛠️ COMPONENT: ARCHITECTURAL SKILLS GAP DIAGNOSTIC matrix
+            # ️ COMPONENT: ARCHITECTURAL SKILLS GAP DIAGNOSTIC matrix
             st.markdown('<div class="premium-card"><h3>🔍 Operational Skills Gap Audit Engine</h3></div>', unsafe_allow_html=True)
             st.markdown("<div class='badge-blue'>🔷 <b>Current Operational Skill Matrix:</b> MS Word, Advanced Excel Data Formats, Functional Interpersonal Presentation.</div>", unsafe_allow_html=True)
-            st.markdown("<div class='badge-red'>🟥 <b>Identified Missing Target Skills Base:</b> Cloud Infrastructure Architecture, Scalable Project Management Frameworks, Automated Power BI Analytics Dashboards.</div>", unsafe_allow_html=True)
-
-            # 6. COMPONENT: DYNAMIC PERSONALIZED LEARNING ROADMAP TIMELINE JOURNEY
-            st.markdown('<div class="premium-card"><h3>📚 Curriculum Learning Roadmap Timeline Engine</h3></div>', unsafe_allow_html=True)
-            col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-            with col_m1: st.markdown("<div class='badge-orange'>🔸 <b>Month 1</b><br/>Excel Advanced Tracking</div>", unsafe_allow_html=True)
-            with col_m2: st.markdown("<div class='badge-orange'>🔸 <b>Month 2</b><br/>Power BI Architecture</div>", unsafe_allow_html=True)
-            with col_m3: st.markdown("<div class='badge-orange'>🔸 <b>Month 3</b><br/>Project Management</div>", unsafe_allow_html=True)
-            with col_m4: st.markdown("<div class='badge-orange'>🔸 <b>Month 4</b><br/>Portfolio Blueprint</div>", unsafe_allow_html=True)
+            st.markdown("<div class='badge-red'> <b>Identified Missing Target Skills Base:</b> Cloud Infrastructure Architecture, Scalable Project Management Frameworks, Automated Power BI Analytics Dashboards.</div>", unsafe_allow_html=True)
 
         with col_main_right:
             # 🏆 SPECIAL FEATURE FLAGSHIP: EXCLUSIVE REGISTERED MT EMPLOYABILITY SCORE™ COMPONENT
@@ -453,8 +488,7 @@ def main():
                 if chat_box_input:
                     st.session_state.copilot_messages.append({"role": "user", "content": chat_box_input})
                     if client:
-                        try:
-                            r = client.models.generate_content(model='gemini-2.5-flash', contents=chat_box_input)
+                        try:                            r = client.models.generate_content(model='gemini-2.5-flash', contents=chat_box_input)
                             st.session_state.copilot_messages.append({"role": "assistant", "content": r.text})
                         except Exception:
                             st.session_state.copilot_messages.append({"role": "assistant", "content": "Ecosystem API layer processed query request parameters cleanly inside sandboxed memory."})
@@ -462,15 +496,6 @@ def main():
                         st.session_state.copilot_messages.append({"role": "assistant", "content": "Ecosystem local execution processing sandbox model return line completed."})
                     st.rerun()
 
-            # 7. FEATURE IMPLEMENTATION: RIGOROUS LONGITUDINAL CAREER JOURNEY PROGRESS TRACKER
-            st.markdown('<div class="premium-card"><h3>🏁 Operational Career Journey Progress Tracker</h3></div>', unsafe_allow_html=True)
-            st.markdown("🔹 **Profile Handshake Setup Infrastructure** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  🟢 `COMPLETED`", unsafe_allow_html=True)
-            st.markdown("🔹 **Core Cognitive Employability Assessment** &nbsp;&nbsp;&nbsp;&nbsp; 🟢 `COMPLETED`", unsafe_allow_html=True)
-            st.markdown("🔹 **Dynamic AI CV Parameter Optimization** &nbsp;&nbsp;&nbsp; 🟢 `COMPLETED`", unsafe_allow_html=True)
-            st.markdown("🔹 **Live Behavioral Interview Simulation** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⏳ `IN PROGRESS`", unsafe_allow_html=True)
-            st.markdown("🔹 **Marketplace Employment Job Placement** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⏳ `PENDING PIPELINE`", unsafe_allow_html=True)
-
-        # 10. SYSTEM VISUALIZATION IMPACT SECTION AT FOOTER CORE
         render_impact_section()
 
     # ---- MODULE TIMELINE HUB BLOCK: ADVANCED CV ENGINE ----
@@ -512,8 +537,7 @@ def main():
         itype = st.selectbox("Select Target Segment Interview Focus Metric", ["Graduate Trainee", "Internship", "Entry Level Role"])
         st.warning("**Incoming Agent Prompt Simulator:** Tell us about a time you handled project roadblocks effectively under pressure.")
         user_response = st.text_area("Type or Stream Your Behavioral Response Text Block Below")
-        
-        if st.button("Submit Response for Agent Evaluation Matrix"):
+                if st.button("Submit Response for Agent Evaluation Matrix"):
             if client:
                 with st.spinner("Analyzing delivery vectors..."):
                     try:
@@ -527,7 +551,7 @@ def main():
         if "last_interview_output" in st.session_state:
             st.info(st.session_state["last_interview_output"])
             int_html = f"<html><body style=\"font-family:'Segoe UI',Arial; padding:30px;\"><h2>Interview Simulation Feedback</h2><pre>{st.session_state['last_interview_output']}</pre></body></html>"
-            st.download_button(label="📥 Download Professional Interview Feedback (.html)", data=int_html, file_name="Interview_Analysis_Feedback.html", mime="text/html")
+            st.download_button(label=" Download Professional Interview Feedback (.html)", data=int_html, file_name="Interview_Analysis_Feedback.html", mime="text/html")
 
     # ---- 9. FUTURE PHASE IMPLEMENTATION: EMPLOYER VERIFIED TALENT PORTAL MARKETPLACE ----
     elif st.session_state.current_page == "Employer Connect":
@@ -562,8 +586,7 @@ def main():
 # 10. SYSTEM VISUALIZATION: ECOSYSTEM MISSION IMPACT SECTION COMPONENT
 def render_impact_section():
     st.markdown("""
-        <div class="premium-card" style="margin-top: 35px; border-top: 4px solid #0B6B3A; background: #F8FAFC;">
-            <h3 style="text-align:center; color:#0B6B3A !important; font-weight:800;">📈 Graduate Career Launchpad Impact Matrix Projections</h3>
+        <div class="premium-card" style="margin-top: 35px; border-top: 4px solid #0B6B3A; background: #F8FAFC;">            <h3 style="text-align:center; color:#0B6B3A !important; font-weight:800;">📈 Graduate Career Launchpad Impact Matrix Projections</h3>
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center; margin-top: 20px;">
                 <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">1,250+</div><div style="font-size:12px; color:#64748B; font-weight:700;">GRADUATES REGISTERED</div></div>
                 <div style="padding:10px;"><div style="font-size:32px; font-weight:800; color:#0B6B3A;">3,800+</div><div style="font-size:12px; color:#64748B; font-weight:700;">CVS COMPREHENSIVELY OPTIMIZED</div></div>
