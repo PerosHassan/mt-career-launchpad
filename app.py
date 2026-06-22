@@ -1,11 +1,6 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition - Premium Green Theme (Presentation Optimized)
-
-Fixed features:
-1. Native API integration to bypass 'API_KEY_INVALID' blocks.
-2. Premium high-contrast CSS typography for perfect readability over gradients.
-3. Clean layout architecture for desktop and mobile screen presentations.
+Enterprise AI Agent Edition - Premium Green Theme (Mobile Contrast Fixed)
 """
 
 import streamlit as st
@@ -14,7 +9,7 @@ import hashlib
 import os
 
 # =============================================================================
-# INITIALIZE LIVE AI AGENT ENGINE (NATIVE FIX)
+# INITIALIZE LIVE AI AGENT ENGINE
 # =============================================================================
 try:
     from google import genai
@@ -23,10 +18,8 @@ except ImportError:
     AI_LIBRARY_AVAILABLE = False
 
 def get_ai_agent():
-    """Initializes the official Google GenAI client using secure environment tokens."""
     if not AI_LIBRARY_AVAILABLE:
         return None
-    # Prioritize Streamlit Secrets for cloud deployment stability
     api_key = st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return None
@@ -94,39 +87,37 @@ def get_user_profile(username):
     return {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
 
 # =============================================================================
-# FRONTEND SYSTEM DESIGN (HIGH CONTRAST / ACCESSIBILITY FIX)
+# FRONTEND SYSTEM DESIGN (MOBILE RESPONSIVE + AGGRESSIVE WHITE CONTRAST OVR)
 # =============================================================================
 def inject_premium_styles():
     st.markdown("""
         <style>
-        /* Import Professional Typography */
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
-        /* Global Canvas Rules */
+        /* Force App Base Background & Universal Inheritance */
         .stApp {
             background: linear-gradient(180deg, #063c22 0%, #0d6137 50%, #114d2e 100%) !important;
-            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
             color: #ffffff !important;
         }
         
-        /* Strict Typography Fixes - Force Crisp Visibility on Labels & Inputs */
+        /* AGGRESSIVE WHITE CONTRAST OVERRIDE FOR ALL TEXT/LABELS ON MOBILE */
+        h1, h2, h3, h4, h5, h6, p, span, li, label, div, select {
+            color: #ffffff !important;
+        }
+
+        /* Target Streamlit widget text input fields & titles natively */
         div[data-testid="stWidgetLabel"] p, 
         .stSelectbox label p, 
         .stTextInput label p, 
         .stTextArea label p,
         .stWidgetFormModifier label {
             color: #ffffff !important;
-            font-weight: 600 !important;
-            font-size: 15px !important;
-            letter-spacing: -0.1px;
+            font-weight: 700 !important;
+            font-size: 16px !important;
         }
         
-        /* Text Color Inheritance Fixes for Native Subheadings */
-        h1, h2, h3, h4, h5, h6, p, span, li {
-            color: #ffffff !important;
-        }
-        
-        /* Premium Branding / Logo Mark Geometry */
+        /* Branding Element Geometry */
         .brand-container {
             display: flex;
             align-items: center;
@@ -146,80 +137,61 @@ def inject_premium_styles():
             font-weight: 800;
             color: white !important;
             font-size: 22px;
-            letter-spacing: -0.5px;
         }
         
-        /* Main Hero Presentation Wrapper */
+        /* Layout Hero Presentation */
         .premium-hero {
             text-align: center;
-            padding: 30px 20px 20px 20px;
+            padding: 20px 10px;
             color: white;
         }
         .premium-hero h1 {
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
-            font-size: 42px !important;
+            font-size: 36px !important;
             font-weight: 800 !important;
-            letter-spacing: -1px;
             margin: 0 !important;
         }
         .premium-hero p.tagline {
             color: #a3e6be !important;
-            font-size: 20px !important;
-            font-weight: 400;
+            font-size: 18px !important;
             margin-top: 4px !important;
-            margin-bottom: 16px !important;
-            letter-spacing: -0.2px;
         }
         
-        /* Form Field Text Overrides (Ensures inputs are readable inside white boxes) */
+        /* Safe Form Text Styling (Inputs remain legible inside fields) */
         .stTextInput input, .stTextArea textarea {
             color: #1f2937 !important;
             font-weight: 500 !important;
             background-color: #ffffff !important;
             border-radius: 12px !important;
-            border: 1px solid #d1d5db !important;
         }
         
-        /* Custom Elegant Container Cards */
+        /* Premium Translucent System Cards */
         .premium-card {
             background: rgba(255, 255, 255, 0.12);
-            padding: 24px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 24px;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
         }
         .premium-card h3 {
-            color: #ffffff !important;
-            font-size: 20px !important;
+            font-size: 22px !important;
             font-weight: 700 !important;
             margin-top: 0 !important;
-            margin-bottom: 10px !important;
-        }
-        .premium-card p {
-            font-size: 14px !important;
-            line-height: 1.5 !important;
-            color: #e5e7eb !important;
+            color: #ffffff !important;
         }
         
-        /* Global Button Layout Engine */
+        /* Global Navigation/Action Button Interface Engine */
         div.stButton > button {
             background: linear-gradient(90deg, #2ae083 0%, #198754 100%) !important;
-            color: #063c22 !important;
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            color: #ffffff !important;
             border-radius: 12px !important;
             border: none !important;
             padding: 12px 24px !important;
             font-weight: 700 !important;
-            font-size: 14px !important;
-            box-shadow: 0 4px 14px rgba(42, 224, 131, 0.2) !important;
-            transition: all 0.2s ease-in-out;
             width: 100%;
         }
         div.stButton > button:hover {
-            transform: translateY(-1.5px);
-            box-shadow: 0 6px 20px rgba(42, 224, 131, 0.4) !important;
-            color: white !important;
+            color: #063c22 !important;
+            background: #ffffff !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -231,7 +203,6 @@ def main():
     st.set_page_config(page_title="MT Graduate Career Launchpad", page_icon="⚡", layout="wide")
     inject_premium_styles()
     
-    # Initialize Safe Session Properties 
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
     if "username" not in st.session_state:
@@ -239,7 +210,6 @@ def main():
     if "current_page" not in st.session_state:
         st.session_state.current_page = "Home Menu"
         
-    # Persistent State Handling for CV Fields
     if "cv_data_name" not in st.session_state:
         st.session_state.cv_data_name = ""
     if "cv_data_title" not in st.session_state:
@@ -251,25 +221,16 @@ def main():
     if "cv_data_projects" not in st.session_state:
         st.session_state.cv_data_projects = ""
 
-    # ---- BRAND IDENTITY & HERO HEADER ----
     st.markdown("""
         <div class="premium-hero">
             <div class="brand-container">
                 <div class="logo-mark">MT</div>
                 <h1>Graduate Career Launchpad</h1>
             </div>
-            <p class="tagline">your professional profile, <span style="font-weight: 300; opacity: 0.9;">ready everywhere.</span></p>
-            <p style="max-width: 600px; margin: 0 auto; font-size: 14px; opacity: 0.85;">
-                Create a clean digital CV and personal workspace powered by live AI Agent analysis engines.
-            </p>
+            <p class="tagline">your professional profile, <span style="font-weight: 300;">ready everywhere.</span></p>
         </div>
     """, unsafe_allow_html=True)
 
-    # Check for System Dependency Warning
-    if not AI_LIBRARY_AVAILABLE:
-        st.error("🚨 System Dependency Error: 'google-genai' is missing from requirements.txt. Please add it to your repository.")
-
-    # ---- UNAUTHORIZED SYSTEM PORTAL ----
     if not st.session_state.logged_in:
         col_auth_left, col_auth_right = st.columns(2)
         
@@ -304,158 +265,102 @@ def main():
                         st.error("Username index is currently occupied.")
         return
 
-    # Authorized Session Global Parameters
     current_user = st.session_state.username
     client = get_ai_agent()
 
-    # Top Status Control Bar
     c_status_left, c_status_right = st.columns([5, 1])
     with c_status_left:
-        if client:
-            st.markdown(f"<span>🟢 <b>AI Agent Cloud Connected:</b> `ID: {current_user}` | Mode: `Live Production Engines Active`</span>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<span style='color: #FCA5A5;'>⚠️ <b>AI Preview Mode:</b> Please configure a valid <code>GEMINI_API_KEY</code> key string within your Streamlit Secrets dashboard layer.</span>", unsafe_allow_html=True)
+        st.markdown(f"<span>🟢 <b>Ecosystem Workspace Active:</b> User ID: `{current_user}`</span>", unsafe_allow_html=True)
     with c_status_right:
-        if st.button("Disconnect Agent", key="btn_global_disconnect"):
+        if st.button("Disconnect", key="btn_global_disconnect"):
             st.session_state.logged_in = False
             st.session_state.username = ""
             st.session_state.current_page = "Home Menu"
             st.rerun()
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
     # =============================================================================
     # NAVIGATION AND MAIN MODULE ROUTING
     # =============================================================================
     if st.session_state.current_page == "Home Menu":
-        st.markdown("<h3 style='font-weight:600; margin-bottom:16px;'>Active Suite Navigation Modules</h3>", unsafe_allow_html=True)
-        col1, col2, col3 = st.columns(3)
+        st.markdown("<h3 style='font-weight:600;'>Active Suite Modules</h3>", unsafe_allow_html=True)
         
-        with col1:
-            st.markdown('<div class="premium-card"><h3>📝 AI CV Builder & Optimizer</h3><p>Analyze performance metrics and tailor core structural phrases dynamically.</p></div>', unsafe_allow_html=True)
-            if st.button("Launch Optimizer System", key="nav_cv_opt"):
-                st.session_state.current_page = "Advanced CV Builder"
-                st.rerun()
-                
-            st.markdown('<div class="premium-card"><h3>🎙️ Behavioral Simulation</h3><p>Evaluate response streams under technical interview criteria with feedback models.</p></div>', unsafe_allow_html=True)
-            if st.button("Launch Coach System", key="nav_coach_opt"):
-                st.session_state.current_page = "Interview Simulation"
-                st.rerun()
+        st.markdown('<div class="premium-card"><h3>📝 AI CV Builder & Optimizer</h3></div>', unsafe_allow_html=True)
+        if st.button("Open Optimizer System", key="nav_cv_opt"):
+            st.session_state.current_page = "Advanced CV Builder"
+            st.rerun()
+            
+        st.markdown('<div class="premium-card"><h3>🎙️ Behavioral Simulation Coach</h3></div>', unsafe_allow_html=True)
+        if st.button("Open Coach System", key="nav_coach_opt"):
+            st.session_state.current_page = "Interview Simulation"
+            st.rerun()
 
-        with col2:
-            st.markdown('<div class="premium-card"><h3>🔍 Job Placement Matrix</h3><p>Track engineering and technology positions matching your primary verified technical profiles.</p></div>', unsafe_allow_html=True)
-            if st.button("Launch Placement Explorer", key="nav_jobs_opt"):
-                st.session_state.current_page = "Job Matcher Hub"
-                st.rerun()
+        st.markdown('<div class="premium-card"><h3>🔍 Job Placement Matrix</h3></div>', unsafe_allow_html=True)
+        if st.button("Open Placement Explorer", key="nav_jobs_opt"):
+            st.session_state.current_page = "Job Matcher Hub"
+            st.rerun()
 
-            st.markdown('<div class="premium-card"><h3>✉️ Outreach Architecture</h3><p>Generate highly structured, conversion-optimized emails and LinkedIn introduction notes.</p></div>', unsafe_allow_html=True)
-            if st.button("Launch Messaging Suite", key="nav_outreach_opt"):
-                st.session_state.current_page = "Alumni Outreach"
-                st.rerun()
+        st.markdown('<div class="premium-card"><h3>✉️ Outreach Architecture</h3></div>', unsafe_allow_html=True)
+        if st.button("Open Messaging Suite", key="nav_outreach_opt"):
+            st.session_state.current_page = "Alumni Outreach"
+            st.rerun()
 
-        with col3:
-            st.markdown('<div class="premium-card"><h3>📁 Portfolio Studio</h3><p>Establish unified interfaces tracking asset libraries, live code repositories, and credentials.</p></div>', unsafe_allow_html=True)
-            if st.button("Launch Asset Configurator", key="nav_port_opt"):
-                st.session_state.current_page = "Branding & Portfolio"
-                st.rerun()
+        st.markdown('<div class="premium-card"><h3>⚙️ Environment Settings</h3></div>', unsafe_allow_html=True)
+        if st.button("Open System Settings", key="nav_cfg_opt"):
+            st.session_state.current_page = "Profile Config"
+            st.rerun()
 
-            st.markdown('<div class="premium-card"><h3>⚙️ Environment Settings</h3><p>Verify data structures, storage paths, encryption hashes, and system logs variables.</p></div>', unsafe_allow_html=True)
-            if st.button("Launch System Settings", key="nav_cfg_opt"):
-                st.session_state.current_page = "Profile Config"
-                st.rerun()
-
-    # ---- 1. CV BUILDER & OPTIMIZER MODULE ----
+    # ---- 1. CV BUILDER MODULE ----
     elif st.session_state.current_page == "Advanced CV Builder":
         if st.button("← Back to System Dashboard Menu", key="ret_from_cv"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
             
-        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
-        st.markdown('<h3>📝 Live AI CV Optimization Workspace</h3>', unsafe_allow_html=True)
-        
-        col_left_inputs, col_right_inputs = st.columns(2)
-        with col_left_inputs:
-            st.session_state.cv_data_name = st.text_input("Full Legal Name Profile", value=st.session_state.cv_data_name, key="in_cv_name")
-            st.session_state.cv_data_title = st.text_input("Target Professional Title", value=st.session_state.cv_data_title, key="in_cv_title")
-        with col_right_inputs:
-            st.session_state.cv_data_skills = st.text_area("Technical Stack Keywords", value=st.session_state.cv_data_skills, key="in_cv_skills", height=115)
-            
-        st.session_state.cv_data_exp = st.text_area("Comprehensive Career Experience Blocks", value=st.session_state.cv_data_exp, key="in_cv_exp", height=140)
+        st.markdown('<div class="premium-card"><h3>📝 Live AI CV Optimization Workspace</h3></div>', unsafe_allow_html=True)
+        st.session_state.cv_data_name = st.text_input("Full Legal Name Profile", value=st.session_state.cv_data_name)
+        st.session_state.cv_data_title = st.text_input("Target Professional Title", value=st.session_state.cv_data_title)
+        st.session_state.cv_data_skills = st.text_area("Technical Stack Keywords", value=st.session_state.cv_data_skills)
+        st.session_state.cv_data_exp = st.text_area("Comprehensive Career Experience Blocks", value=st.session_state.cv_data_exp)
         
         if st.button("Save Core Profile Parameters", key="btn_save_profile_action"):
-            package = {
-                "fullname": st.session_state.cv_data_name,
-                "role": st.session_state.cv_data_title,
-                "skills": st.session_state.cv_data_skills,
-                "bio": st.session_state.cv_data_exp,
-                "projects": st.session_state.cv_data_projects
-            }
-            if update_user_profile(current_user, package):
-                st.success("Profile updates successfully written to central system records!")
-        st.markdown('</div>', unsafe_allow_html=True)
+            package = {"fullname": st.session_state.cv_data_name, "role": st.session_state.cv_data_title, "skills": st.session_state.cv_data_skills, "bio": st.session_state.cv_data_exp, "projects": st.session_state.cv_data_projects}
+            update_user_profile(current_user, package)
+            st.success("Profile saved!")
         
-        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
-        st.markdown('<h3>📊 Live Agent Alignment & ATS Diagnostics</h3>', unsafe_allow_html=True)
-        target_description_text = st.text_area("Paste Target Job Requirements Specifications", key="in_target_description_text", height=130, placeholder="Paste corporate job criteria details here...")
+        st.markdown('<div class="premium-card"><h3>📊 Live Agent Alignment & ATS Diagnostics</h3></div>', unsafe_allow_html=True)
+        target_description_text = st.text_area("Paste Target Job Requirements Specifications", key="in_target_description_text")
         
         if st.button("Execute Live Agent Analysis", key="btn_execute_ai_analysis"):
-            if target_description_text and st.session_state.cv_data_exp:
-                with st.spinner("Agent running real-time profile diagnostic match..."):
-                    if client:
-                        try:
-                            prompt = (
-                                f"You are an elite corporate Talent Acquisition AI Agent. Review this user profile and experience data against the target job requirements.\n\n"
-                                f"User Target Role: {st.session_state.cv_data_title}\n"
-                                f"User Skills List: {st.session_state.cv_data_skills}\n"
-                                f"User Professional History: {st.session_state.cv_data_exp}\n\n"
-                                f"Target Job Requirements:\n{target_description_text}\n\n"
-                                f"Provide a comprehensive critique containing a quantified Match Index %, missing structural industry terms, and clear recommendations using Markdown formatting."
-                            )
-                            response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
-                        except Exception as e:
-                            st.error(f"Agent analysis connection dropped: {str(e)}")
-                    else:
-                        st.warning("Ecosystem running on local preview mode. Add API key for live execution.")
+            if client:
+                try:
+                    prompt = f"Critique this candidate profile for role {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Bio: {st.session_state.cv_data_exp}. Job spec: {target_description_text}"
+                    response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                    st.markdown(f'<div style="background:white; color:black; padding:15px; border-radius:8px;">{response.text}</div>', unsafe_allow_html=True)
+                except Exception as e:
+                    st.error(f"Error connecting: {str(e)}")
             else:
-                st.warning("Please supply both professional experience data and target job criteria values.")
-        st.markdown('</div>', unsafe_allow_html=True)
+                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
-    # ---- 2. INTERVIEW SIMULATION COACH MODULE ----
+    # ---- 2. INTERVIEW SIMULATION MODULE ----
     elif st.session_state.current_page == "Interview Simulation":
         if st.button("← Back to System Dashboard Menu", key="ret_from_coach"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
             
-        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
-        st.markdown('<h3>🎙️ Live AI Behavioral Simulation Coach</h3>', unsafe_allow_html=True)
-        st.write(f"**Target Position:** {st.session_state.cv_data_title if st.session_state.cv_data_title else 'General Candidate'}")
-        
-        question_type = st.selectbox("Select Interview Focus Metric", ["Behavioral (STAR Method)", "Technical / Domain Deep Dive", "Leadership & Conflict Resolution"])
-        mock_question = st.text_area("Interview Question to Answer", value="Tell me about a time you encountered a severe technical roadblock or conflicting timeline challenge. How did you resolve it?", height=70)
-        user_response = st.text_area("Type Your Response Stream Here", height=150, placeholder="Using the STAR method (Situation, Task, Action, Result), describe your action steps...")
+        st.markdown('<div class="premium-card"><h3>🎙️ Live AI Behavioral Simulation Coach</h3></div>', unsafe_allow_html=True)
+        question_type = st.selectbox("Select Interview Focus Metric", ["Behavioral (STAR Method)", "Technical / Domain Deep Dive"])
+        mock_question = st.text_area("Interview Question to Answer", value="Tell me about a time you encountered a severe roadblock. How did you resolve it?")
+        user_response = st.text_area("Type Your Response Stream Here")
         
         if st.button("Submit Response for Agent Evaluation", key="btn_eval_interview"):
-            if user_response:
-                with st.spinner("AI Coach analyzing core delivery structure..."):
-                    if client:
-                        try:
-                            prompt = (
-                                f"Act as an expert technical interviewer. Evaluate this candidate's response to the question: '{mock_question}'\n"
-                                f"Candidate Target Role: {st.session_state.cv_data_title}\n"
-                                f"Candidate Skills: {st.session_state.cv_data_skills}\n"
-                                f"Candidate Answer: {user_response}\n\n"
-                                f"Analyze if they utilized the STAR method properly. Highlight clear strengths, identify delivery gaps, and provide a perfectly restructured 'Ideal Revision' version of their answer."
-                            )
-                            response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
-                        except Exception as e:
-                            st.error(f"Error executing interview assessment: {str(e)}")
-                    else:
-                        st.warning("API key missing. Connect your token to run live evaluation frameworks.")
+            if client:
+                try:
+                    prompt = f"Evaluate this answer: {user_response} to question: {mock_question}"
+                    response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                    st.markdown(f'<div style="background:white; color:black; padding:15px; border-radius:8px;">{response.text}</div>', unsafe_allow_html=True)
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
             else:
-                st.warning("Please type your response before running evaluation parameters.")
-        st.markdown('</div>', unsafe_allow_html=True)
+                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
     # ---- 3. JOB PLACEMENT MATRIX MODULE ----
     elif st.session_state.current_page == "Job Matcher Hub":
@@ -463,30 +368,19 @@ def main():
             st.session_state.current_page = "Home Menu"
             st.rerun()
             
-        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
-        st.markdown('<h3>🔍 Strategic Job Placement & Skill Match Matrix</h3>', unsafe_allow_html=True)
-        st.write("Scan your core skill tokens against competitive market roles to map open gaps.")
-        
+        st.markdown('<div class="premium-card"><h3>🔍 Strategic Job Placement & Skill Match Matrix</h3></div>', unsafe_allow_html=True)
         industry_focus = st.text_input("Target Industry Sector", value="FinTech")
         
         if st.button("Generate Tailored Job Placement Blueprint", key="btn_run_job_matcher"):
-            with st.spinner("Mapping dynamic roles matrix pipelines..."):
-                if client:
-                    try:
-                        prompt = (
-                            f"Based on the following profile, map out 3 premium job descriptions/titles currently relevant in the {industry_focus} industry.\n"
-                            f"Verified Title: {st.session_state.cv_data_title}\n"
-                            f"Core Technical Stack: {st.session_state.cv_data_skills}\n"
-                            f"Experience Block: {st.session_state.cv_data_exp}\n\n"
-                            f"Format as an itemized breakdown. For each title provide: 1. Core Responsibilities, 2. Critical Skill gaps the user needs to study next, and 3. Suggested pipeline strategy."
-                        )
-                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                        st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
-                    except Exception as e:
-                        st.error(f"Error processing matrix pipeline metrics: {str(e)}")
-                else:
-                    st.warning("Ecosystem running on preview mode. Live API client required.")
-        st.markdown('</div>', unsafe_allow_html=True)
+            if client:
+                try:
+                    prompt = f"Provide 3 relevant target roles for tech candidate in {industry_focus} industry. User skills: {st.session_state.cv_data_skills}"
+                    response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                    st.markdown(f'<div style="background:white; color:black; padding:15px; border-radius:8px;">{response.text}</div>', unsafe_allow_html=True)
+                except Exception as e:
+                    st.error(f"Error running match query: {str(e)}")
+            else:
+                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
     # ---- 4. OUTREACH ARCHITECTURE MODULE ----
     elif st.session_state.current_page == "Alumni Outreach":
@@ -494,88 +388,35 @@ def main():
             st.session_state.current_page = "Home Menu"
             st.rerun()
             
-        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
-        st.markdown('<h3>✉️ Enterprise Conversion Outreach Architecture</h3>', unsafe_allow_html=True)
+        st.markdown('<div class="premium-card"><h3>✉️ Enterprise Conversion Outreach Architecture</h3></div>', unsafe_allow_html=True)
+        recipient_title = st.text_input("Recipient Professional Role", value="Hiring Manager")
+        platform = st.selectbox("Target Communication Channel", ["LinkedIn InMail Template", "Cold Email Framework"])
+        company_target = st.text_input("Target Corporate Institution", value="Target Organization")
         
-        col_out1, col_out2 = st.columns(2)
-        with col_out1:
-            recipient_title = st.text_input("Recipient Professional Role", value="Hiring Manager")
-            platform = st.selectbox("Target Communication Channel", ["LinkedIn InMail Template", "Cold Email Framework", "Alumni Referral Request"])
-        with col_out2:
-            company_target = st.text_input("Target Corporate Institution", value="Target Organization")
-            tone_style = st.selectbox("Tone Setting", ["Warm & Value-First", "Direct & Technical Corporate", "High-Impact Graduate Enthusiast"])
-            
         if st.button("Generate High-Conversion Messaging Strategy", key="btn_gen_outreach"):
-            with st.spinner("Compiling structural messaging frameworks..."):
-                if client:
-                    try:
-                        prompt = (
-                            f"Write a high-converting {platform} message from a candidate to a {recipient_title} at {company_target}.\n"
-                            f"Candidate Name: {st.session_state.cv_data_name}\n"
-                            f"Candidate Core Identity: {st.session_state.cv_data_title}\n"
-                            f"Core Skills to Reference: {st.session_state.cv_data_skills}\n"
-                            f"Tone Profile: {tone_style}\n\n"
-                            f"Ensure it avoids boring cliches, clearly highlights why their experience matters, and leaves a sharp, professional call-to-action."
-                        )
-                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                        st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
-                    except Exception as e:
-                        st.error(f"Error processing text generation: {str(e)}")
-                else:
-                    st.warning("Connect your live GEMINI_API_KEY to unlock dynamic generation engines.")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # ---- 5. PORTFOLIO STUDIO MODULE ----
-    elif st.session_state.current_page == "Branding & Portfolio":
-        if st.button("← Back to System Dashboard Menu", key="ret_from_branding"):
-            st.session_state.current_page = "Home Menu"
-            st.rerun()
-            
-        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
-        st.markdown('<h3>📁 Professional Portfolio Asset Studio</h3>', unsafe_allow_html=True)
-        
-        st.session_state.cv_data_projects = st.text_area("Describe Your Live Projects / Repositories", value=st.session_state.cv_data_projects, height=120, placeholder="Project 1: System description, code stack, metrics and outcomes achieved...")
-        
-        if st.button("Optimize Project Descriptions for Behance/GitHub", key="btn_optimize_portfolio"):
-            if st.session_state.cv_data_projects:
-                with st.spinner("Polishing portfolio text layout matrices..."):
-                    if client:
-                        try:
-                            prompt = (
-                                f"You are a professional branding strategist. Optimize these technical project logs into a structured portfolio presentation suitable for GitHub Readmes or Behance project sheets.\n"
-                                f"User Projects Info:\n{st.session_state.cv_data_projects}\n\n"
-                                f"Reformat them with clear headings, clean feature bullet points, technical architecture breakdowns, and impact summaries."
-                            )
-                            response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-                            st.markdown(f'<div style="background: rgba(255,255,255,0.95); color: #063c22; padding: 20px; border-radius: 12px; margin-top:15px;">{response.text}</div>', unsafe_allow_html=True)
-                        except Exception as e:
-                            st.error(f"Portfolio agent connection lost: {str(e)}")
-                    else:
-                        st.warning("Please verify your API key configs to use live generation.")
+            if client:
+                try:
+                    prompt = f"Write pitch template to {recipient_title} at {company_target} on platform {platform}."
+                    response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                    st.markdown(f'<div style="background:white; color:black; padding:15px; border-radius:8px;">{response.text}</div>', unsafe_allow_html=True)
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
             else:
-                st.warning("Please fill in your current project notes first.")
-        st.markdown('</div>', unsafe_allow_html=True)
+                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
-    # ---- 6. ENVIRONMENT SYSTEM SETTINGS MODULE ----
+    # ---- 5. ENVIRONMENT SYSTEM SETTINGS MODULE ----
     elif st.session_state.current_page == "Profile Config":
         if st.button("← Back to System Dashboard Menu", key="ret_from_cfg"):
             st.session_state.current_page = "Home Menu"
             st.rerun()
             
-        st.markdown('<div class="premium-card">', unsafe_allow_html=True)
-        st.markdown('<h3>⚙️ Secure Local Database & Environment Management</h3>', unsafe_allow_html=True)
-        st.write(f"**Current Workspace Directory Reference:** `{os.getcwd()}`")
-        st.write(f"**Active Instance Index Key:** `{current_user}`")
-        
+        st.markdown('<div class="premium-card"><h3>⚙️ Secure Local Database & Environment Management</h3></div>', unsafe_allow_html=True)
+        st.write(f"Workspace Path: `{os.getcwd()}`")
         if st.button("Check Local File Safety & Run Database Audit", key="btn_audit_db"):
             if os.path.exists(USER_FILE):
-                st.success(f"File index verification: Local `{USER_FILE}` database path is healthy and functional.")
                 with open(USER_FILE, "r") as f:
                     data = json.load(f)
                 st.json({"Registered Profiles Index Count": len(data.keys()), "Active Security Handshakes": True})
-            else:
-                st.error("No centralized local database found. Run setup tasks to initialize.")
-        st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
