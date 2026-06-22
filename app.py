@@ -124,6 +124,7 @@ def inject_premium_styles():
             color: #ffffff !important;
             font-weight: 700 !important;
             font-size: 16px !important;
+            margin-bottom: 8px !important;
         }
         
         /* Logo Badge presentation */
@@ -390,7 +391,8 @@ def main():
                 with st.spinner("Agent running real-time profile diagnostic match..."):
                     prompt = f"Critique this candidate profile for role {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Bio: {st.session_state.cv_data_exp}. Job spec: {target_description_text}"
                     try:
-                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        # FIX: Explicit prefix added
+                        response = client.models.generate_content(model='models/gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 📊 Live Agent Diagnostic Output")
                             st.info(response.text)
@@ -418,7 +420,8 @@ def main():
                 with st.spinner("AI Coach analyzing core delivery structure..."):
                     prompt = f"Evaluate this answer: {user_response} to question: {mock_question}"
                     try:
-                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        # FIX: Explicit prefix added
+                        response = client.models.generate_content(model='models/gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 🎙️ AI Coach Evaluation Feedback")
                             st.info(response.text)
@@ -444,7 +447,8 @@ def main():
                 with st.spinner("Mapping dynamic roles matrix pipelines..."):
                     prompt = f"Provide 3 relevant target roles for tech candidate in {industry_focus} industry. User skills: {st.session_state.cv_data_skills}"
                     try:
-                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        # FIX: Explicit prefix added
+                        response = client.models.generate_content(model='models/gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 🔍 Strategic Career Placement Map")
                             st.info(response.text)
@@ -477,7 +481,8 @@ def main():
                         f"data-driven software solutions and AI application development with institutional impact goals."
                     )
                     try:
-                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        # FIX: Explicit prefix added
+                        response = client.models.generate_content(model='models/gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### ✉️ Strategic Communication Pitch")
                             st.info(response.text)
