@@ -5,6 +5,7 @@ Enterprise AI Agent Edition - Background Resilient Build
 Fixed features:
 1. Implemented background persistence cache to mitigate mobile OS aggressive memory management (minimizing refresh loss).
 2. Retained full high-contrast green premium theme and active gemini-2.5-flash configuration.
+3. Added highly specific, professional pre-filled details for realistic outreach testing.
 """
 
 import streamlit as st
@@ -107,7 +108,7 @@ def get_user_profile(username):
 def inject_premium_styles():
     st.markdown("""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
         /* Force App Base Background & Universal Inheritance */
         .stApp {
@@ -222,9 +223,7 @@ def main():
     # STATE RESTORATION MATRIX (Recovers data if phone sleeps browser tab)
     # -------------------------------------------------------------------------
     if "session_recovered" not in st.session_state:
-        # Check if an existing memory signature is stored in global memory pool
         if global_bridge["active_sessions"]:
-            # Pick up last active connection profile safely
             last_user = list(global_bridge["active_sessions"].keys())[-1]
             cached_data = global_bridge["active_sessions"][last_user]
             
@@ -278,7 +277,6 @@ def main():
                     st.session_state.cv_data_projects = prof.get("projects", "")
                     st.session_state.current_page = "Home Menu"
                     
-                    # Store session signature to survive minimization resets
                     global_bridge["active_sessions"][lin_user] = {
                         "current_page": st.session_state.current_page,
                         "cv_data_name": st.session_state.cv_data_name,
@@ -306,7 +304,6 @@ def main():
     current_user = st.session_state.username
     client = get_ai_agent()
 
-    # Dynamic status update helper for global bridge mapping
     def synchronize_cache():
         global_bridge["active_sessions"][current_user] = {
             "current_page": st.session_state.current_page,
@@ -457,7 +454,7 @@ def main():
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
 
-    # ---- 4. OUTREACH ARCHITECTURE MODULE ----
+    # ---- 4. OUTREACH ARCHITECTURE MODULE (UPDATED WITH PROFESSIONAL PRE-FILL DETAILS) ----
     elif st.session_state.current_page == "Alumni Outreach":
         if st.button("← Back to System Dashboard Menu", key="ret_from_outreach"):
             st.session_state.current_page = "Home Menu"
@@ -465,14 +462,21 @@ def main():
             st.rerun()
             
         st.markdown('<div class="premium-card"><h3>✉️ Enterprise Conversion Outreach Architecture</h3></div>', unsafe_allow_html=True)
-        recipient_title = st.text_input("Recipient Professional Role", value="Hiring Manager")
+        
+        # Filled in specific, realistic professional target data details
+        recipient_title = st.text_input("Recipient Professional Role", value="Technical Recruiting Manager & Program Lead")
         platform = st.selectbox("Target Communication Channel", ["LinkedIn InMail Template", "Cold Email Framework"])
-        company_target = st.text_input("Target Corporate Institution", value="Target Organization")
+        company_target = st.text_input("Target Corporate Institution", value="UNICEF Innovation Lab Engine")
         
         if st.button("Generate High-Conversion Messaging Strategy", key="btn_gen_outreach"):
             if client:
                 with st.spinner("Compiling structural messaging frameworks..."):
-                    prompt = f"Write pitch template to {recipient_title} at {company_target} on platform {platform}."
+                    prompt = (
+                        f"Write a highly compelling professional networking pitch template addressed to the "
+                        f"'{recipient_title}' at '{company_target}' using the '{platform}' layout style. "
+                        f"The message should focus on bridging technical expertise in building scalable, "
+                        f"data-driven software solutions and AI application development with institutional impact goals."
+                    )
                     try:
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
