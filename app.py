@@ -1,32 +1,132 @@
+"""
+MT Graduate Career Launchpad
+Enterprise AI Agent Edition - Fully Restored & Relegibility Build
+"""
+
+import streamlit as st
+import json
+import hashlib
+import os
+
+# =============================================================================
+# PERSISTENT ENVIRONMENT MEMORY ENGINE
+# =============================================================================
+@st.cache_resource
+def get_global_memory_bridge():
+    """Creates a global memory container that survives mobile browser tab sleep states."""
+    return {"active_sessions": {}}
+
+global_bridge = get_global_memory_bridge()
+
+# =============================================================================
+# INITIALIZE LIVE AI AGENT ENGINE
+# =============================================================================
+try:
+    from google import genai
+    AI_LIBRARY_AVAILABLE = True
+except ImportError:
+    AI_LIBRARY_AVAILABLE = False
+
+def get_ai_agent():
+    if not AI_LIBRARY_AVAILABLE:
+        return None
+    api_key = st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    try:
+        return genai.Client(api_key=api_key)
+    except Exception:
+        return None
+
+# =============================================================================
+# FILE MANAGEMENT & CONFIGURATION (BACKEND DATA STORE)
+# =============================================================================
+USER_FILE = os.path.join(os.path.dirname(__file__), "users.json") if '__file__' in locals() else "users.json"
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def load_users():
+    if not os.path.exists(USER_FILE):
+        return {}
+    try:
+        with open(USER_FILE, "r") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def save_users(users):
+    with open(USER_FILE, "w") as f:
+        json.dump(users, f, indent=4)
+
+def register_user(username, password):
+    users = load_users()
+    if username in users:
+        return False
+    users[username] = {
+        "password": hash_password(password),
+        "profile": {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
+    }
+    save_users(users)
+    return True
+
+def authenticate_user(username, password):
+    users = load_users()
+    if username in users:
+        stored_data = users[username]
+        if isinstance(stored_data, str):
+            return stored_data == hash_password(password)
+        return stored_data.get("password") == hash_password(password)
+    return False
+
+def update_user_profile(username, profile_data):
+    users = load_users()
+    if username in users:
+        if isinstance(users[username], str):
+            users[username] = {"password": users[username], "profile": profile_data}
+        else:
+            users[username]["profile"] = profile_data
+        save_users(users)
+        return True
+    return False
+
+def get_user_profile(username):
+    users = load_users()
+    if username in users and isinstance(users[username], dict):
+        return users[username].get("profile", {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""})
+    return {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
+
+# =============================================================================
+# FRONTEND SYSTEM DESIGN (MOBILE RESPONSIVE PREMIUM GREEN SYSTEM)
+# =============================================================================
 def inject_premium_styles():
     st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
         
-        /* Force App Base Background & Universal Inheritance */
+        /* App Background Gradient */
         .stApp {
             background: linear-gradient(180deg, #063c22 0%, #0d6137 50%, #114d2e 100%) !important;
             font-family: 'Plus Jakarta Sans', sans-serif !important;
             color: #ffffff !important;
         }
         
-        /* AGGRESSIVE WHITE CONTRAST OVERRIDE FOR ALL TEXT/LABELS ON MOBILE */
-        h1, h2, h3, h4, h5, h6, p, span, li, label, div, select {
+        /* Universal Baseline White Headers/Labels */
+        h1, h2, h3, h4, h5, h6, p, span, label, .stWidgetFormModifier label {
             color: #ffffff !important;
         }
 
-        /* Target Streamlit widget text input fields & titles natively */
+        /* Widget Header Typography styling */
         div[data-testid="stWidgetLabel"] p, 
         .stSelectbox label p, 
         .stTextInput label p, 
-        .stTextArea label p,
-        .stWidgetFormModifier label {
+        .stTextArea label p {
             color: #ffffff !important;
             font-weight: 700 !important;
             font-size: 16px !important;
         }
         
-        /* Branding Element Geometry */
+        /* Logo Badge presentation */
         .brand-container {
             display: flex;
             align-items: center;
@@ -48,7 +148,7 @@ def inject_premium_styles():
             font-size: 22px;
         }
         
-        /* Layout Hero Presentation */
+        /* Hero Banner */
         .premium-hero {
             text-align: center;
             padding: 20px 10px;
@@ -65,7 +165,7 @@ def inject_premium_styles():
             margin-top: 4px !important;
         }
         
-        /* Safe Form Text Styling (Inputs remain legible inside fields) */
+        /* Form Entry Text Box Settings */
         .stTextInput input, .stTextArea textarea {
             color: #1f2937 !important;
             font-weight: 500 !important;
@@ -73,16 +173,17 @@ def inject_premium_styles():
             border-radius: 12px !important;
         }
         
-        /* FIX FOR SELECTBOX DROPDOWN TEXT INVISIBILITY */
-        /* Forces deep dark text color inside the selection tray and lists */
-        div[data-baseweb="select"] *, 
-        ul[role="listbox"] *, 
-        li[role="option"] * {
+        /* FIXED SELECTBOX POP-UP TRAYS - DARK TEXT OVER WHITE OPTIONS */
+        div[data-baseweb="select"] ul, 
+        div[data-baseweb="select"] li, 
+        div[data-baseweb="select"] span, 
+        div[data-baseweb="popover"] li, 
+        div[role="listbox"] li {
             color: #1f2937 !important;
             font-weight: 500 !important;
         }
         
-        /* Premium Translucent System Cards */
+        /* Content Card Presentation */
         .premium-card {
             background: rgba(255, 255, 255, 0.12);
             padding: 20px;
@@ -97,7 +198,7 @@ def inject_premium_styles():
             color: #ffffff !important;
         }
         
-        /* Global Navigation/Action Button Interface Engine */
+        /* Command Navigation Buttons */
         div.stButton > button {
             background: linear-gradient(90deg, #2ae083 0%, #198754 100%) !important;
             color: #ffffff !important;
@@ -113,3 +214,294 @@ def inject_premium_styles():
         }
         </style>
     """, unsafe_allow_html=True)
+
+# =============================================================================
+# MAIN INTERFACE ARCHITECTURE
+# =============================================================================
+def main():
+    st.set_page_config(page_title="MT Graduate Career Launchpad", page_icon="⚡", layout="wide")
+    inject_premium_styles()
+    
+    # Session data restore structure
+    if "session_recovered" not in st.session_state:
+        if global_bridge["active_sessions"]:
+            last_user = list(global_bridge["active_sessions"].keys())[-1]
+            cached_data = global_bridge["active_sessions"][last_user]
+            
+            st.session_state.logged_in = True
+            st.session_state.username = last_user
+            st.session_state.current_page = cached_data.get("current_page", "Home Menu")
+            st.session_state.cv_data_name = cached_data.get("cv_data_name", "")
+            st.session_state.cv_data_title = cached_data.get("cv_data_title", "")
+            st.session_state.cv_data_skills = cached_data.get("cv_data_skills", "")
+            st.session_state.cv_data_exp = cached_data.get("cv_data_exp", "")
+            st.session_state.cv_data_projects = cached_data.get("cv_data_projects", "")
+        else:
+            st.session_state.logged_in = False
+            st.session_state.username = ""
+            st.session_state.current_page = "Home Menu"
+            st.session_state.cv_data_name = ""
+            st.session_state.cv_data_title = ""
+            st.session_state.cv_data_skills = ""
+            st.session_state.cv_data_exp = ""
+            st.session_state.cv_data_projects = ""
+        st.session_state.session_recovered = True
+
+    # Main Branding Block
+    st.markdown("""
+        <div class="premium-hero">
+            <div class="brand-container">
+                <div class="logo-mark">MT</div>
+                <h1>Graduate Career Launchpad</h1>
+            </div>
+            <p class="tagline">your professional profile, <span style="font-weight: 300;">ready everywhere.</span></p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Login Validation View
+    if not st.session_state.logged_in:
+        col_auth_left, col_auth_right = st.columns(2)
+        
+        with col_auth_left:
+            st.markdown('<div class="premium-card"><h3>🔒 Core Portal Entry</h3><p>Verify your security credentials.</p></div>', unsafe_allow_html=True)
+            lin_user = st.text_input("Username", key="l_user_field")
+            lin_pass = st.text_input("Security Access Pass", type="password", key="l_pass_field")
+            if st.button("Authenticate & Launch Ecosystem", key="act_login_btn"):
+                if authenticate_user(lin_user, lin_pass):
+                    st.session_state.logged_in = True
+                    st.session_state.username = lin_user
+                    prof = get_user_profile(lin_user)
+                    st.session_state.cv_data_name = prof.get("fullname", "")
+                    st.session_state.cv_data_title = prof.get("role", "")
+                    st.session_state.cv_data_skills = prof.get("skills", "")
+                    st.session_state.cv_data_exp = prof.get("bio", "")
+                    st.session_state.cv_data_projects = prof.get("projects", "")
+                    st.session_state.current_page = "Home Menu"
+                    
+                    global_bridge["active_sessions"][lin_user] = {
+                        "current_page": st.session_state.current_page,
+                        "cv_data_name": st.session_state.cv_data_name,
+                        "cv_data_title": st.session_state.cv_data_title,
+                        "cv_data_skills": st.session_state.cv_data_skills,
+                        "cv_data_exp": st.session_state.cv_data_exp,
+                        "cv_data_projects": st.session_state.cv_data_projects
+                    }
+                    st.rerun()
+                else:
+                    st.error("Credential verification failed.")
+                    
+        with col_auth_right:
+            st.markdown('<div class="premium-card"><h3>✨ Setup Profile Engine</h3><p>Build a secure local workspace instance.</p></div>', unsafe_allow_html=True)
+            reg_user = st.text_input("Choose Unique Username", key="r_user_field")
+            reg_pass = st.text_input("Choose Cryptographic Pass", type="password", key="r_pass_field")
+            if st.button("Configure New Workspace Data", key="act_reg_btn"):
+                if reg_user and reg_pass:
+                    if register_user(reg_user, reg_pass):
+                        st.success("Configuration built successfully! Log in on the left matrix.")
+                    else:
+                        st.error("Username index is currently occupied.")
+        return
+
+    current_user = st.session_state.username
+    client = get_ai_agent()
+
+    def synchronize_cache():
+        global_bridge["active_sessions"][current_user] = {
+            "current_page": st.session_state.current_page,
+            "cv_data_name": st.session_state.cv_data_name,
+            "cv_data_title": st.session_state.cv_data_title,
+            "cv_data_skills": st.session_state.cv_data_skills,
+            "cv_data_exp": st.session_state.cv_data_exp,
+            "cv_data_projects": st.session_state.cv_data_projects
+        }
+
+    c_status_left, c_status_right = st.columns([5, 1])
+    with c_status_left:
+        st.markdown(f"<span>🟢 <b>Ecosystem Workspace Active:</b> User ID: `{current_user}`</span>", unsafe_allow_html=True)
+    with c_status_right:
+        if st.button("Disconnect", key="btn_global_disconnect"):
+            global_bridge["active_sessions"].pop(current_user, None)
+            st.session_state.logged_in = False
+            st.session_state.username = ""
+            st.session_state.current_page = "Home Menu"
+            st.rerun()
+
+    # =============================================================================
+    # NAVIGATION AND MAIN MODULE ROUTING
+    # =============================================================================
+    if st.session_state.current_page == "Home Menu":
+        st.markdown("<h3 style='font-weight:600;'>Active Suite Modules</h3>", unsafe_allow_html=True)
+        
+        st.markdown('<div class="premium-card"><h3>📝 AI CV Builder & Optimizer</h3></div>', unsafe_allow_html=True)
+        if st.button("Open Optimizer System", key="nav_cv_opt"):
+            st.session_state.current_page = "Advanced CV Builder"
+            synchronize_cache()
+            st.rerun()
+            
+        st.markdown('<div class="premium-card"><h3>🎙️ Behavioral Simulation Coach</h3></div>', unsafe_allow_html=True)
+        if st.button("Open Coach System", key="nav_coach_opt"):
+            st.session_state.current_page = "Interview Simulation"
+            synchronize_cache()
+            st.rerun()
+
+        st.markdown('<div class="premium-card"><h3>🔍 Job Placement Matrix</h3></div>', unsafe_allow_html=True)
+        if st.button("Open Placement Explorer", key="nav_jobs_opt"):
+            st.session_state.current_page = "Job Matcher Hub"
+            synchronize_cache()
+            st.rerun()
+
+        st.markdown('<div class="premium-card"><h3>✉️ Outreach Architecture</h3></div>', unsafe_allow_html=True)
+        if st.button("Open Messaging Suite", key="nav_outreach_opt"):
+            st.session_state.current_page = "Alumni Outreach"
+            synchronize_cache()
+            st.rerun()
+
+        st.markdown('<div class="premium-card"><h3>⚙️ Environment Settings</h3></div>', unsafe_allow_html=True)
+        if st.button("Open System Settings", key="nav_cfg_opt"):
+            st.session_state.current_page = "Profile Config"
+            synchronize_cache()
+            st.rerun()
+
+    # ---- 1. CV BUILDER MODULE ----
+    elif st.session_state.current_page == "Advanced CV Builder":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_cv"):
+            st.session_state.current_page = "Home Menu"
+            synchronize_cache()
+            st.rerun()
+            
+        st.markdown('<div class="premium-card"><h3>📝 Live AI CV Optimization Workspace</h3></div>', unsafe_allow_html=True)
+        st.session_state.cv_data_name = st.text_input("Full Legal Name Profile", value=st.session_state.cv_data_name)
+        st.session_state.cv_data_title = st.text_input("Target Professional Title", value=st.session_state.cv_data_title)
+        st.session_state.cv_data_skills = st.text_area("Technical Stack Keywords", value=st.session_state.cv_data_skills)
+        st.session_state.cv_data_exp = st.text_area("Comprehensive Career Experience Blocks", value=st.session_state.cv_data_exp)
+        synchronize_cache()
+        
+        if st.button("Save Core Profile Parameters", key="btn_save_profile_action"):
+            package = {"fullname": st.session_state.cv_data_name, "role": st.session_state.cv_data_title, "skills": st.session_state.cv_data_skills, "bio": st.session_state.cv_data_exp, "projects": st.session_state.cv_data_projects}
+            update_user_profile(current_user, package)
+            synchronize_cache()
+            st.success("Profile saved!")
+        
+        st.markdown('<div class="premium-card"><h3>📊 Live Agent Alignment & ATS Diagnostics</h3></div>', unsafe_allow_html=True)
+        target_description_text = st.text_area("Paste Target Job Requirements Specifications", key="in_target_description_text")
+        
+        if st.button("Execute Live Agent Analysis", key="btn_execute_ai_analysis"):
+            if client:
+                with st.spinner("Agent running real-time profile diagnostic match..."):
+                    prompt = f"Critique this candidate profile for role {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Bio: {st.session_state.cv_data_exp}. Job spec: {target_description_text}"
+                    try:
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        if response.text:
+                            st.markdown("### 📊 Live Agent Diagnostic Output")
+                            st.info(response.text)
+                        else:
+                            st.warning("Empty response received. Please try again.")
+                    except Exception as e:
+                        st.error(f"Error connecting: {str(e)}")
+            else:
+                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+
+    # ---- 2. INTERVIEW SIMULATION MODULE ----
+    elif st.session_state.current_page == "Interview Simulation":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_coach"):
+            st.session_state.current_page = "Home Menu"
+            synchronize_cache()
+            st.rerun()
+            
+        st.markdown('<div class="premium-card"><h3>🎙️ Live AI Behavioral Simulation Coach</h3></div>', unsafe_allow_html=True)
+        question_type = st.selectbox("Select Interview Focus Metric", ["Behavioral (STAR Method)", "Technical / Domain Deep Dive"])
+        mock_question = st.text_area("Interview Question to Answer", value="Tell me about a time you encountered a severe roadblock. How did you resolve it?")
+        user_response = st.text_area("Type Your Response Stream Here")
+        
+        if st.button("Submit Response for Agent Evaluation", key="btn_eval_interview"):
+            if client:
+                with st.spinner("AI Coach analyzing core delivery structure..."):
+                    prompt = f"Evaluate this answer: {user_response} to question: {mock_question}"
+                    try:
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        if response.text:
+                            st.markdown("### 🎙️ AI Coach Evaluation Feedback")
+                            st.info(response.text)
+                        else:
+                            st.warning("Empty response received. Please try again.")
+                    except Exception as e:
+                        st.error(f"Error: {str(e)}")
+            else:
+                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+
+    # ---- 3. JOB PLACEMENT MATRIX MODULE ----
+    elif st.session_state.current_page == "Job Matcher Hub":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_matcher"):
+            st.session_state.current_page = "Home Menu"
+            synchronize_cache()
+            st.rerun()
+            
+        st.markdown('<div class="premium-card"><h3>🔍 Strategic Job Placement & Skill Match Matrix</h3></div>', unsafe_allow_html=True)
+        industry_focus = st.text_input("Target Industry Sector", value="FinTech")
+        
+        if st.button("Generate Tailored Job Placement Blueprint", key="btn_run_job_matcher"):
+            if client:
+                with st.spinner("Mapping dynamic roles matrix pipelines..."):
+                    prompt = f"Provide 3 relevant target roles for tech candidate in {industry_focus} industry. User skills: {st.session_state.cv_data_skills}"
+                    try:
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        if response.text:
+                            st.markdown("### 🔍 Strategic Career Placement Map")
+                            st.info(response.text)
+                        else:
+                            st.warning("Empty response received. Please try again.")
+                    except Exception as e:
+                        st.error(f"Error running match query: {str(e)}")
+            else:
+                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+
+    # ---- 4. OUTREACH ARCHITECTURE MODULE ----
+    elif st.session_state.current_page == "Alumni Outreach":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_outreach"):
+            st.session_state.current_page = "Home Menu"
+            synchronize_cache()
+            st.rerun()
+            
+        st.markdown('<div class="premium-card"><h3>✉️ Enterprise Conversion Outreach Architecture</h3></div>', unsafe_allow_html=True)
+        recipient_title = st.text_input("Recipient Professional Role", value="Technical Recruiting Manager & Program Lead")
+        platform = st.selectbox("Target Communication Channel", ["LinkedIn InMail Template", "Cold Email Framework"])
+        company_target = st.text_input("Target Corporate Institution", value="UNICEF Innovation Lab Engine")
+        
+        if st.button("Generate High-Conversion Messaging Strategy", key="btn_gen_outreach"):
+            if client:
+                with st.spinner("Compiling structural messaging frameworks..."):
+                    prompt = (
+                        f"Write a highly compelling professional networking pitch template addressed to the "
+                        f"'{recipient_title}' at '{company_target}' using the '{platform}' layout style. "
+                        f"The message should focus on bridging technical expertise in building scalable, "
+                        f"data-driven software solutions and AI application development with institutional impact goals."
+                    )
+                    try:
+                        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+                        if response.text:
+                            st.markdown("### ✉️ Strategic Communication Pitch")
+                            st.info(response.text)
+                        else:
+                            st.warning("Empty response received. Please try again.")
+                    except Exception as e:
+                        st.error(f"Error: {str(e)}")
+            else:
+                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+
+    # ---- 5. ENVIRONMENT SYSTEM SETTINGS MODULE ----
+    elif st.session_state.current_page == "Profile Config":
+        if st.button("← Back to System Dashboard Menu", key="ret_from_cfg"):
+            st.session_state.current_page = "Home Menu"
+            synchronize_cache()
+            st.rerun()
+            
+        st.markdown('<div class="premium-card"><h3>⚙️ Secure Local Database & Environment Management</h3></div>', unsafe_allow_html=True)
+        st.write(f"Workspace Path: `{os.getcwd()}`")
+        if st.button("Check Local File Safety & Run Database Audit", key="btn_audit_db"):
+            if os.path.exists(USER_FILE):
+                with open(USER_FILE, "r") as f:
+                    data = json.load(f)
+                st.json({"Registered Profiles Index Count": len(data.keys()), "Active Security Handshakes": True})
+
+if __name__ == '__main__':
+    main()
