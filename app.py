@@ -292,11 +292,13 @@ def main():
         with col_auth_right:
             st.markdown('<div class="premium-card"><h3>✨ Create Graduate Account</h3><p>Configure a fresh isolated local profile instance.</p></div>', unsafe_allow_html=True)
             reg_user = st.text_input("Choose Workspace Username", key="r_user_field")
-            reg_pass = st.text_input("Generate Cryptographic Pass", type="password", key="r_pass_field")            if st.button("Configure New Workspace Data", key="act_reg_btn"):
+            reg_pass = st.text_input("Generate Cryptographic Pass", type="password", key="r_pass_field")
+            if st.button("Configure New Workspace Data", key="act_reg_btn"):
                 if reg_user and reg_pass:
                     if register_user(reg_user, reg_pass):
                         st.success("Configuration index registered! Authenticate on left matrix.")
                     else:
+                        st.error("Selected username parameter is already assigned.")
                         st.error("Selected username parameter is already assigned.")
         
         # 10. DYNAMIC ECOSYSTEM ROADMAP AND VISION IMPACT GRID
