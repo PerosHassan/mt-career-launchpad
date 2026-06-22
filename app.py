@@ -129,48 +129,85 @@ def inject_premium_styles():
             background-color: #DCFCE7 !important;
             border-left: 5px solid #22C55E !important;
             color: #14532D !important;
-            padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
         .badge-blue {
             background-color: #DBEAFE !important;
             border-left: 5px solid #3B82F6 !important;
             color: #1E3A8A !important;
-            padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
         .badge-orange {
             background-color: #FFEDD5 !important;
-            border-left: 5px solid #F97316 !important;
-            color: #7C2D12 !important;
-            padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; font-weight: 500;
+            border-left: 5px solid #F97316 !important;            color: #7C2D12 !important;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
         .badge-red {
             background-color: #FEE2E2 !important;
-            border-left: 5px solid #EF4444 !important;            color: #7F1D1D !important;
-            padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; font-weight: 500;
+            border-left: 5px solid #EF4444 !important;
+            color: #7F1D1D !important;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
         .saas-grid {
-            display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
         }
         .saas-analytics-card {
-            flex: 1; min-width: 160px; background: #ffffff; border: 1px solid #E2E8F0;
-            padding: 20px 16px; border-radius: 12px; text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02); border-top: 4px solid #0B6B3A;
+            flex: 1;
+            min-width: 160px;
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            padding: 20px 16px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            border-top: 4px solid #0B6B3A;
         }
-        .saas-val { font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 4px; }
-        .saas-lbl { font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .saas-val {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+        .saas-lbl {
+            font-size: 12px;
+            color: #64748B;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
         div.stButton > button {
             background: linear-gradient(90deg, #0B6B3A 0%, #19D17B 100%) !important;
             color: #ffffff !important;
             border-radius: 12px !important;
-            border: none !important;
-            padding: 10px 20px !important;
+            border: none !important;            padding: 10px 20px !important;
             font-weight: 700 !important;
         }
         .system-footer {
-            margin-top: 40px; padding: 30px; background-color: #0B6B3A;
-            border-radius: 16px; color: #ffffff !important; text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background-color: #0B6B3A;
+            border-radius: 16px;
+            color: #ffffff !important;
+            text-align: center;
         }
-        .system-footer h4, .system-footer p { color: #ffffff !important; }
+        .system-footer h4, .system-footer p {
+            color: #ffffff !important;
+        }
         </style>
     """, unsafe_allow_html=True)
 
@@ -195,6 +232,7 @@ def main():
             <p class="tagline">Enterprise AI-Powered Employability & Acceleration Ecosystem</p>
         </div>
     """, unsafe_allow_html=True)
+
     if not st.session_state.logged_in:
         col_auth_left, col_auth_right = st.columns(2)
         
@@ -205,8 +243,7 @@ def main():
             if st.button("Login", key="act_login_btn"):
                 if authenticate_user(lin_user, lin_pass):
                     st.session_state.logged_in = True
-                    st.session_state.username = lin_user
-                    st.session_state.current_page = "Dashboard Workspace"
+                    st.session_state.username = lin_user                    st.session_state.current_page = "Dashboard Workspace"
                     st.rerun()
                 else:
                     st.error("Login failed.")
@@ -243,7 +280,8 @@ def main():
 
     c_status_left, c_status_right = st.columns([5, 1])
     with c_status_left:
-        st.markdown(f"🟢 Logged in as: **{current_user}**")    with c_status_right:
+        st.markdown(f"🟢 Logged in as: **{current_user}**")
+    with c_status_right:
         if st.button("Logout", key="btn_global_disconnect"):
             st.session_state.logged_in = False
             st.session_state.username = ""
@@ -254,8 +292,7 @@ def main():
         st.markdown("### 🧭 Navigation")
         if st.button("🏠 Dashboard", use_container_width=True): 
             st.session_state.current_page = "Dashboard Workspace"
-            st.rerun()
-        if st.button("📄 CV Builder", use_container_width=True): 
+            st.rerun()        if st.button("📄 CV Builder", use_container_width=True): 
             st.session_state.current_page = "Advanced CV Builder"
             st.rerun()
         if st.button("🎤 Interview", use_container_width=True): 
@@ -292,7 +329,8 @@ def render_impact_section():
     st.markdown("""
         <div class="premium-card" style="margin-top: 35px; border-top: 4px solid #0B6B3A;">
             <h3 style="text-align:center; color:#0B6B3A !important;">📈 Impact Metrics</h3>
-            <div style="display: flex; justify-content: space-around; text-align: center;">                <div><div style="font-size:32px; font-weight:800; color:#0B6B3A;">1,250+</div><div>Graduates</div></div>
+            <div style="display: flex; justify-content: space-around; text-align: center;">
+                <div><div style="font-size:32px; font-weight:800; color:#0B6B3A;">1,250+</div><div>Graduates</div></div>
                 <div><div style="font-size:32px; font-weight:800; color:#0B6B3A;">3,800+</div><div>CVs Optimized</div></div>
                 <div><div style="font-size:32px; font-weight:800; color:#0B6B3A;">76%</div><div>Success Rate</div></div>
             </div>
@@ -303,8 +341,7 @@ def render_footer():
     st.markdown("""
         <div class="system-footer">
             <h4>Graduate Career Launchpad</h4>
-            <p>Developed by MIDDLE TECHNOLOGY</p>
-            <p><b>Founder:</b> Hassan Peros</p>
+            <p>Developed by MIDDLE TECHNOLOGY</p>            <p><b>Founder:</b> Hassan Peros</p>
         </div>
     """, unsafe_allow_html=True)
 
