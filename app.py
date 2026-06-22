@@ -1,6 +1,6 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition - Fully Restored & Readability Build
+Enterprise AI Agent Edition - Fully Expanded with Export Engine
 """
 
 import streamlit as st
@@ -209,7 +209,7 @@ def inject_premium_styles():
         }
         
         /* Command Navigation Buttons */
-        div.stButton > button {
+        div.stButton > button, div.stDownloadButton > button {
             background: linear-gradient(90deg, #2ae083 0%, #198754 100%) !important;
             color: #ffffff !important;
             border-radius: 12px !important;
@@ -218,7 +218,7 @@ def inject_premium_styles():
             font-weight: 700 !important;
             width: 100%;
         }
-        div.stButton > button:hover {
+        div.stButton > button:hover, div.stDownloadButton > button:hover {
             color: #063c22 !important;
             background: #ffffff !important;
         }
@@ -402,14 +402,23 @@ def main():
                     try:
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
-                            st.markdown("### 📊 Live Agent Diagnostic Output")
-                            st.info(response.text)
+                            st.session_state["last_cv_output"] = response.text
                         else:
                             st.warning("Empty response received. Please try again.")
                     except Exception as e:
                         st.error(f"Error connecting: {str(e)}")
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+
+        if "last_cv_output" in st.session_state:
+            st.markdown("### 📊 Live Agent Diagnostic Output")
+            st.info(st.session_state["last_cv_output"])
+            st.download_button(
+                label="📥 Download Diagnostic Report",
+                data=st.session_state["last_cv_output"],
+                file_name="ATS_Diagnostic_Report.txt",
+                mime="text/plain"
+            )
 
     # ---- 2. INTERVIEW SIMULATION MODULE ----
     elif st.session_state.current_page == "Interview Simulation":
@@ -430,14 +439,23 @@ def main():
                     try:
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
-                            st.markdown("### 🎙️ AI Coach Evaluation Feedback")
-                            st.info(response.text)
+                            st.session_state["last_interview_output"] = response.text
                         else:
                             st.warning("Empty response received. Please try again.")
                     except Exception as e:
                         st.error(f"Error: {str(e)}")
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+
+        if "last_interview_output" in st.session_state:
+            st.markdown("### 🎙️ AI Coach Evaluation Feedback")
+            st.info(st.session_state["last_interview_output"])
+            st.download_button(
+                label="📥 Download Interview Feedback",
+                data=st.session_state["last_interview_output"],
+                file_name="Interview_Feedback.txt",
+                mime="text/plain"
+            )
 
     # ---- 3. JOB PLACEMENT MATRIX MODULE ----
     elif st.session_state.current_page == "Job Matcher Hub":
@@ -456,14 +474,23 @@ def main():
                     try:
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
-                            st.markdown("### 🔍 Strategic Career Placement Map")
-                            st.info(response.text)
+                            st.session_state["last_job_output"] = response.text
                         else:
                             st.warning("Empty response received. Please try again.")
                     except Exception as e:
                         st.error(f"Error running match query: {str(e)}")
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+
+        if "last_job_output" in st.session_state:
+            st.markdown("### 🔍 Strategic Career Placement Map")
+            st.info(st.session_state["last_job_output"])
+            st.download_button(
+                label="📥 Download Career Roadmap Blueprint",
+                data=st.session_state["last_job_output"],
+                file_name="Career_Placement_Map.txt",
+                mime="text/plain"
+            )
 
     # ---- 4. OUTREACH ARCHITECTURE MODULE ----
     elif st.session_state.current_page == "Alumni Outreach":
@@ -489,14 +516,23 @@ def main():
                     try:
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
-                            st.markdown("### ✉️ Strategic Communication Pitch")
-                            st.info(response.text)
+                            st.session_state["last_outreach_output"] = response.text
                         else:
                             st.warning("Empty response received. Please try again.")
                     except Exception as e:
                         st.error(f"Error: {str(e)}")
             else:
                 st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+
+        if "last_outreach_output" in st.session_state:
+            st.markdown("### ✉️ Strategic Communication Pitch")
+            st.info(st.session_state["last_outreach_output"])
+            st.download_button(
+                label="📥 Download Pitch Template",
+                data=st.session_state["last_outreach_output"],
+                file_name="Outreach_Strategy_Pitch.txt",
+                mime="text/plain"
+            )
 
     # ---- 5. ENVIRONMENT SYSTEM SETTINGS MODULE ----
     elif st.session_state.current_page == "Profile Config":
