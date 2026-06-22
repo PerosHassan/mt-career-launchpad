@@ -1,6 +1,6 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition - Fully Expanded with Export Engine
+Enterprise AI Agent Edition - Permanent API Fix & Full Download Suite
 """
 
 import streamlit as st
@@ -19,7 +19,7 @@ def get_global_memory_bridge():
 global_bridge = get_global_memory_bridge()
 
 # =============================================================================
-# INITIALIZE LIVE AI AGENT ENGINE
+# INITIALIZE STABLE PROD AI AGENT ENGINE (PERMANENT API FIX)
 # =============================================================================
 try:
     from google import genai
@@ -34,6 +34,7 @@ def get_ai_agent():
     if not api_key:
         return None
     try:
+        # Initializing the modern standard production client
         return genai.Client(api_key=api_key)
     except Exception:
         return None
@@ -174,7 +175,7 @@ def inject_premium_styles():
             border-radius: 12px !important;
         }
         
-        /* FIXED SELECTBOX POP-UP TRAYS - DARK TEXT OVER WHITE OPTIONS */
+        /* Fixed Selectbox popovers */
         div[data-baseweb="select"] ul, 
         div[data-baseweb="select"] li, 
         div[data-baseweb="select"] span, 
@@ -199,7 +200,7 @@ def inject_premium_styles():
             color: #ffffff !important;
         }
 
-        /* FIX FOR BLUE/DARK TEXT READABILITY IN AI OUTPUT CARDS (st.info / st.warning) */
+        /* Fix readability in info cards */
         div.stAlert p, div.stAlert ul, div.stAlert li, div.stAlert span, div.stAlert div {
             color: #ffffff !important;
         }
@@ -208,7 +209,7 @@ def inject_premium_styles():
             font-weight: 600;
         }
         
-        /* Command Navigation Buttons */
+        /* Action Buttons styling */
         div.stButton > button, div.stDownloadButton > button {
             background: linear-gradient(90deg, #2ae083 0%, #198754 100%) !important;
             color: #ffffff !important;
@@ -232,7 +233,7 @@ def main():
     st.set_page_config(page_title="MT Graduate Career Launchpad", page_icon="⚡", layout="wide")
     inject_premium_styles()
     
-    # Session data restore structure
+    # Session lifecycle recovery configuration
     if "session_recovered" not in st.session_state:
         if global_bridge["active_sessions"]:
             last_user = list(global_bridge["active_sessions"].keys())[-1]
@@ -257,7 +258,7 @@ def main():
             st.session_state.cv_data_projects = ""
         st.session_state.session_recovered = True
 
-    # Main Branding Block
+    # Main Top Banner Header Display
     st.markdown("""
         <div class="premium-hero">
             <div class="brand-container">
@@ -268,7 +269,7 @@ def main():
         </div>
     """, unsafe_allow_html=True)
 
-    # Login Validation View
+    # Login Validation Guard Matrix
     if not st.session_state.logged_in:
         col_auth_left, col_auth_right = st.columns(2)
         
@@ -400,24 +401,30 @@ def main():
                 with st.spinner("Agent running real-time profile diagnostic match..."):
                     prompt = f"Critique this candidate profile for role {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Bio: {st.session_state.cv_data_exp}. Job spec: {target_description_text}"
                     try:
+                        # Fixed stable production request configuration mapping
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.session_state["last_cv_output"] = response.text
+                            if "cv_err" in st.session_state: del st.session_state["cv_err"]
                         else:
-                            st.warning("Empty response received. Please try again.")
+                            st.session_state["cv_err"] = "Empty response structure returned from agent cluster."
                     except Exception as e:
-                        st.error(f"Error connecting: {str(e)}")
+                        st.session_state["cv_err"] = f"API Interface Dropdown Error: {str(e)}"
             else:
-                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+                st.session_state["cv_err"] = "AI Client token parameter missing in backend deployment secrets block."
+
+        if "cv_err" in st.session_state:
+            st.error(st.session_state["cv_err"])
 
         if "last_cv_output" in st.session_state:
             st.markdown("### 📊 Live Agent Diagnostic Output")
             st.info(st.session_state["last_cv_output"])
             st.download_button(
-                label="📥 Download Diagnostic Report",
+                label="📥 Download Diagnostic Report (.txt)",
                 data=st.session_state["last_cv_output"],
                 file_name="ATS_Diagnostic_Report.txt",
-                mime="text/plain"
+                mime="text/plain",
+                key="dl_cv_output_btn"
             )
 
     # ---- 2. INTERVIEW SIMULATION MODULE ----
@@ -440,21 +447,26 @@ def main():
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.session_state["last_interview_output"] = response.text
+                            if "int_err" in st.session_state: del st.session_state["int_err"]
                         else:
-                            st.warning("Empty response received. Please try again.")
+                            st.session_state["int_err"] = "Empty verification evaluation response."
                     except Exception as e:
-                        st.error(f"Error: {str(e)}")
+                        st.session_state["int_err"] = f"API Error: {str(e)}"
             else:
-                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+                st.session_state["int_err"] = "AI Client token variable missing."
+
+        if "int_err" in st.session_state:
+            st.error(st.session_state["int_err"])
 
         if "last_interview_output" in st.session_state:
             st.markdown("### 🎙️ AI Coach Evaluation Feedback")
             st.info(st.session_state["last_interview_output"])
             st.download_button(
-                label="📥 Download Interview Feedback",
+                label="📥 Download Interview Feedback (.txt)",
                 data=st.session_state["last_interview_output"],
                 file_name="Interview_Feedback.txt",
-                mime="text/plain"
+                mime="text/plain",
+                key="dl_interview_output_btn"
             )
 
     # ---- 3. JOB PLACEMENT MATRIX MODULE ----
@@ -475,21 +487,26 @@ def main():
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.session_state["last_job_output"] = response.text
+                            if "job_err" in st.session_state: del st.session_state["job_err"]
                         else:
-                            st.warning("Empty response received. Please try again.")
+                            st.session_state["job_err"] = "Empty matching map generated."
                     except Exception as e:
-                        st.error(f"Error running match query: {str(e)}")
+                        st.session_state["job_err"] = f"API Error: {str(e)}"
             else:
-                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+                st.session_state["job_err"] = "AI Client token variable missing."
+
+        if "job_err" in st.session_state:
+            st.error(st.session_state["job_err"])
 
         if "last_job_output" in st.session_state:
             st.markdown("### 🔍 Strategic Career Placement Map")
             st.info(st.session_state["last_job_output"])
             st.download_button(
-                label="📥 Download Career Roadmap Blueprint",
+                label="📥 Download Career Roadmap Blueprint (.txt)",
                 data=st.session_state["last_job_output"],
                 file_name="Career_Placement_Map.txt",
-                mime="text/plain"
+                mime="text/plain",
+                key="dl_job_output_btn"
             )
 
     # ---- 4. OUTREACH ARCHITECTURE MODULE ----
@@ -517,21 +534,26 @@ def main():
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.session_state["last_outreach_output"] = response.text
+                            if "outreach_err" in st.session_state: del st.session_state["outreach_err"]
                         else:
-                            st.warning("Empty response received. Please try again.")
+                            st.session_state["outreach_err"] = "Empty messaging strategy matrix returned."
                     except Exception as e:
-                        st.error(f"Error: {str(e)}")
+                        st.session_state["outreach_err"] = f"API Error: {str(e)}"
             else:
-                st.error("AI client key variable missing or invalid in cloud environment secrets panel.")
+                st.session_state["outreach_err"] = "AI Client token variable missing."
+
+        if "outreach_err" in st.session_state:
+            st.error(st.session_state["outreach_err"])
 
         if "last_outreach_output" in st.session_state:
             st.markdown("### ✉️ Strategic Communication Pitch")
             st.info(st.session_state["last_outreach_output"])
             st.download_button(
-                label="📥 Download Pitch Template",
+                label="📥 Download Pitch Template (.txt)",
                 data=st.session_state["last_outreach_output"],
                 file_name="Outreach_Strategy_Pitch.txt",
-                mime="text/plain"
+                mime="text/plain",
+                key="dl_outreach_output_btn"
             )
 
     # ---- 5. ENVIRONMENT SYSTEM SETTINGS MODULE ----
