@@ -47,8 +47,7 @@ def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 def load_users():
-    if not os.path.exists(USER_FILE):
-        return {}
+    if not os.path.exists(USER_FILE):        return {}
     try:
         with open(USER_FILE, "r") as f:
             return json.load(f)
@@ -97,12 +96,17 @@ def get_user_profile(username):
     return {"fullname": "", "role": "", "bio": "", "skills": "", "projects": ""}
 
 # =============================================================================
-# FRONTEND SYSTEM DESIGN & HIGH-IMPACT CORPORATE THEME CONFIGURATION
-# =============================================================================
+# FRONTEND SYSTEM DESIGN & HIGH-IMPACT CORPORATE THEME CONFIGURATION# =============================================================================
 def inject_premium_styles():
     st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+        
+        /* HIDE STREAMLIT HEADER TOOLBAR ICONS (GitHub, Share, Star, Menu) */
+        #MainMenu {visibility: hidden !important;}
+        header {visibility: hidden !important;}
+        [data-testid="stToolbar"] {display: none !important;}
+        .stApp header {display: none !important;}
         
         /* Universal Canvas Background Slate (#F8FAFC) */
         .stApp {
@@ -141,8 +145,7 @@ def inject_premium_styles():
             color: #19D17B !important;
             font-size: 18px !important;
             margin-top: 6px !important;
-            font-weight: 500 !important;
-        }
+            font-weight: 500 !important;        }
         
         /* Base SaaS Premium Container Cards */
         .premium-card {
@@ -191,8 +194,7 @@ def inject_premium_styles():
             display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;
         }
         .saas-analytics-card {
-            flex: 1; min-width: 160px; background: #ffffff; border: 1px solid #E2E8F0;
-            padding: 20px 16px; border-radius: 12px; text-align: center;
+            flex: 1; min-width: 160px; background: #ffffff; border: 1px solid #E2E8F0;            padding: 20px 16px; border-radius: 12px; text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02); border-top: 4px solid #0B6B3A;
         }
         .saas-val { font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 4px; }
@@ -241,8 +243,7 @@ def main():
         st.session_state.cv_data_exp = ""
         st.session_state.cv_data_projects = ""
         st.session_state.copilot_messages = [
-            {"role": "assistant", "content": "Hello! I am your Launchpad AI Career Copilot. How can I accelerate your career journey today?"}
-        ]
+            {"role": "assistant", "content": "Hello! I am your Launchpad AI Career Copilot. How can I accelerate your career journey today?"}        ]
 
     # Platform Title Presentation Box
     st.markdown("""
@@ -291,8 +292,7 @@ def main():
         with col_auth_right:
             st.markdown('<div class="premium-card"><h3>✨ Create Graduate Account</h3><p>Configure a fresh isolated local profile instance.</p></div>', unsafe_allow_html=True)
             reg_user = st.text_input("Choose Workspace Username", key="r_user_field")
-            reg_pass = st.text_input("Generate Cryptographic Pass", type="password", key="r_pass_field")
-            if st.button("Configure New Workspace Data", key="act_reg_btn"):
+            reg_pass = st.text_input("Generate Cryptographic Pass", type="password", key="r_pass_field")            if st.button("Configure New Workspace Data", key="act_reg_btn"):
                 if reg_user and reg_pass:
                     if register_user(reg_user, reg_pass):
                         st.success("Configuration index registered! Authenticate on left matrix.")
@@ -341,8 +341,7 @@ def main():
             st.markdown("<h4 style='margin:0; color:#64748B;'>Career Readiness Score</h4>", unsafe_allow_html=True)
             st.markdown("<div style='font-size: 48px; font-weight: 800; color: #0B6B3A;'>82%</div>", unsafe_allow_html=True)
             st.markdown("<code style='font-size:16px; color:#0B6B3A;'>████████░░</code>", unsafe_allow_html=True)
-        with col_crs_right:
-            st.markdown("<p style='margin: 4px 0;'>🟩 <b>Profile Strength:</b> 90%</p>", unsafe_allow_html=True)
+        with col_crs_right:            st.markdown("<p style='margin: 4px 0;'>🟩 <b>Profile Strength:</b> 90%</p>", unsafe_allow_html=True)
             st.markdown("<p style='margin: 4px 0;'>🟩 <b>Skills Match Coefficient:</b> 78%</p>", unsafe_allow_html=True)
             st.markdown("<p style='margin: 4px 0;'>🟩 <b>Ecosystem CV Quality index:</b> 88%</p>", unsafe_allow_html=True)
             st.markdown("<p style='margin: 4px 0;'>🟩 <b>Interview Readiness Score:</b> 72%</p>", unsafe_allow_html=True)
@@ -391,8 +390,7 @@ def main():
                 ]
                 for j in jobs_data:
                     c_j1, c_j2 = st.columns([3, 2])
-                    with c_j1:
-                        st.markdown(f"<div class='badge-blue'>🔷 <b>{j['title']}</b> ({j['match']} Match Profile Correlation)</div>", unsafe_allow_html=True)
+                    with c_j1:                        st.markdown(f"<div class='badge-blue'>🔷 <b>{j['title']}</b> ({j['match']} Match Profile Correlation)</div>", unsafe_allow_html=True)
                     with c_j2:
                         st.markdown("<div style='margin-top:4px;'>", unsafe_allow_html=True)
                         st.button("Apply Instantly", key=f"apply_{j['title']}")
@@ -441,8 +439,7 @@ def main():
                     st.session_state.copilot_messages.append({"role": "user", "content": "Create a cover letter template"})
                     st.session_state.copilot_messages.append({"role": "assistant", "content": "Subject: Application for Target Role Profile...\n\nDear Hiring Team,\n\nI am writing to explore system alignments between my core technical background capabilities and your active vacancy development goals..."})
 
-            # Real-time message streaming rendering structure inside chat canvas
-            for msg in st.session_state.copilot_messages[-4:]:
+            # Real-time message streaming rendering structure inside chat canvas            for msg in st.session_state.copilot_messages[-4:]:
                 if msg["role"] == "user":
                     st.markdown(f"<div style='text-align:right; margin:6px 0;'><span style='background-color:#E2E8F0; padding:8px 12px; border-radius:12px; display:inline-block; font-size:14px;'><b>You:</b> {msg['content']}</span></div>", unsafe_allow_html=True)
                 else:
@@ -491,8 +488,7 @@ def main():
         target_description_text = st.text_area("Paste Core Target Job Requirements Specifications Block")
         if st.button("Execute Live Agent CV Optimization Analysis"):
             if client:
-                with st.spinner("Processing deep content alignment metrics..."):
-                    prompt = f"Perform an ATS audit for {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Target Role: {target_description_text}."
+                with st.spinner("Processing deep content alignment metrics..."):                    prompt = f"Perform an ATS audit for {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Target Role: {target_description_text}."
                     try:
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         st.session_state["last_cv_output"] = response.text
@@ -541,8 +537,7 @@ def main():
             
             st.markdown("---")
             st.markdown("#### 💼 Post Active Vacancies Matrix")
-            st.text_input("Job Title Requirement Block Input Position")
-            st.text_area("Job Specification Details Array Parameters")
+            st.text_input("Job Title Requirement Block Input Position")            st.text_area("Job Specification Details Array Parameters")
             st.button("Publish Position Openings Index")
             
         with c_emp2:
