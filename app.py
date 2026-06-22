@@ -1,18 +1,27 @@
 """
 MT Graduate Career Launchpad
-Enterprise AI Agent Edition - Fully Optimized Production Build
+Enterprise AI Agent Edition - Background Resilient Build
 
 Fixed features:
-1. Native API integration to resolve 'API_KEY_INVALID' blocks.
-2. High-contrast mobile typography to fix unreadable headings.
-3. Stable native alert styling to eliminate blank output screens.
-4. Updated to an active, stable model (gemini-2.5-flash) to bypass the 404 retirement error.
+1. Implemented background persistence cache to mitigate mobile OS aggressive memory management (minimizing refresh loss).
+2. Retained full high-contrast green premium theme and active gemini-2.5-flash configuration.
 """
 
 import streamlit as st
 import json
 import hashlib
 import os
+
+# =============================================================================
+# PERSISTENT ENVIRONMENT MEMORY ENGINE (Survives Mobile App Minimizing)
+# =============================================================================
+@st.cache_resource
+def get_global_memory_bridge():
+    """Creates a global memory container that survives mobile browser tab sleep states."""
+    return {"active_sessions": {}}
+
+# Initialize global background memory bridge
+global_bridge = get_global_memory_bridge()
 
 # =============================================================================
 # INITIALIZE LIVE AI AGENT ENGINE
@@ -209,24 +218,36 @@ def main():
     st.set_page_config(page_title="MT Graduate Career Launchpad", page_icon="⚡", layout="wide")
     inject_premium_styles()
     
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
-    if "username" not in st.session_state:
-        st.session_state.username = ""
-    if "current_page" not in st.session_state:
-        st.session_state.current_page = "Home Menu"
-        
-    if "cv_data_name" not in st.session_state:
-        st.session_state.cv_data_name = ""
-    if "cv_data_title" not in st.session_state:
-        st.session_state.cv_data_title = ""
-    if "cv_data_skills" not in st.session_state:
-        st.session_state.cv_data_skills = ""
-    if "cv_data_exp" not in st.session_state:
-        st.session_state.cv_data_exp = ""
-    if "cv_data_projects" not in st.session_state:
-        st.session_state.cv_data_projects = ""
+    # -------------------------------------------------------------------------
+    # STATE RESTORATION MATRIX (Recovers data if phone sleeps browser tab)
+    # -------------------------------------------------------------------------
+    if "session_recovered" not in st.session_state:
+        # Check if an existing memory signature is stored in global memory pool
+        if global_bridge["active_sessions"]:
+            # Pick up last active connection profile safely
+            last_user = list(global_bridge["active_sessions"].keys())[-1]
+            cached_data = global_bridge["active_sessions"][last_user]
+            
+            st.session_state.logged_in = True
+            st.session_state.username = last_user
+            st.session_state.current_page = cached_data.get("current_page", "Home Menu")
+            st.session_state.cv_data_name = cached_data.get("cv_data_name", "")
+            st.session_state.cv_data_title = cached_data.get("cv_data_title", "")
+            st.session_state.cv_data_skills = cached_data.get("cv_data_skills", "")
+            st.session_state.cv_data_exp = cached_data.get("cv_data_exp", "")
+            st.session_state.cv_data_projects = cached_data.get("cv_data_projects", "")
+        else:
+            st.session_state.logged_in = False
+            st.session_state.username = ""
+            st.session_state.current_page = "Home Menu"
+            st.session_state.cv_data_name = ""
+            st.session_state.cv_data_title = ""
+            st.session_state.cv_data_skills = ""
+            st.session_state.cv_data_exp = ""
+            st.session_state.cv_data_projects = ""
+        st.session_state.session_recovered = True
 
+    # System UI presentation header
     st.markdown("""
         <div class="premium-hero">
             <div class="brand-container">
@@ -237,6 +258,7 @@ def main():
         </div>
     """, unsafe_allow_html=True)
 
+    # Authentication view engine
     if not st.session_state.logged_in:
         col_auth_left, col_auth_right = st.columns(2)
         
@@ -255,6 +277,16 @@ def main():
                     st.session_state.cv_data_exp = prof.get("bio", "")
                     st.session_state.cv_data_projects = prof.get("projects", "")
                     st.session_state.current_page = "Home Menu"
+                    
+                    # Store session signature to survive minimization resets
+                    global_bridge["active_sessions"][lin_user] = {
+                        "current_page": st.session_state.current_page,
+                        "cv_data_name": st.session_state.cv_data_name,
+                        "cv_data_title": st.session_state.cv_data_title,
+                        "cv_data_skills": st.session_state.cv_data_skills,
+                        "cv_data_exp": st.session_state.cv_data_exp,
+                        "cv_data_projects": st.session_state.cv_data_projects
+                    }
                     st.rerun()
                 else:
                     st.error("Credential verification failed.")
@@ -274,11 +306,23 @@ def main():
     current_user = st.session_state.username
     client = get_ai_agent()
 
+    # Dynamic status update helper for global bridge mapping
+    def synchronize_cache():
+        global_bridge["active_sessions"][current_user] = {
+            "current_page": st.session_state.current_page,
+            "cv_data_name": st.session_state.cv_data_name,
+            "cv_data_title": st.session_state.cv_data_title,
+            "cv_data_skills": st.session_state.cv_data_skills,
+            "cv_data_exp": st.session_state.cv_data_exp,
+            "cv_data_projects": st.session_state.cv_data_projects
+        }
+
     c_status_left, c_status_right = st.columns([5, 1])
     with c_status_left:
         st.markdown(f"<span>🟢 <b>Ecosystem Workspace Active:</b> User ID: `{current_user}`</span>", unsafe_allow_html=True)
     with c_status_right:
         if st.button("Disconnect", key="btn_global_disconnect"):
+            global_bridge["active_sessions"].pop(current_user, None)
             st.session_state.logged_in = False
             st.session_state.username = ""
             st.session_state.current_page = "Home Menu"
@@ -293,32 +337,38 @@ def main():
         st.markdown('<div class="premium-card"><h3>📝 AI CV Builder & Optimizer</h3></div>', unsafe_allow_html=True)
         if st.button("Open Optimizer System", key="nav_cv_opt"):
             st.session_state.current_page = "Advanced CV Builder"
+            synchronize_cache()
             st.rerun()
             
         st.markdown('<div class="premium-card"><h3>🎙️ Behavioral Simulation Coach</h3></div>', unsafe_allow_html=True)
         if st.button("Open Coach System", key="nav_coach_opt"):
             st.session_state.current_page = "Interview Simulation"
+            synchronize_cache()
             st.rerun()
 
         st.markdown('<div class="premium-card"><h3>🔍 Job Placement Matrix</h3></div>', unsafe_allow_html=True)
         if st.button("Open Placement Explorer", key="nav_jobs_opt"):
             st.session_state.current_page = "Job Matcher Hub"
+            synchronize_cache()
             st.rerun()
 
         st.markdown('<div class="premium-card"><h3>✉️ Outreach Architecture</h3></div>', unsafe_allow_html=True)
         if st.button("Open Messaging Suite", key="nav_outreach_opt"):
             st.session_state.current_page = "Alumni Outreach"
+            synchronize_cache()
             st.rerun()
 
         st.markdown('<div class="premium-card"><h3>⚙️ Environment Settings</h3></div>', unsafe_allow_html=True)
         if st.button("Open System Settings", key="nav_cfg_opt"):
             st.session_state.current_page = "Profile Config"
+            synchronize_cache()
             st.rerun()
 
     # ---- 1. CV BUILDER MODULE ----
     elif st.session_state.current_page == "Advanced CV Builder":
         if st.button("← Back to System Dashboard Menu", key="ret_from_cv"):
             st.session_state.current_page = "Home Menu"
+            synchronize_cache()
             st.rerun()
             
         st.markdown('<div class="premium-card"><h3>📝 Live AI CV Optimization Workspace</h3></div>', unsafe_allow_html=True)
@@ -326,10 +376,12 @@ def main():
         st.session_state.cv_data_title = st.text_input("Target Professional Title", value=st.session_state.cv_data_title)
         st.session_state.cv_data_skills = st.text_area("Technical Stack Keywords", value=st.session_state.cv_data_skills)
         st.session_state.cv_data_exp = st.text_area("Comprehensive Career Experience Blocks", value=st.session_state.cv_data_exp)
+        synchronize_cache()
         
         if st.button("Save Core Profile Parameters", key="btn_save_profile_action"):
             package = {"fullname": st.session_state.cv_data_name, "role": st.session_state.cv_data_title, "skills": st.session_state.cv_data_skills, "bio": st.session_state.cv_data_exp, "projects": st.session_state.cv_data_projects}
             update_user_profile(current_user, package)
+            synchronize_cache()
             st.success("Profile saved!")
         
         st.markdown('<div class="premium-card"><h3>📊 Live Agent Alignment & ATS Diagnostics</h3></div>', unsafe_allow_html=True)
@@ -340,7 +392,6 @@ def main():
                 with st.spinner("Agent running real-time profile diagnostic match..."):
                     prompt = f"Critique this candidate profile for role {st.session_state.cv_data_title}. Skills: {st.session_state.cv_data_skills}. Bio: {st.session_state.cv_data_exp}. Job spec: {target_description_text}"
                     try:
-                        # Rerouted to active stable tier model
                         response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
                         if response.text:
                             st.markdown("### 📊 Live Agent Diagnostic Output")
@@ -356,6 +407,7 @@ def main():
     elif st.session_state.current_page == "Interview Simulation":
         if st.button("← Back to System Dashboard Menu", key="ret_from_coach"):
             st.session_state.current_page = "Home Menu"
+            synchronize_cache()
             st.rerun()
             
         st.markdown('<div class="premium-card"><h3>🎙️ Live AI Behavioral Simulation Coach</h3></div>', unsafe_allow_html=True)
@@ -383,6 +435,7 @@ def main():
     elif st.session_state.current_page == "Job Matcher Hub":
         if st.button("← Back to System Dashboard Menu", key="ret_from_matcher"):
             st.session_state.current_page = "Home Menu"
+            synchronize_cache()
             st.rerun()
             
         st.markdown('<div class="premium-card"><h3>🔍 Strategic Job Placement & Skill Match Matrix</h3></div>', unsafe_allow_html=True)
@@ -408,6 +461,7 @@ def main():
     elif st.session_state.current_page == "Alumni Outreach":
         if st.button("← Back to System Dashboard Menu", key="ret_from_outreach"):
             st.session_state.current_page = "Home Menu"
+            synchronize_cache()
             st.rerun()
             
         st.markdown('<div class="premium-card"><h3>✉️ Enterprise Conversion Outreach Architecture</h3></div>', unsafe_allow_html=True)
@@ -435,6 +489,7 @@ def main():
     elif st.session_state.current_page == "Profile Config":
         if st.button("← Back to System Dashboard Menu", key="ret_from_cfg"):
             st.session_state.current_page = "Home Menu"
+            synchronize_cache()
             st.rerun()
             
         st.markdown('<div class="premium-card"><h3>⚙️ Secure Local Database & Environment Management</h3></div>', unsafe_allow_html=True)
