@@ -1,7 +1,0 @@
-streamlit
-google-generativeai
-PyPDF2
-pdfplumber
-requests
-pandas
-plotly
