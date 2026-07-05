@@ -1,14 +1,22 @@
+version: "3.9"
+
 services:
   backend:
+    container_name: mt-career-backend
     build: .
-    # Use this specific command to run your app
     command: uvicorn backend:app --host 0.0.0.0 --port 8000
-    environment:
-      - GOOGLE_API_KEY=AQ.Ab8RN6INT1vHzFu5m0RgIdFadNrr2OzevmBBlpwC_Jeezy3_OQ
+    env_file:
+      - .env
+    restart: unless-stopped
+
   frontend:
+    container_name: mt-career-frontend
     build: .
-    command: streamlit run frontend.py --server.port 8501
+    command: streamlit run frontend.py --server.address=0.0.0.0 --server.port=8501
+    env_file:
+      - .env
     ports:
       - "8501:8501"
     depends_on:
       - backend
+    restart: unless-stopped
