@@ -1,47 +1,128 @@
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="MT Graduate Career Launchpad", layout="wide")
+# ---------------------------------------
+# Page Configuration
+# ---------------------------------------
 
-# Initialize session state for navigation
-if 'page' not in st.session_state:
-    st.session_state.page = 'Dashboard'
+st.set_page_config(
+    page_title="MT Graduate Career Launchpad",
+    page_icon="🚀",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-# Sidebar Navigation
+# ---------------------------------------
+# Custom CSS
+# ---------------------------------------
+
+st.markdown("""
+<style>
+
+.main {
+    background-color:#F8FAFC;
+}
+
+h1,h2,h3{
+    color:#0F172A;
+}
+
+.metric-card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0px 4px 12px rgba(0,0,0,0.08);
+}
+
+.stButton>button{
+    width:100%;
+    border-radius:10px;
+    height:45px;
+    background:#2563EB;
+    color:white;
+    border:none;
+    font-weight:bold;
+}
+
+.stButton>button:hover{
+    background:#1D4ED8;
+}
+
+.sidebar-title{
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    color:#2563EB;
+}
+
+.small-text{
+    text-align:center;
+    color:gray;
+    font-size:14px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------
+# Session State
+# ---------------------------------------
+
+if "page" not in st.session_state:
+    st.session_state.page = "Dashboard"
+
+# ---------------------------------------
+# Sidebar
+# ---------------------------------------
+
 with st.sidebar:
-    st.header("⏱️ Ecosystem Hubs")
-    if st.button("🏠 Dashboard"): st.session_state.page = 'Dashboard'
-    if st.button("🧠 Career Assessment"): st.session_state.page = 'Career Assessment'
-    if st.button("📄 CV Builder & Optimizer"): st.session_state.page = 'CV Builder'
 
-# Main Page Logic
-if st.session_state.page == 'Dashboard':
-    st.title("Graduate Career Launchpad - Dashboard")
-    
-    with st.form(key='analysis_form'):
-        user_input = st.text_area("Paste your resume here")
-        submit_button = st.form_submit_button(label='Analyze with AI')
+    st.markdown(
+        "<div class='sidebar-title'>🚀 MT Career Launchpad</div>",
+        unsafe_allow_html=True
+    )
 
-    if submit_button and user_input:
-        with st.spinner('Analyzing...'):
-            try:
-                response = requests.post("http://backend:8000/analyze", json={"text": user_input})
-                if response.status_code == 200:
-                    st.success("Analysis Complete!")
-                    st.write(response.json().get("feedback"))
-            except Exception as e:
-                st.error(f"Connection Error: {e}")
-                
-    # Metrics display
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Employability Score", "82%")
-    col2.metric("ATS Match", "88%")
-    col3.metric("Badges", "11")
+    st.markdown(
+        "<div class='small-text'>Launch Your Career With AI</div>",
+        unsafe_allow_html=True
+    )
 
-elif st.session_state.page == 'Career Assessment':
-    st.title("🧠 Career Assessment")
-    st.write("Assessment content goes here...")
+    st.divider()
 
-elif st.session_state.page == 'CV Builder':
-    st.title("📄 CV Builder & Optimizer")
-    st.write("Optimization tools coming soon.")
+    if st.button("🏠 Dashboard"):
+        st.session_state.page = "Dashboard"
+
+    if st.button("🤖 AI Resume Analyzer"):
+        st.session_state.page = "Resume"
+
+    if st.button("🧠 Career Assessment"):
+        st.session_state.page = "Assessment"
+
+    if st.button("📄 CV Builder"):
+        st.session_state.page = "CV"
+
+    if st.button("🎯 Career Roadmap"):
+        st.session_state.page = "Roadmap"
+
+    if st.button("💼 Job Recommendations"):
+        st.session_state.page = "Jobs"
+
+    if st.button("📚 Learning Hub"):
+        st.session_state.page = "Learning"
+
+    if st.button("⚙️ Settings"):
+        st.session_state.page = "Settings"
+
+    st.divider()
+
+    st.success("🟢 System Online")
+
+# ---------------------------------------
+# Dashboard Header
+# ---------------------------------------
+
+st.title("🚀 MT Graduate Career Launchpad")
+
+st.caption("Powered by Google Gemini AI")
+
+st.markdown("---")
