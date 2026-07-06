@@ -30,6 +30,7 @@ with st.sidebar:
     for page in pages:
         if st.button(page, use_container_width=True):
             st.session_state.page = page
+            st.rerun()
 
     st.divider()
     st.success("🟢 System Online")
@@ -57,11 +58,8 @@ elif page == "AI Resume Analyzer":
     )
 
     if st.button("Analyze with AI"):
-
         if resume.strip():
-
             with st.spinner("Analyzing..."):
-
                 try:
                     response = requests.post(
                         "http://backend:8000/analyze",
@@ -75,10 +73,8 @@ elif page == "AI Resume Analyzer":
                         st.markdown(result["feedback"])
                     else:
                         st.error("Backend returned an error.")
-
                 except Exception as e:
                     st.error(f"Connection Error: {e}")
-
         else:
             st.warning("Please paste your resume first.")
 
