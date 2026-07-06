@@ -1,128 +1,108 @@
 import streamlit as st
 import requests
 
-# ---------------------------------------
-# Page Configuration
-# ---------------------------------------
-
 st.set_page_config(
     page_title="MT Graduate Career Launchpad",
     page_icon="🚀",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
-# ---------------------------------------
-# Custom CSS
-# ---------------------------------------
-
-st.markdown("""
-<style>
-
-.main {
-    background-color:#F8FAFC;
-}
-
-h1,h2,h3{
-    color:#0F172A;
-}
-
-.metric-card{
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0px 4px 12px rgba(0,0,0,0.08);
-}
-
-.stButton>button{
-    width:100%;
-    border-radius:10px;
-    height:45px;
-    background:#2563EB;
-    color:white;
-    border:none;
-    font-weight:bold;
-}
-
-.stButton>button:hover{
-    background:#1D4ED8;
-}
-
-.sidebar-title{
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
-    color:#2563EB;
-}
-
-.small-text{
-    text-align:center;
-    color:gray;
-    font-size:14px;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-# ---------------------------------------
-# Session State
-# ---------------------------------------
-
+# Session state
 if "page" not in st.session_state:
     st.session_state.page = "Dashboard"
 
-# ---------------------------------------
 # Sidebar
-# ---------------------------------------
-
 with st.sidebar:
+    st.title("🚀 MT Career Launchpad")
+    st.caption("Launch Your Career With AI")
 
-    st.markdown(
-        "<div class='sidebar-title'>🚀 MT Career Launchpad</div>",
-        unsafe_allow_html=True
-    )
+    pages = [
+        "Dashboard",
+        "AI Resume Analyzer",
+        "Career Assessment",
+        "CV Builder",
+        "Career Roadmap",
+        "Job Recommendations",
+        "Learning Hub",
+        "Settings",
+    ]
 
-    st.markdown(
-        "<div class='small-text'>Launch Your Career With AI</div>",
-        unsafe_allow_html=True
-    )
-
-    st.divider()
-
-    if st.button("🏠 Dashboard"):
-        st.session_state.page = "Dashboard"
-
-    if st.button("🤖 AI Resume Analyzer"):
-        st.session_state.page = "Resume"
-
-    if st.button("🧠 Career Assessment"):
-        st.session_state.page = "Assessment"
-
-    if st.button("📄 CV Builder"):
-        st.session_state.page = "CV"
-
-    if st.button("🎯 Career Roadmap"):
-        st.session_state.page = "Roadmap"
-
-    if st.button("💼 Job Recommendations"):
-        st.session_state.page = "Jobs"
-
-    if st.button("📚 Learning Hub"):
-        st.session_state.page = "Learning"
-
-    if st.button("⚙️ Settings"):
-        st.session_state.page = "Settings"
+    for page in pages:
+        if st.button(page, use_container_width=True):
+            st.session_state.page = page
 
     st.divider()
-
     st.success("🟢 System Online")
 
-# ---------------------------------------
-# Dashboard Header
-# ---------------------------------------
+page = st.session_state.page
 
-st.title("🚀 MT Graduate Career Launchpad")
+if page == "Dashboard":
+    st.title("🚀 MT Graduate Career Launchpad")
+    st.subheader("Welcome!")
+    st.write("This is your AI-powered career development platform.")
 
-st.caption("Powered by Google Gemini AI")
+    col1, col2, col3, col4 = st.columns(4)
 
-st.markdown("---")
+    col1.metric("Employability Score", "82%")
+    col2.metric("ATS Match", "88%")
+    col3.metric("Career Progress", "15%")
+    col4.metric("AI Analyses", "0")
+
+elif page == "AI Resume Analyzer":
+    st.title("🤖 AI Resume Analyzer")
+
+    resume = st.text_area(
+        "Paste your resume below:",
+        height=250
+    )
+
+    if st.button("Analyze with AI"):
+
+        if resume.strip():
+
+            with st.spinner("Analyzing..."):
+
+                try:
+                    response = requests.post(
+                        "http://backend:8000/analyze",
+                        json={"text": resume},
+                        timeout=120
+                    )
+
+                    if response.status_code == 200:
+                        result = response.json()
+                        st.success("Analysis Complete")
+                        st.markdown(result["feedback"])
+                    else:
+                        st.error("Backend returned an error.")
+
+                except Exception as e:
+                    st.error(f"Connection Error: {e}")
+
+        else:
+            st.warning("Please paste your resume first.")
+
+elif page == "Career Assessment":
+    st.title("🧠 Career Assessment")
+    st.info("Coming soon...")
+
+elif page == "CV Builder":
+    st.title("📄 CV Builder")
+    st.info("Coming soon...")
+
+elif page == "Career Roadmap":
+    st.title("🛣️ Career Roadmap")
+    st.info("Coming soon...")
+
+elif page == "Job Recommendations":
+    st.title("💼 Job Recommendations")
+    st.info("Coming soon...")
+
+elif page == "Learning Hub":
+    st.title("📚 Learning Hub")
+    st.info("Coming soon...")
+
+elif page == "Settings":
+    st.title("⚙️ Settings")
+    st.write("Version 2.0")
+    st.success("Backend Connected")
