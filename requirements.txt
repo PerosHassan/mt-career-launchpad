@@ -2,5 +2,5 @@ streamlit
 fastapi
 uvicorn
 requests
-google-generativeai
 python-dotenv
+google-genai
