@@ -1,31 +1,33 @@
 import os
-import google.generativeai as genai
+from openai import OpenAI
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
-# Get API key
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+client = OpenAI(
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url="https://openrouter.ai/api/v1",
+)
 
-if not GOOGLE_API_KEY:
-    raise ValueError(
-        "GOOGLE_API_KEY not found. Please add it to your .env file."
-    )
-
-# Configure Gemini
-genai.configure(api_key=GOOGLE_API_KEY)
-
-# Load model
-model = genai.GenerativeModel("gemini-1.5-flash")
-
+MODEL = os.getenv(
+    "OPENROUTER_MODEL",
+    "meta-llama/llama-3.3-70b-instruct"
+)
 
 def generate_response(prompt: str) -> str:
-    """
-    Generate a response from Google's Gemini model.
-    """
     try:
-        response = model.generate_content(prompt)
-        return response.text
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        return response.choices[0].message.content
+
     except Exception as e:
-        return f"Error: {str(e)}"
+        return f"Error: {e}"
