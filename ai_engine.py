@@ -14,14 +14,12 @@ if not api_key:
 # Create Gemini client
 client = genai.Client(api_key=api_key)
 
-# Load model name from .env
+# Model name
 MODEL_NAME = os.getenv("MODEL_NAME", "gemini-2.5-flash")
 
 
 def generate_response(prompt: str) -> str:
-    """
-    Generate a response using Google's Gemini model.
-    """
+    """Generate a response using Gemini."""
     try:
         response = client.models.generate_content(
             model=MODEL_NAME,
