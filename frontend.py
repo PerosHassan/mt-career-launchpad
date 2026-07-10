@@ -45,6 +45,7 @@ with st.sidebar:
 
 st.title("🚀 MT Career Launchpad")
 st.markdown("### Your AI-powered career development assistant")
+
 # -------------------------------
 # Dashboard
 # -------------------------------
@@ -65,7 +66,8 @@ if st.session_state.page == "Dashboard":
 - 📄 CV Builder
 - 🗺 Career Roadmap
 """)
-  # -------------------------------
+
+# -------------------------------
 # AI Resume Analyzer
 # -------------------------------
 elif st.session_state.page == "Resume":
@@ -90,8 +92,6 @@ elif st.session_state.page == "Resume":
                         f"{BACKEND_URL}/generate",
                         json={
                             "prompt": f"""
-You are an expert career coach.
-
 Analyze the following resume and provide:
 
 1. Overall score out of 100.
@@ -120,7 +120,8 @@ Resume:
 
                 except Exception as e:
                     st.error(f"Connection Error: {e}")
-                  # -------------------------------
+
+# -------------------------------
 # Career Assessment
 # -------------------------------
 elif st.session_state.page == "Assessment":
@@ -145,8 +146,6 @@ elif st.session_state.page == "Assessment":
                         f"{BACKEND_URL}/generate",
                         json={
                             "prompt": f"""
-You are an experienced career advisor.
-
 Based on the information below, provide:
 
 1. Best career paths.
@@ -166,12 +165,14 @@ User Information:
                         result = response.json()
                         st.success("Career Assessment Complete")
                         st.write(result["response"])
+
                     else:
                         st.error(f"Backend Error: {response.status_code}")
 
                 except Exception as e:
                     st.error(f"Connection Error: {e}")
-                  # -------------------------------
+
+# -------------------------------
 # CV Builder
 # -------------------------------
 elif st.session_state.page == "CV":
@@ -196,8 +197,6 @@ elif st.session_state.page == "CV":
                         f"{BACKEND_URL}/generate",
                         json={
                             "prompt": f"""
-You are an expert CV writer.
-
 Using the information below, create a professional ATS-friendly CV with:
 
 1. Professional Summary
@@ -219,12 +218,14 @@ Information:
                         result = response.json()
                         st.success("CV Generated Successfully")
                         st.write(result["response"])
+
                     else:
                         st.error(f"Backend Error: {response.status_code}")
 
                 except Exception as e:
                     st.error(f"Connection Error: {e}")
-                  # -------------------------------
+
+# -------------------------------
 # Career Roadmap
 # -------------------------------
 elif st.session_state.page == "Roadmap":
@@ -248,8 +249,6 @@ elif st.session_state.page == "Roadmap":
                         f"{BACKEND_URL}/generate",
                         json={
                             "prompt": f"""
-You are an experienced career mentor.
-
 Create a detailed learning roadmap for someone who wants to become:
 
 {career_goal}
@@ -272,6 +271,7 @@ Include:
                         result = response.json()
                         st.success("Roadmap Generated Successfully")
                         st.write(result["response"])
+
                     else:
                         st.error(f"Backend Error: {response.status_code}")
 
