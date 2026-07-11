@@ -238,7 +238,7 @@ Role:
         return "No response generated."
 
     return response.strip()
-    def generate_response(user_input):
+    def generate_response(task: str, user_input: str):
 
     task = detect_task(user_input)
 
