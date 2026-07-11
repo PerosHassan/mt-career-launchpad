@@ -3,20 +3,24 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-# Load environment variables
+# ==========================
+# Load Environment Variables
+# ==========================
 load_dotenv()
 
 # Get API Key
 api_key = os.getenv("GOOGLE_API_KEY")
 
 if not api_key:
-    raise ValueError("GOOGLE_API_KEY not found. Please add it to your .env file.")
+    raise ValueError(
+        "GOOGLE_API_KEY not found. Please add it to your .env file."
+    )
 
 # Initialize Gemini Client
 client = genai.Client(api_key=api_key)
 
 # Model Name
-MODEL_NAME = os.getenv("MODEL_NAME", "gemini-2.5-flash")
+MODEL_NAME = os.getenv("MODEL_NAME", "gemini-2.5-flash-lite")
 
 # ==========================
 # SYSTEM PROMPT
@@ -34,7 +38,8 @@ Your responsibilities are to:
 - Generate personalized career roadmaps.
 
 Always respond professionally, accurately, and with actionable advice.
-Structure your responses using headings and bullet points whenever appropriate.
+
+Structure every response using clear headings, bullet points, and numbered lists where appropriate.
 """
 
 # ==========================
@@ -42,7 +47,8 @@ Structure your responses using headings and bullet points whenever appropriate.
 # ==========================
 def generate_response(user_prompt: str) -> str:
     """
-    Sends the user's request to Gemini and returns the AI response.
+    Sends the user's request to the Gemini Generative AI model
+    and returns the generated response.
     """
 
     # Prompt Engineering
@@ -50,11 +56,10 @@ def generate_response(user_prompt: str) -> str:
 User Request:
 {user_prompt}
 
-Please provide a detailed, professional, and actionable response.
+Please provide a detailed, professional, personalized, and actionable response.
 """
 
     try:
-        # Call the Gemini Generative AI Model
         response = client.models.generate_content(
             model=MODEL_NAME,
             contents=formatted_prompt,
@@ -65,11 +70,7 @@ Please provide a detailed, professional, and actionable response.
             ),
         )
 
-        # Extract AI Response
-        ai_response = response.text
-
-        # Return AI Response to the frontend
-        return ai_response
+        return response.text
 
     except Exception as e:
-        return f"Error generating AI response: {e}"
+        return f"Error generating AI response: {str(e)}"
