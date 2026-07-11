@@ -248,28 +248,14 @@ Role:
     try:
 
         response = client.models.generate_content(
-            ...
-
-    try:
-
-        response = client.models.generate_content(
-
             model=MODEL_NAME,
-
             contents=engineered_prompt,
-
             config=types.GenerateContentConfig(
-
                 system_instruction=SYSTEM_PROMPT,
-
                 temperature=0.7,
-
                 top_p=0.95,
-
                 max_output_tokens=2048,
-
-            )
-
+            ),
         )
 
         return validate_response(response.text)
