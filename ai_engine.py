@@ -240,13 +240,15 @@ Role:
     return response.strip()
     def generate_response(task: str, user_input: str):
 
-    # Task is received directly from the frontend
-# No need to detect it automatically.
-
     engineered_prompt = build_prompt(
         task,
         user_input
     )
+
+    try:
+
+        response = client.models.generate_content(
+            ...
 
     try:
 
