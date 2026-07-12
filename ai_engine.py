@@ -6,6 +6,7 @@ from google.genai import types
 # ============================================================
 # LOAD ENVIRONMENT VARIABLES
 # ============================================================
+
 load_dotenv()
 
 API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -18,19 +19,22 @@ if not API_KEY:
 # ============================================================
 # MODEL CONFIGURATION
 # ============================================================
+
 MODEL_NAME = os.getenv(
     "MODEL_NAME",
-    "gemini-2.5-flash"
+    "gemini-3.5-flash"
 )
 
 # ============================================================
 # INITIALIZE GEMINI CLIENT
 # ============================================================
+
 client = genai.Client(api_key=API_KEY)
 
 # ============================================================
 # TASK CONSTANTS
 # ============================================================
+
 TASK_RESUME = "resume"
 TASK_CAREER = "career"
 TASK_CV = "cv"
@@ -40,42 +44,43 @@ TASK_INTERVIEW = "interview"
 # ============================================================
 # SYSTEM PROMPT
 # ============================================================
+
 SYSTEM_PROMPT = """
 You are MT Career Launchpad AI.
 
-You are an intelligent Career Development Assistant built to help students,
-graduates and professionals make informed career decisions.
+You are an intelligent AI Career Development Assistant designed to
+help students, graduates and professionals achieve career success.
 
 Your responsibilities include:
 
-- Resume Analysis
-- ATS Resume Optimization
-- Career Assessment
-- CV Writing
-- Career Roadmaps
-- Interview Preparation
-- Skill Gap Analysis
-- Learning Recommendations
-- Certification Recommendations
+• Resume Analysis
+• ATS Resume Optimization
+• CV Writing
+• Career Assessment
+• Career Roadmaps
+• Interview Preparation
+• Skill Gap Analysis
+• Learning Recommendations
+• Certification Recommendations
 
 Always:
 
 - Understand the user's goal.
-- Think carefully before answering.
-- Provide accurate and professional advice.
+- Think before answering.
+- Give professional and practical advice.
 - Explain your reasoning.
-- Structure responses using headings.
-- Use bullet points whenever appropriate.
-- End with practical next steps.
+- Use headings.
+- Use bullet points.
+- End every response with actionable next steps.
 - Never fabricate information.
-- If uncertain, clearly state your limitations.
 """
 
 # ============================================================
 # PROMPT TEMPLATES
 # ============================================================
 
-def resume_prompt(user_input: str) -> str:
+def resume_prompt(user_input: str):
+
     return f"""
 You are an ATS Resume Expert.
 
@@ -83,12 +88,12 @@ Analyse the following resume professionally.
 
 Provide:
 
-1. ATS Score (out of 100)
+1. ATS Score
 2. Strengths
 3. Weaknesses
 4. Missing Skills
-5. Recommendations for Improvement
-6. Final Summary
+5. Improvement Suggestions
+6. Final Recommendation
 
 Resume:
 
@@ -96,19 +101,20 @@ Resume:
 """
 
 
-def career_prompt(user_input: str) -> str:
-    return f"""
-You are a Senior Career Advisor.
+def career_prompt(user_input: str):
 
-Analyse the user's information.
+    return f"""
+You are a Senior Career Coach.
+
+Analyse the user's profile.
 
 Provide:
 
-1. Suitable Career Paths
-2. Skills to Develop
-3. Recommended Certifications
+1. Best Career Paths
+2. Skills to Learn
+3. Certifications
 4. Job Opportunities
-5. One-Year Career Development Plan
+5. One-Year Career Plan
 
 User Information:
 
@@ -116,11 +122,10 @@ User Information:
 """
 
 
-def cv_prompt(user_input: str) -> str:
-    return f"""
-You are an Expert CV Writer.
+def cv_prompt(user_input: str):
 
-Create an ATS-friendly professional CV.
+    return f"""
+Create a professional ATS-friendly CV.
 
 Include:
 
@@ -138,10 +143,9 @@ Information:
 """
 
 
-def roadmap_prompt(user_input: str) -> str:
-    return f"""
-You are a Career Mentor.
+def roadmap_prompt(user_input: str):
 
+    return f"""
 Create a detailed 12-month learning roadmap.
 
 Career Goal:
@@ -150,18 +154,17 @@ Career Goal:
 
 Include:
 
-- Beginner Skills
-- Intermediate Skills
-- Advanced Skills
-- Recommended Courses
+- Monthly Plan
+- Skills
+- Courses
 - Certifications
 - Portfolio Projects
-- Monthly Timeline
 - Career Opportunities
 """
 
 
-def interview_prompt(user_input: str) -> str:
+def interview_prompt(user_input: str):
+
     return f"""
 You are an Interview Coach.
 
@@ -169,12 +172,12 @@ Prepare the user for interviews.
 
 Provide:
 
-- Common Interview Questions
-- Sample Answers
+- Common Questions
+- Model Answers
 - Interview Tips
 - Mistakes to Avoid
 
-Target Role:
+Role:
 
 {user_input}
 """
@@ -183,7 +186,7 @@ Target Role:
 # PROMPT ROUTER
 # ============================================================
 
-def build_prompt(task: str, user_input: str) -> str:
+def build_prompt(task: str, user_input: str):
 
     prompts = {
         TASK_RESUME: resume_prompt,
@@ -196,40 +199,37 @@ def build_prompt(task: str, user_input: str) -> str:
     if task in prompts:
         return prompts[task](user_input)
 
-    return f"""
-You are a Professional Career Development Assistant.
+    return user_input
 
-Respond professionally to the following request.
-
-User Request:
-
-{user_input}
-"""
 
 # ============================================================
 # RESPONSE VALIDATION
 # ============================================================
 
-def validate_response(response_text: str) -> str:
+def validate_response(text):
 
-    if not response_text:
-        return "No AI response was generated."
+    if text is None:
+        return "No response generated."
 
-    return response_text.strip()
+    if not str(text).strip():
+        return "No response generated."
+
+    return str(text).strip()
+
 
 # ============================================================
-# GENERATE AI RESPONSE
+# GENERATE RESPONSE
 # ============================================================
 
-def generate_response(task: str, user_input: str) -> str:
+def generate_response(task: str, user_input: str):
 
-    engineered_prompt = build_prompt(task, user_input)
+    prompt = build_prompt(task, user_input)
 
     try:
 
         response = client.models.generate_content(
             model=MODEL_NAME,
-            contents=engineered_prompt,
+            contents=prompt,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 temperature=0.7,
@@ -241,4 +241,5 @@ def generate_response(task: str, user_input: str) -> str:
         return validate_response(response.text)
 
     except Exception as e:
+
         return f"AI Engine Error: {e}"
