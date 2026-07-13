@@ -1,4 +1,5 @@
 import os
+import time
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -20,7 +21,6 @@ if not API_KEY:
 # MODEL CONFIGURATION
 # ============================================================
 
-# Using the active and supported gemini-3.5-flash model
 MODEL_NAME = os.getenv(
     "MODEL_NAME",
     "gemini-3.5-flash"
@@ -193,42 +193,50 @@ def validate_response(text):
     return str(text).strip()
 
 # ============================================================
-# GENERATE RESPONSE
+# GENERATE RESPONSE WITH AUTO-RETRY
 # ============================================================
 
 def generate_response(task: str, user_input: str):
     prompt = build_prompt(task, user_input)  
+    
+    max_retries = 3
+    initial_delay = 2  # seconds
 
-    try:  
-        response = client.models.generate_content(  
-            model=MODEL_NAME,  
-            contents=prompt,  
-            config=types.GenerateContentConfig(  
-                system_instruction=SYSTEM_PROMPT,  
-                temperature=0.7,  
-                top_p=0.95,  
-                max_output_tokens=2048,  
-            ),  
-        )  
-
-        return validate_response(response.text)  
-
-    except Exception as e:  
-        error = str(e)  
-
-        # Google Gemini service temporarily busy  
-        if "503" in error or "UNAVAILABLE" in error:  
-            return (  
-                "⚠️ The AI service is currently experiencing high demand.\n\n"  
-                "Please wait a few moments and try again."  
+    for attempt in range(max_retries):
+        try:  
+            response = client.models.generate_content(  
+                model=MODEL_NAME,  
+                contents=prompt,  
+                config=types.GenerateContentConfig(  
+                    system_instruction=SYSTEM_PROMPT,  
+                    temperature=0.7,  
+                    top_p=0.95,  
+                    max_output_tokens=2048,  
+                ),  
             )  
 
-        # Invalid API Key  
-        if "API_KEY_INVALID" in error or "400" in error:  
-            return (  
-                "❌ AI Configuration Error.\n\n"  
-                "The Google Gemini API key is invalid or missing."  
-            )  
+            return validate_response(response.text)  
 
-        # Any other unexpected error  
-        return f"❌ AI Engine Error:\n\n{error}"
+        except Exception as e:  
+            error = str(e)  
+
+            # Invalid API Key
+            if "API_KEY_INVALID" in error or "400" in error:  
+                return (  
+                    "❌ AI Configuration Error.\n\n"  
+                    "The Google Gemini API key is invalid or missing."  
+                )  
+
+            # If it's a rate limit / busy error, wait and try again
+            if "503" in error or "UNAVAILABLE" in error or "429" in error:
+                if attempt < max_retries - 1:
+                    time.sleep(initial_delay * (attempt + 1))
+                    continue
+                else:
+                    return (  
+                        "⚠️ The AI service is currently experiencing high demand.\n\n"  
+                        "Please wait a few moments and try again."  
+                    )  
+
+            # Any other unexpected error  
+            return f"❌ AI Engine Error:\n\n{error}"
