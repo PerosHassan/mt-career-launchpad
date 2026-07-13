@@ -20,10 +20,10 @@ if not API_KEY:
 # MODEL CONFIGURATION
 # ============================================================
 
-# Updated default model string fallback to the faster, smarter gemini-2.5-flash
+# Using the active and supported gemini-3.5-flash model
 MODEL_NAME = os.getenv(
     "MODEL_NAME",
-    "gemini-2.5-flash"
+    "gemini-3.5-flash"
 )
 
 # ============================================================
