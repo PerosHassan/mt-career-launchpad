@@ -299,3 +299,30 @@ def get_recent_activity(user_id, limit=5):
 
 
     return activity
+    # ============================================================
+# GET USER AI CONTEXT
+# ============================================================
+
+def get_user_context(user_id):
+
+    profile = get_profile(user_id)
+
+
+    if profile:
+
+        return f"""
+Career Goal:
+{profile[0]}
+
+Skills:
+{profile[1]}
+
+Experience:
+{profile[2]}
+
+Education:
+{profile[3]}
+"""
+
+
+    return "No profile information available."
