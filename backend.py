@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from ai_engine import generate_response
 
@@ -10,6 +11,18 @@ app = FastAPI(
     title="MT Career Launchpad API",
     description="Backend API for the MT Career Launchpad AI Assistant",
     version="2.0"
+)
+
+# ============================================================
+# CORS CONFIGURATION
+# ============================================================
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # ============================================================
@@ -30,6 +43,17 @@ def home():
         "message": "Welcome to the MT Career Launchpad API!",
         "status": "running",
         "version": "2.0"
+    }
+
+# ============================================================
+# HEALTH CHECK ROUTE
+# ============================================================
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+        "service": "MT Career Launchpad Backend"
     }
 
 # ============================================================
