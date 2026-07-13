@@ -326,3 +326,40 @@ Education:
 
 
     return "No profile information available."
+    # ============================================================
+# PROFILE COMPLETION SCORE
+# ============================================================
+
+def get_profile_completion(user_id):
+
+    profile = get_profile(user_id)
+
+
+    if not profile:
+        return 0
+
+
+    fields = [
+        profile[0],  # career goal
+        profile[1],  # skills
+        profile[2],  # experience
+        profile[3]   # education
+    ]
+
+
+    completed = 0
+
+
+    for field in fields:
+
+        if field and field.strip():
+
+            completed += 1
+
+
+    percentage = int(
+        (completed / len(fields)) * 100
+    )
+
+
+    return percentage
