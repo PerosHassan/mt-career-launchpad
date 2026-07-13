@@ -243,21 +243,6 @@ def generate_response(task: str, user_input: str):
 
     except Exception as e:
 
-        error = str(e)
+    print("GEMINI ERROR:", str(e))
 
-        # Google Gemini service temporarily busy
-        if "503" in error or "UNAVAILABLE" in error:
-            return (
-                "⚠️ The AI service is currently experiencing high demand.\n\n"
-                "Please wait a few moments and try again."
-            )
-
-        # Invalid API Key
-        if "API_KEY_INVALID" in error or "400" in error:
-            return (
-                "❌ AI Configuration Error.\n\n"
-                "The Google Gemini API key is invalid or missing."
-            )
-
-        # Any other unexpected error
-        return f"❌ AI Engine Error:\n\n{error}"
+    return f"❌ GEMINI ERROR:\n\n{str(e)}"
