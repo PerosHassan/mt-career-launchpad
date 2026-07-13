@@ -5,7 +5,16 @@ import requests
 from auth import create_user, authenticate_user
 
 # User Data
-from user_data import save_ai_history
+from user_data import (
+    save_ai_history,
+    get_user_history,
+    get_user_stats,
+    get_recent_activity,
+    save_profile,
+    get_profile,
+    get_user_context,
+    get_profile_completion
+)
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -87,11 +96,23 @@ BACKEND_URL = "http://localhost:8000"
 
 def call_ai(task: str, user_input: str):
     try:
+        user_context = ""
+
+        if st.session_state.user:
+            user_context = get_user_context(st.session_state.user["id"])
+
         response = requests.post(
             f"{BACKEND_URL}/generate",
             json={
                 "task": task,
-                "input": user_input
+                "input": f"""User Profile:
+
+{user_context}
+
+User Request:
+
+{user_input}
+"""
             },
             timeout=120
         )
@@ -178,6 +199,9 @@ with st.sidebar:
         if st.button("👤 My Profile"):
             st.session_state.page = "Profile"
 
+        if st.button("📚 My History"):
+            st.session_state.page = "History"
+
         if st.button("📄 Resume Analyzer"):
             st.session_state.page = "Resume"
 
@@ -232,6 +256,61 @@ if st.session_state.user:
     if st.session_state.page == "Dashboard":
         st.header("🏠 Dashboard")
         st.success(f"Welcome {st.session_state.user['name']} 👋")
+
+        # ============================================================
+        # USER CAREER PROGRESS (ANALYTICS)
+        # ============================================================
+        user_id = st.session_state.user["id"]
+        stats = get_user_stats(user_id)
+
+        st.subheader("📊 Your Career Progress")
+
+        c1, c2, c3, c4 = st.columns(4)
+
+        with c1:
+            st.metric(
+                "📄 Resume Analyses",
+                stats["resume"]
+            )
+
+        with c2:
+            st.metric(
+                "🧠 Career Assessments",
+                stats["career"]
+            )
+
+        with c3:
+            st.metric(
+                "📝 CV Generations",
+                stats["cv"]
+            )
+
+        with c4:
+            st.metric(
+                "🎤 Interview Practice",
+                stats["interview"]
+            )
+
+        st.divider()
+
+        # ============================================================
+        # RECENT ACTIVITY
+        # ============================================================
+        st.subheader("🕒 Recent Activity")
+
+        recent = get_recent_activity(user_id)
+
+        if not recent:
+            st.info("No AI activity yet. Start using the AI tools.")
+        else:
+            for item in recent:
+                task = item[0]
+                date = item[1]
+
+                st.write(f"🤖 **{task.upper()}** — {date}")
+
+        st.divider()
+
         st.write(
             """
             MT Career Launchpad AI uses **Google Gemini Generative AI**
@@ -270,6 +349,16 @@ if st.session_state.user:
     # 2. PROFILE PAGE
     elif st.session_state.page == "Profile":
         st.header("👤 My Profile")
+
+        # ============================================================
+        # PROFILE COMPLETION GAUGE
+        # ============================================================
+        completion = get_profile_completion(st.session_state.user["id"])
+
+        st.subheader("📊 Profile Completion")
+        st.progress(completion / 100)
+        st.write(f"{completion}% Complete")
+
         user = st.session_state.user
 
         st.subheader("Account Information")
@@ -280,13 +369,79 @@ if st.session_state.user:
             st.text_input("Email", value=user["email"], disabled=True)
 
         st.divider()
+
+        # Load existing profile
+        profile = get_profile(user["id"])
+
+        if profile:
+            career_interest = profile[0]
+            skills = profile[1]
+            experience = profile[2]
+            education = profile[3]
+        else:
+            career_interest = ""
+            skills = ""
+            experience = ""
+            education = ""
+
         st.subheader("Career Profile")
-        career_interest = st.text_input("Career Interest", placeholder="Example: AI Engineer, Product Manager")
-        skills = st.text_area("Skills", placeholder="Python, AI, Product Management...")
-        experience = st.text_area("Experience", placeholder="Describe your experience...")
+
+        career_interest = st.text_input(
+            "Career Goal",
+            value=career_interest,
+            placeholder="Example: AI Engineer, Product Manager"
+        )
+
+        skills = st.text_area(
+            "Skills",
+            value=skills,
+            placeholder="Python, AI, Product Management..."
+        )
+
+        experience = st.text_area(
+            "Experience",
+            value=experience,
+            placeholder="Describe your experience..."
+        )
+
+        education = st.text_area(
+            "Education",
+            value=education,
+            placeholder="Your education background..."
+        )
 
         if st.button("💾 Save Profile"):
-            st.success("Profile information saved.")
+            save_profile(
+                user_id=user["id"],
+                career_goal=career_interest,
+                skills=skills,
+                experience=experience,
+                education=education
+            )
+            st.success("✅ Profile updated successfully")
+            st.rerun()
+
+    # ============================================================
+    # HISTORY PAGE
+    # ============================================================
+    elif st.session_state.page == "History":
+        st.header("📚 My AI History")
+        
+        user_id = st.session_state.user["id"]
+        history = get_user_history(user_id)
+
+        if not history:
+            st.info("You have not generated any AI content yet.")
+        else:
+            st.success(f"Found {len(history)} previous AI activities.")
+            
+            for item in history:
+                task = item[0]
+                response = item[1]
+                date = item[2]
+
+                with st.expander(f"🤖 {task.upper()} | {date}"):
+                    st.write(response)
 
     # 3. RESUME ANALYZER
     elif st.session_state.page == "Resume":
