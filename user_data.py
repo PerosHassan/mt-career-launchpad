@@ -259,3 +259,43 @@ def get_user_stats(user_id):
 
 
     return stats
+    # ============================================================
+# GET RECENT USER ACTIVITY
+# ============================================================
+
+def get_recent_activity(user_id, limit=5):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+
+    cursor.execute(
+        """
+        SELECT
+        task,
+        created_at
+
+        FROM ai_history
+
+        WHERE user_id=?
+
+        ORDER BY id DESC
+
+        LIMIT ?
+
+        """,
+        (
+            user_id,
+            limit
+        )
+    )
+
+
+    activity = cursor.fetchall()
+
+
+    conn.close()
+
+
+    return activity
