@@ -95,7 +95,8 @@ if "user" not in st.session_state:
 # BACKEND CONFIGURATION & AI REQUEST FUNCTION
 # ============================================================
 
-BACKEND_URL = "http://localhost:8000"
+# Swapped out local testing server for your live production Render deployment
+BACKEND_URL = "https://mt-career-launchpad-api.onrender.com"
 
 def call_ai(task: str, user_input: str):
     try:
@@ -488,7 +489,7 @@ if st.session_state.user:
                 st.warning("Please enter your professional information.")
             else:
                 with st.spinner("🤖 Gemini AI is writing your professional CV..."):
-                    result = call_ai(task="cv", user_input=cv_info)
+                    result = call_ai(task="cv", use_input=cv_info)
                 st.success("✅ CV Generated Successfully")
                 st.markdown(result)
                 st.download_button("📥 Download CV", result, file_name="generated_cv.txt", mime="text/plain")
