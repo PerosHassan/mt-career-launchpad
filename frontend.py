@@ -4,6 +4,9 @@ import requests
 # Authentication
 from auth import create_user, authenticate_user
 
+# User Data
+from user_data import save_ai_history
+
 # ============================================================
 # PAGE CONFIGURATION
 # ============================================================
@@ -94,7 +97,18 @@ def call_ai(task: str, user_input: str):
         )
 
         if response.status_code == 200:
-            return response.json()["response"]
+            result = response.json()["response"]
+
+            # Save AI result for logged-in user
+            if st.session_state.user:
+                save_ai_history(
+                    user_id=st.session_state.user["id"],
+                    task=task,
+                    input_text=user_input,
+                    ai_response=result
+                )
+
+            return result
 
         return f"❌ Backend Error ({response.status_code})"
 
