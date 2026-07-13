@@ -1,40 +1,75 @@
-# 🚀 MT Career Launchpad
-MT Career Launchpad is an AI-powered career development platform that helps students, graduates, and professionals make informed career decisions using Google's Gemini Generative AI.
-The platform provides intelligent career guidance through resume analysis, career assessments, CV generation, and personalized learning roadmaps.
+# 🚀 MT Career Launchpad AI
+
+MT Career Launchpad AI is an AI-powered career development platform that helps students, graduates, and professionals make informed career decisions using Google's Gemini Generative AI.
+
+The platform provides personalized career support through resume analysis, career assessments, ATS-friendly CV generation, interview preparation, career roadmaps, and AI-powered recommendations based on user profiles.
+
 ---
-## 🌟 Features
+
+# 🌟 Features
+
+## 🔐 User Management
+- User registration and login
+- Secure password hashing
+- Session-based authentication
+- User-specific dashboard
+- Profile management
+
+## 🤖 AI Career Tools
 - 📄 AI Resume Analyzer
 - 🧠 Career Assessment
 - 📝 ATS-Friendly CV Builder
 - 🗺 Personalized Career Roadmap
-- 🤖 Powered by Google Gemini Generative AI
-- ⚡ FastAPI Backend
-- 🎨 Streamlit Frontend
-- 🔒 Environment Variable Configuration
-- 🧩 Modular AI Engine with Prompt Engineering
+- 🎤 AI Interview Coach
+
+## 📊 Personalization
+- User career profile
+- Profile completion tracking
+- AI responses based on user information
+- Personalized career recommendations
+
+## 📥 Export Features
+- Professional PDF reports
+- Microsoft Word document export
+
+## ⚙️ Technology
+- Google Gemini Generative AI
+- FastAPI Backend
+- Streamlit Frontend
+- SQLite Database
+- Modular AI Engine
+- Prompt Engineering
+
 ---
-## 🏗️ Project Architecture
+
+# 🏗️ Project Architecture
+
 ```text
-                User
-                  │
-                  ▼
-        Streamlit Frontend
-                  │
-                  ▼
-          FastAPI Backend
-                  │
-                  ▼
-            AI Engine
-        (Prompt Engineering)
-                  │
-                  ▼
-      Google Gemini API
-                  │
-                  ▼
-          AI Response
-                  │
-                  ▼
-               User
+                    User
+                      │
+                      ▼
+            Streamlit Frontend
+                      │
+                      ▼
+             FastAPI Backend
+                      │
+                      ▼
+              Authentication
+                      │
+                      ▼
+              User Database
+              (SQLite)
+                      │
+                      ▼
+                AI Engine
+          (Prompt Engineering)
+                      │
+                      ▼
+            Google Gemini API
+                      │
+                      ▼
+              Personalized AI
+               Response
 ```
 ---
 ## 📂 Project Structure
