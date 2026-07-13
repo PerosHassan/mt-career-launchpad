@@ -208,3 +208,54 @@ def get_user_history(user_id):
 
 
     return history
+    # ============================================================
+# GET USER STATISTICS
+# ============================================================
+
+def get_user_stats(user_id):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+
+    cursor.execute(
+        """
+        SELECT task, COUNT(*)
+
+        FROM ai_history
+
+        WHERE user_id=?
+
+        GROUP BY task
+
+        """,
+        (user_id,)
+    )
+
+
+    results = cursor.fetchall()
+
+
+    conn.close()
+
+
+    stats = {
+
+        "resume": 0,
+        "career": 0,
+        "cv": 0,
+        "roadmap": 0,
+        "interview": 0
+
+    }
+
+
+    for task, count in results:
+
+        if task in stats:
+
+            stats[task] = count
+
+
+    return stats
