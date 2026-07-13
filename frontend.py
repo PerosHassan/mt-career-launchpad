@@ -16,6 +16,9 @@ from user_data import (
     get_profile_completion
 )
 
+# Export Utilities
+from export_utils import export_to_pdf, export_to_docx
+
 # ============================================================
 # PAGE CONFIGURATION
 # ============================================================
@@ -257,9 +260,7 @@ if st.session_state.user:
         st.header("🏠 Dashboard")
         st.success(f"Welcome {st.session_state.user['name']} 👋")
 
-        # ============================================================
         # USER CAREER PROGRESS (ANALYTICS)
-        # ============================================================
         user_id = st.session_state.user["id"]
         stats = get_user_stats(user_id)
 
@@ -268,36 +269,21 @@ if st.session_state.user:
         c1, c2, c3, c4 = st.columns(4)
 
         with c1:
-            st.metric(
-                "📄 Resume Analyses",
-                stats["resume"]
-            )
+            st.metric("📄 Resume Analyses", stats["resume"])
 
         with c2:
-            st.metric(
-                "🧠 Career Assessments",
-                stats["career"]
-            )
+            st.metric("🧠 Career Assessments", stats["career"])
 
         with c3:
-            st.metric(
-                "📝 CV Generations",
-                stats["cv"]
-            )
+            st.metric("📝 CV Generations", stats["cv"])
 
         with c4:
-            st.metric(
-                "🎤 Interview Practice",
-                stats["interview"]
-            )
+            st.metric("🎤 Interview Practice", stats["interview"])
 
         st.divider()
 
-        # ============================================================
         # RECENT ACTIVITY
-        # ============================================================
         st.subheader("🕒 Recent Activity")
-
         recent = get_recent_activity(user_id)
 
         if not recent:
@@ -306,7 +292,6 @@ if st.session_state.user:
             for item in recent:
                 task = item[0]
                 date = item[1]
-
                 st.write(f"🤖 **{task.upper()}** — {date}")
 
         st.divider()
@@ -350,17 +335,13 @@ if st.session_state.user:
     elif st.session_state.page == "Profile":
         st.header("👤 My Profile")
 
-        # ============================================================
         # PROFILE COMPLETION GAUGE
-        # ============================================================
         completion = get_profile_completion(st.session_state.user["id"])
-
         st.subheader("📊 Profile Completion")
         st.progress(completion / 100)
         st.write(f"{completion}% Complete")
 
         user = st.session_state.user
-
         st.subheader("Account Information")
         col1, col2 = st.columns(2)
         with col1:
@@ -421,9 +402,7 @@ if st.session_state.user:
             st.success("✅ Profile updated successfully")
             st.rerun()
 
-    # ============================================================
-    # HISTORY PAGE
-    # ============================================================
+    # 3. HISTORY PAGE
     elif st.session_state.page == "History":
         st.header("📚 My AI History")
         
@@ -443,7 +422,7 @@ if st.session_state.user:
                 with st.expander(f"🤖 {task.upper()} | {date}"):
                     st.write(response)
 
-    # 3. RESUME ANALYZER
+    # 4. RESUME ANALYZER (WITH NEW PDF & WORD EXPORT FORMATS)
     elif st.session_state.page == "Resume":
         st.header("📄 AI Resume Analyzer")
         st.write("Upload or paste your resume below and let AI evaluate it professionally.")
@@ -457,9 +436,32 @@ if st.session_state.user:
                     result = call_ai(task="resume", user_input=resume)
                 st.success("✅ Resume Analysis Complete")
                 st.markdown(result)
-                st.download_button("📥 Download Analysis", data=result, file_name="resume_analysis.txt", mime="text/plain")
+                
+                # Dynamic generation of PDF and DOCX files
+                pdf_file = export_to_pdf("Resume Analysis Report", result)
+                docx_file = export_to_docx("Resume Analysis Report", result)
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.download_button(
+                        "📄 Download PDF",
+                        data=pdf_file,
+                        file_name="resume_analysis_report.pdf",
+                        mime="application/pdf",
+                        use_container_width=True
+                    )
+                    
+                with col2:
+                    st.download_button(
+                        "📝 Download Word",
+                        data=docx_file,
+                        file_name="resume_analysis_report.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        use_container_width=True
+                    )
 
-    # 4. CAREER ASSESSMENT
+    # 5. CAREER ASSESSMENT
     elif st.session_state.page == "Career":
         st.header("🧠 AI Career Assessment")
         st.write("Tell the AI about your education, skills and career goals.")
@@ -475,7 +477,7 @@ if st.session_state.user:
                 st.markdown(result)
                 st.download_button("📥 Download Career Advice", result, file_name="career_advice.txt", mime="text/plain")
 
-    # 5. CV BUILDER
+    # 6. CV BUILDER
     elif st.session_state.page == "CV":
         st.header("📝 AI CV Builder")
         st.write("Provide your professional information to generate an ATS-friendly CV.")
@@ -491,7 +493,7 @@ if st.session_state.user:
                 st.markdown(result)
                 st.download_button("📥 Download CV", result, file_name="generated_cv.txt", mime="text/plain")
 
-    # 6. CAREER ROADMAP
+    # 7. CAREER ROADMAP
     elif st.session_state.page == "Roadmap":
         st.header("🗺️ AI Career Roadmap")
         st.write("Tell the AI your dream career and receive a personalized 12-month roadmap.")
@@ -507,7 +509,7 @@ if st.session_state.user:
                 st.markdown(result)
                 st.download_button("📥 Download Roadmap", result, file_name="career_roadmap.txt", mime="text/plain")
 
-    # 7. INTERVIEW COACH
+    # 8. INTERVIEW COACH
     elif st.session_state.page == "Interview":
         st.header("🎤 AI Interview Coach")
         st.write("Prepare for your next interview with personalized AI coaching.")
