@@ -21,9 +21,10 @@ if not API_KEY:
 # ============================================================
 
 MODEL_NAME = os.getenv(
+    MODEL_NAME = os.getenv(
     "MODEL_NAME",
-    "gemini-3.5-flash"
-)
+    "gemini-2.5-flash"
+    )
 
 # ============================================================
 # INITIALIZE GEMINI CLIENT
