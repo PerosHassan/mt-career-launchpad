@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from ai_engine import generate_response
@@ -17,6 +17,8 @@ app = FastAPI(
 # CORS CONFIGURATION
 # ============================================================
 
+# This ensures your Streamlit frontend can securely request data 
+# from this API when hosted on Render.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -62,14 +64,19 @@ def health():
 
 @app.post("/generate")
 def generate(request: AIRequest):
-
-    response = generate_response(
-        task=request.task,
-        user_input=request.input
-    )
-
-    return {
-        "success": True,
-        "task": request.task,
-        "response": response
-    }
+    try:
+        response = generate_response(
+            task=request.task,
+            user_input=request.input
+        )
+        
+        return {
+            "success": True,
+            "task": request.task,
+            "response": response
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"An error occurred in the backend: {str(e)}"
+        )
