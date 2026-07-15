@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import re
 
 # Authentication
 from auth import create_user, authenticate_user
@@ -80,6 +81,35 @@ h2 {
 
 </style>
 """, unsafe_allow_html=True)
+
+# ============================================================
+# UTILITY FUNCTIONS
+# ============================================================
+
+def clean_markdown_for_download(raw_text: str) -> str:
+    """
+    Strips raw markdown tags (like #, * and _) from text files 
+    so they look clean and professional when opened locally.
+    """
+    if not raw_text:
+        return ""
+        
+    # 1. Replace markdown headers (### Header) with capitalized spacing
+    cleaned = re.sub(r'^#{1,6}\s*(.*)$', r'\n\1\n' + '='*len(r'\1'), raw_text, flags=re.MULTILINE)
+    
+    # 2. Remove Bold syntax (**text** -> text)
+    cleaned = re.sub(r'\*\*(.*?)\*\*', r'\1', cleaned)
+    
+    # 3. Remove Italic syntax (*text* -> text)
+    cleaned = re.sub(r'\*(.*?)\*', r'\1', cleaned)
+    
+    # 4. Standardize markdown bullets to neat professional dash list format
+    cleaned = re.sub(r'^\s*[\*\-_]\s+', r'  - ', cleaned, flags=re.MULTILINE)
+    
+    # 5. Collapse excessive line breaks
+    cleaned = re.sub(r'\n{3,}', r'\n\n', cleaned)
+    
+    return cleaned.strip()
 
 # ============================================================
 # SESSION STATE
@@ -476,7 +506,16 @@ if st.session_state.user:
                     result = call_ai(task="career", user_input=career_info)
                 st.success("✅ Career Assessment Complete")
                 st.markdown(result)
-                st.download_button("📥 Download Career Advice", result, file_name="career_advice.txt", mime="text/plain")
+                
+                # Strip markdown syntax for pristine plain text exports
+                cleaned_result = clean_markdown_for_download(result)
+                
+                st.download_button(
+                    "📥 Download Career Advice", 
+                    cleaned_result, 
+                    file_name="career_advice.txt", 
+                    mime="text/plain"
+                )
 
     # 6. CV BUILDER
     elif st.session_state.page == "CV":
@@ -489,10 +528,19 @@ if st.session_state.user:
                 st.warning("Please enter your professional information.")
             else:
                 with st.spinner("🤖 Gemini AI is writing your professional CV..."):
-                    result = call_ai(task="cv", use_input=cv_info)
+                    result = call_ai(task="cv", user_input=cv_info)
                 st.success("✅ CV Generated Successfully")
                 st.markdown(result)
-                st.download_button("📥 Download CV", result, file_name="generated_cv.txt", mime="text/plain")
+                
+                # Strip markdown syntax for pristine plain text exports
+                cleaned_result = clean_markdown_for_download(result)
+                
+                st.download_button(
+                    "📥 Download CV", 
+                    cleaned_result, 
+                    file_name="generated_cv.txt", 
+                    mime="text/plain"
+                )
 
     # 7. CAREER ROADMAP
     elif st.session_state.page == "Roadmap":
@@ -508,7 +556,16 @@ if st.session_state.user:
                     result = call_ai(task="roadmap", user_input=career_goal)
                 st.success("✅ Career Roadmap Generated")
                 st.markdown(result)
-                st.download_button("📥 Download Roadmap", result, file_name="career_roadmap.txt", mime="text/plain")
+                
+                # Strip markdown syntax for pristine plain text exports
+                cleaned_result = clean_markdown_for_download(result)
+                
+                st.download_button(
+                    "📥 Download Roadmap", 
+                    cleaned_result, 
+                    file_name="career_roadmap.txt", 
+                    mime="text/plain"
+                )
 
     # 8. INTERVIEW COACH
     elif st.session_state.page == "Interview":
@@ -524,7 +581,16 @@ if st.session_state.user:
                     result = call_ai(task="interview", user_input=job_role)
                 st.success("✅ Interview Preparation Ready")
                 st.markdown(result)
-                st.download_button("📥 Download Interview Guide", result, file_name="interview_preparation.txt", mime="text/plain")
+                
+                # Strip markdown syntax for pristine plain text exports
+                cleaned_result = clean_markdown_for_download(result)
+                
+                st.download_button(
+                    "📥 Download Interview Guide", 
+                    cleaned_result, 
+                    file_name="interview_preparation.txt", 
+                    mime="text/plain"
+                )
 
 # ============================================================
 # NOT LOGGED IN SCREEN
